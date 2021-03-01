@@ -1,0 +1,49 @@
+<select id="whatAction">
+  <option value="any">blabla</option>
+  <option value="gcode">GCode</option>
+</select>
+
+<table>
+  <td id="actionHolder">
+
+<textarea class="action-gcode" name="form-control_1" rows="5"></textarea>
+<select class="action-any" name="octo-action_1" id="octoaction_1">
+  <option value="start">Start</option>
+  <!-- usw -->
+</select>
+
+  </td>
+
+</table>
+
+<script>
+
+
+
+(function() {
+
+   var $whatAction = document.getElementById("whatAction");
+  var $actionHolder = document.getElementById("actionHolder");
+
+  function changeAction() {
+    var value = $whatAction.value;
+    for (var i = 0; i < $actionHolder.children.length; i++) {
+      $actionHolder.children[i].style.display = "none";
+    }
+    var $q = $actionHolder.querySelector(".action-" + value);
+    $q.style.display = "block";
+  }
+
+
+ // alternativ: anstelle von "change" => "keyup"
+  $whatAction.addEventListener("change", changeAction);
+  changeAction();
+
+})();
+</script>
+
+<style type="text/css">
+  #actionHolder > * {
+    display: none;
+  }
+</style>
