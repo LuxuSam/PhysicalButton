@@ -6,7 +6,7 @@ import octoprint.plugin
 class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            octoprint.plugin.SettingsPlugin,
                            octoprint.plugin.TemplatePlugin,
-                           #octoprint.plugin.AssetPlugin
+                           octoprint.plugin.AssetPlugin
                            ):
     def on_after_startup(self):
         self._logger.info("Physical Button plugin started")
@@ -29,14 +29,14 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
     def get_template_configs(self):
         return [
-            dict(type = "settings", custom_bindings = False)
+            dict(type = "settings", custom_bindings = True)
         ]
 
     def get_template_vars(self):
         return dict(buttonname = self._settings.get(["buttonname"]))
 
-    #def get_assets(self):
-    #    return dict(js=["js/physicalbutton.js"])
+    def get_assets(self):
+        return dict(js=["js/physicalbutton.js"])
 
 
 

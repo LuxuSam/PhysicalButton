@@ -8,21 +8,31 @@ $(function() {
     function PhysicalbuttonViewModel(parameters) {
         var self = this;
 
-        self.settings = parameters[0];
+        self.settingsViewModel = parameters[0];
 
-        self.addButton = function(){
-            console.log(self.settings);
-        }
-        // assign the injected parameters, e.g.:
-        // self.loginStateViewModel = parameters[0];
-        // self.settingsViewModel = parameters[1];
-
+        self.buttonname = ko.observable();
+        self.gpio = ko.observable();
+        self.action = ko.observable();
 
         self.onBeforeBinding = function() {
-            self.settings.plugins.physicalbutton.buttonname
+            self.buttonname(self.settingsViewModel.settings.plugins.physicalbutton.buttonname());
+            self.gpio(self.settingsViewModel.settings.plugins.physicalbutton.gpio());
+            self.action(self.settingsViewModel.settings.plugins.physicalbutton.action());
         }
-        self.onSettingsShow = function() {
 
+        self.onEventSettingsUpdated = function (payload) {
+            self.buttonname(self.settingsViewModel.settings.plugins.physicalbutton.buttonname());
+            self.gpio(self.settings.settingsViewModel.plugins.physicalbutton.gpio());
+            self.action(self.settings.settingsViewModel.plugins.physicalbutton.action());
+        }
+
+
+        self.addButton = function(){
+
+        }
+
+        self.onSettingsShow = function() {
+            //self.newName(self.settings.plugins.physicalbutton.buttonname());
         }
 
     }

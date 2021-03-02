@@ -6,7 +6,7 @@
                 <h4>Buttons:</h4>
             </td>
             <td>
-                <button class="btn btn-outline-primary">
+                <button class="btn btn-outline-primary" data-bind:"click: addButton">
                     <i class="fas fa-plus"></i>
                 </button>
             </td>
@@ -15,19 +15,20 @@
     <div class="list-group">
         <li>
             <a href="#button_1" class="btn" data-toggle="collapse">
-                <label for="buttonname">{{ plugin_physicalbutton_buttonname|escape }}</label>
+                <!--<label>{{ plugin_physicalbutton_buttonname|escape }}</label>-->
+                <label data-bind="text: buttonname"></label>
             </a>
 
             <div id="button_1" class="collapse">
                 <table>
                     <tr>
                         <td>
-                            <a data-toggle="tooltip" title="Name will change on restart" style="color: rgb(51,51,51); text-decoration: none; cursor:help;" onclick="return false;">
+                            <a data-toggle="tooltip" title="Name will change after save" style="color: rgb(51,51,51); text-decoration: none; cursor:help;" onclick="return false;">
                                 <p>Button Name: </p>
                             </a>
                         </td>
                         <td>
-                            <input type="text" class="form-control" data-bind="value: settings.plugins.physicalbutton.buttonname">
+                            <input type="text" class="form-control" data-bind="value: settingsViewModel.settings.plugins.physicalbutton.buttonname" id = "buttonname">
                         </td>
                     </tr>
                     <tr>
@@ -37,7 +38,7 @@
                             </a>
                         </td>
                         <td>
-                            <select data-bind="value:settings.plugins.physicalbutton.gpio"">
+                            <select data-bind="value:settingsViewModel.settings.plugins.physicalbutton.gpio" id = "gpio">
                                 <option value="-1">None</option>
                                 <option value="2">GPIO2</option>
                                 <option value="3">GPIO3</option>
@@ -62,7 +63,7 @@
                             </a>
                         </td>
                         <td>
-                            <select data-bind="value:settings.plugins.physicalbutton.action">
+                            <select data-bind="value:settingsViewModel.settings.plugins.physicalbutton.action" id = "action">
                                 <option value="start">start</option>
                                 <option value="cancel">cancel</option>
                                 <option value="pause">pause</option>
@@ -72,6 +73,14 @@
                                 <option value="disconnect">disconnect</option>
                             </select>
                         </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button class="btn btn-outline-primary" data-bind:"click: updateButton">
+                                <label>Update Button</label>
+                            </button>
+                        </td>
+
                     </tr>
                 </table>
             </div>
