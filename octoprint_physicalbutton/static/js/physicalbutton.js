@@ -8,11 +8,23 @@ $(function() {
     function PhysicalbuttonViewModel(parameters) {
         var self = this;
 
+        self.settings = parameters[0];
+
+        self.addButton = function(){
+            console.log(self.settings);
+        }
         // assign the injected parameters, e.g.:
         // self.loginStateViewModel = parameters[0];
         // self.settingsViewModel = parameters[1];
 
-        // TODO: Implement your plugin's view model here.
+
+        self.onBeforeBinding = function() {
+            self.settings.plugins.physicalbutton.buttonname
+        }
+        self.onSettingsShow = function() {
+
+        }
+
     }
 
     /* view model class, parameters for constructor, container to bind to
@@ -22,8 +34,8 @@ $(function() {
     OCTOPRINT_VIEWMODELS.push({
         construct: PhysicalbuttonViewModel,
         // ViewModels your plugin depends on, e.g. loginStateViewModel, settingsViewModel, ...
-        dependencies: [ /* "loginStateViewModel", "settingsViewModel" */ ],
+        dependencies: ["settingsViewModel"],
         // Elements to bind to, e.g. #settings_plugin_physicalbutton, #tab_plugin_physicalbutton, ...
-        elements: [ /* ... */ ]
+        elements: ["#settings_plugin_physicalbutton"]
     });
 });
