@@ -57,7 +57,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="radio" name="activity" value="action" id="action_activity">
+                                    <input type="radio" name="activity" value="checkedAction" id="action_activity" data-bind="checked: checkedButton">
                                 </td>
                                 <td>
                                     <label for="action_activity">Action:</label>
@@ -77,13 +77,13 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="radio" name="activity" value="gcode" id="gcode_activity">
+                                    <input type="radio" name="activity" value="checkedGcode" id="gcode_activity" data-bind="checked: checkedButton">
                                 </td>
                                 <td>
                                     <label for="gcode_activity">GCODE:&nbsp</label>
                                 </td>
                                 <td>
-                                    <textarea rows="5" cols="80"></textarea>
+                                    <textarea rows="5" data-bind="value: newButtonGcode"></textarea>
                                 </td>
                             </tr>
                             <tr>

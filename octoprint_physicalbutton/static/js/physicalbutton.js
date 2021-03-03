@@ -8,12 +8,15 @@ $(function() {
     function PhysicalbuttonViewModel(parameters) {
         var self = this;
 
+        //settings
         self.settingsViewModel = parameters[0];
 
         //New Button
         self.newButtonName = ko.observable();
         self.newButtonGPIO = ko.observable();
+        self.checkedButton = ko.observable();
         self.newButtonAction = ko.observable();
+        self.newButtonGcode = ko.observable();
 
         //Saved Buttons
         self.buttons = ko.observable();
@@ -27,15 +30,21 @@ $(function() {
         }
 
         self.addButton = function(){
-
             if (self.newButtonName == null){
                 console.log("No Name");
                 return;
             }
-            self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons.push(
-                //{action: ko.observable('none'), buttonname:ko.observable('NewButton'), gpio: ko.observable('0')}));
-                {action: self.newButtonAction, buttonname:self.newButtonName, gpio: self.newButtonGPIO}));
-            self.settingsViewModel.saveData();
+            if (self.checkedButton() == "checkedGcode"){
+                console.log("Not implemented yet");
+                return;
+            }
+            if (self.checkedButton() == "checkedAction"){
+                console.log("Added Action Button");
+                self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons.push(
+                    {action: self.newButtonAction, buttonname:self.newButtonName, gpio: self.newButtonGPIO}));
+                self.settingsViewModel.saveData();
+                ;
+            }
         };
 
         self.removeButton = function(){
