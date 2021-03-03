@@ -40,7 +40,7 @@ $(function() {
 
         self.removeButton = function(){
             self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons.remove(this));
-            self.settingsViewModel.saveData();
+            //self.settingsViewModel.saveData();
 
         };
     }
