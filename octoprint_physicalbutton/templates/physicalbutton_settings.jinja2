@@ -18,16 +18,18 @@
                     <table>
                         <tbody>
                             <tr>
+                                <td></td>
                                 <td>
-                                    <p>Button Name: </p>
+                                    <label for="newButtonnameTF">Button Name:</label>
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control" data-bind="value: newButtonName">
+                                    <input type="text" id="newButtonnameTF" data-bind="value:newButtonName">
                                 </td>
                             </tr>
                             <tr>
+                                <td></td>
                                 <td>
-                                    <p>GPIO: </p>
+                                    <label>GPIO:</label>
                                 </td>
                                 <td>
                                     <select data-bind="value: newButtonGPIO">
@@ -48,8 +50,17 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td></td>
                                 <td>
-                                    <p>Action: </p>
+                                    <h6>Choose the activity for the button:</h6>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="radio" name="activity" value="action" id="action_activity">
+                                </td>
+                                <td>
+                                    <label for="action_activity">Action:</label>
                                 </td>
                                 <td>
                                     <select data-bind="value: newButtonAction">
@@ -66,10 +77,25 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <button class="btn btn-outline-primary" data-bind="click: addButton">
-                                        Save new button
-                                    </button>
+                                    <input type="radio" name="activity" value="gcode" id="gcode_activity">
                                 </td>
+                                <td>
+                                    <label for="gcode_activity">GCODE:&nbsp</label>
+                                </td>
+                                <td>
+                                    <textarea rows="5" cols="80"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <a href="#addNewButton" class="btn btn-outline-primary" data-bind="click: addButton" data-toggle="collapse">
+                                        Save new button
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><p></p></td>
                             </tr>
                         </tbody>
                     </table>

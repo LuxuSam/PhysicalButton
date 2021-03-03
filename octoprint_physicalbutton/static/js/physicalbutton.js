@@ -27,7 +27,9 @@ $(function() {
         }
 
         self.addButton = function(){
-            if (self.newButtonName != null){
+
+            if (self.newButtonName == null){
+                console.log("No Name");
                 return;
             }
             self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons.push(
