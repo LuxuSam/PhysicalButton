@@ -6,9 +6,74 @@
                 <h4>Buttons:</h4>
             </td>
             <td>
-                <button class="btn btn-outline-primary" data-bind="click: addButton">
-                    <i class="fas fa-plus"></i>
-                </button>
+                <a href="#addNewButton" class="btn" data-toggle="collapse">
+                    <i class="fa fa-plus"></i>
+                </a>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <div class="collapse" id="addNewButton">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <p>Button Name: </p>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" data-bind="value: newButtonName">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>GPIO: </p>
+                                </td>
+                                <td>
+                                    <select data-bind="value: newButtonGPIO">
+                                        <option value="0">None</option>
+                                        <option value="2">GPIO2</option>
+                                        <option value="3">GPIO3</option>
+                                        <option value="4">GPIO4</option>
+                                        <option value="5">GPIO5</option>
+                                        <option value="6">GPIO6</option>
+                                        <option value="7">GPIO7</option>
+                                        <option value="8">GPIO8</option>
+                                        <option value="9">GPIO9</option>
+                                        <option value="10">GPIO10</option>
+                                        <option value="11">GPIO11</option>
+                                        <option value="12">GPIO12</option>
+                                        <option value="13">GPIO13</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>Action: </p>
+                                </td>
+                                <td>
+                                    <select data-bind="value: newButtonAction">
+                                        <option value="none">none</option>
+                                        <option value="start">start</option>
+                                        <option value="cancel">cancel</option>
+                                        <option value="pause">pause</option>
+                                        <option value="paused">paused</option>
+                                        <option value="resume">resume</option>
+                                        <option value="resumed">resumed</option>
+                                        <option value="disconnect">disconnect</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="btn btn-outline-primary" data-bind="click: addButton">
+                                        Save new button
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </td>
         </tr>
     </table>

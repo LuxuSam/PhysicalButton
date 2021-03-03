@@ -10,11 +10,12 @@ $(function() {
 
         self.settingsViewModel = parameters[0];
 
-        /*
-        self.buttonname = ko.observable();
-        self.gpio = ko.observable();
-        self.action = ko.observable();
-        */
+        //New Button
+        self.newButtonName = ko.observable();
+        self.newButtonGPIO = ko.observable();
+        self.newButtonAction = ko.observable();
+
+        //Saved Buttons
         self.buttons = ko.observable();
 
         self.onBeforeBinding = function() {
@@ -26,8 +27,12 @@ $(function() {
         }
 
         self.addButton = function(){
+            if (self.newButtonName != null){
+                return;
+            }
             self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons.push(
-                {action: ko.observable('none'), buttonname:ko.observable('NewButton'), gpio: ko.observable('0')}));
+                //{action: ko.observable('none'), buttonname:ko.observable('NewButton'), gpio: ko.observable('0')}));
+                {action: self.newButtonAction, buttonname:self.newButtonName, gpio: self.newButtonGPIO}));
             self.settingsViewModel.saveData();
         };
 
