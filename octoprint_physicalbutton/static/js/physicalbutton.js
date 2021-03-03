@@ -10,31 +10,32 @@ $(function() {
 
         self.settingsViewModel = parameters[0];
 
+        /*
         self.buttonname = ko.observable();
         self.gpio = ko.observable();
         self.action = ko.observable();
+        */
+        self.buttons = ko.observable();
 
         self.onBeforeBinding = function() {
-            self.buttonname(self.settingsViewModel.settings.plugins.physicalbutton.buttonname());
-            self.gpio(self.settingsViewModel.settings.plugins.physicalbutton.gpio());
-            self.action(self.settingsViewModel.settings.plugins.physicalbutton.action());
-        }
+            self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
+        };
 
         self.onEventSettingsUpdated = function (payload) {
-            self.buttonname(self.settingsViewModel.settings.plugins.physicalbutton.buttonname());
-            self.gpio(self.settings.settingsViewModel.plugins.physicalbutton.gpio());
-            self.action(self.settings.settingsViewModel.plugins.physicalbutton.action());
+            self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
         }
-
 
         self.addButton = function(){
+            self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons.push(
+                {action: ko.observable('none'), buttonname:ko.observable('NewButton'), gpio: ko.observable('0')}));
+            self.settingsViewModel.saveData();
+        };
 
-        }
+        self.removeButton = function(){
+            self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons.remove(this));
+            self.settingsViewModel.saveData();
 
-        self.onSettingsShow = function() {
-            //self.newName(self.settings.plugins.physicalbutton.buttonname());
-        }
-
+        };
     }
 
     /* view model class, parameters for constructor, container to bind to

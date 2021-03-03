@@ -11,6 +11,11 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     def on_after_startup(self):
         self._logger.info("Physical Button plugin started")
 
+    def get_settings_defaults(self):
+        return dict(
+            buttons = []
+        )
+
 
 	##~~ Softwareupdate hook
     def get_update_information(self):
@@ -31,9 +36,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         return [
             dict(type = "settings", custom_bindings = True)
         ]
-
-    def get_template_vars(self):
-        return dict(buttonname = self._settings.get(["buttonname"]))
 
     def get_assets(self):
         return dict(js=["js/physicalbutton.js"])

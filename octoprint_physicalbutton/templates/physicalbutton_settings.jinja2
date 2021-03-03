@@ -6,84 +6,80 @@
                 <h4>Buttons:</h4>
             </td>
             <td>
-                <button class="btn btn-outline-primary" data-bind:"click: addButton">
+                <button class="btn btn-outline-primary" data-bind="click: addButton">
                     <i class="fas fa-plus"></i>
                 </button>
             </td>
         </tr>
     </table>
-    <div class="list-group">
-        <li>
-            <a href="#button_1" class="btn" data-toggle="collapse">
-                <!--<label>{{ plugin_physicalbutton_buttonname|escape }}</label>-->
-                <label data-bind="text: buttonname"></label>
-            </a>
-
-            <div id="button_1" class="collapse">
-                <table>
-                    <tr>
-                        <td>
-                            <a data-toggle="tooltip" title="Name will change after save" style="color: rgb(51,51,51); text-decoration: none; cursor:help;" onclick="return false;">
-                                <p>Button Name: </p>
-                            </a>
-                        </td>
-                        <td>
-                            <input type="text" class="form-control" data-bind="value: settingsViewModel.settings.plugins.physicalbutton.buttonname" id = "buttonname">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a data-toggle="tooltip" title="What GPIO is the button connected to?" style="color: rgb(51,51,51); text-decoration: none; cursor:help;" onclick="return false;">
-                                <p>GPIO: </p>
-                            </a>
-                        </td>
-                        <td>
-                            <select data-bind="value:settingsViewModel.settings.plugins.physicalbutton.gpio" id = "gpio">
-                                <option value="-1">None</option>
-                                <option value="2">GPIO2</option>
-                                <option value="3">GPIO3</option>
-                                <option value="4">GPIO4</option>
-                                <option value="5">GPIO5</option>
-                                <option value="6">GPIO6</option>
-                                <option value="7">GPIO7</option>
-                                <option value="8">GPIO8</option>
-                                <option value="9">GPIO9</option>
-                                <option value="10">GPIO10</option>
-                                <option value="11">GPIO11</option>
-                                <option value="12">GPIO12</option>
-                                <option value="13">GPIO13</option>
-
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <a data-toggle="tooltip" title="What action should be done on button press?" style="color: rgb(51,51,51); text-decoration: none; cursor:help;" onclick="return false;">
-                                <p>Action: </p>
-                            </a>
-                        </td>
-                        <td>
-                            <select data-bind="value:settingsViewModel.settings.plugins.physicalbutton.action" id = "action">
-                                <option value="start">start</option>
-                                <option value="cancel">cancel</option>
-                                <option value="pause">pause</option>
-                                <option value="paused">paused</option>
-                                <option value="resume">resume</option>
-                                <option value="resumed">resumed</option>
-                                <option value="disconnect">disconnect</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <button class="btn btn-outline-primary" data-bind:"click: updateButton">
-                                <label>Update Button</label>
-                            </button>
-                        </td>
-
-                    </tr>
-                </table>
-            </div>
-        </li>
-    </div>
+    <table>
+        <tbody data-bind="foreach: settingsViewModel.settings.plugins.physicalbutton.buttons">
+            <tr>
+                <td>
+                    <a data-bind="attr:{href: '#'+ buttonname() + gpio()}" class="btn" data-toggle="collapse">
+                        <label data-bind="text: buttonname"></label>
+                    </a>
+                    <div class="collapse" data-bind="attr:{id: buttonname() + gpio()}">
+                        <table>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <button class="btn btn-outline-primary" data-bind="click: $parent.removeButton">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>Button Name: </p>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" data-bind="value: buttonname">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>GPIO: </p>
+                                </td>
+                                <td>
+                                    <select data-bind="value:gpio">
+                                        <option value="0">None</option>
+                                        <option value="2">GPIO2</option>
+                                        <option value="3">GPIO3</option>
+                                        <option value="4">GPIO4</option>
+                                        <option value="5">GPIO5</option>
+                                        <option value="6">GPIO6</option>
+                                        <option value="7">GPIO7</option>
+                                        <option value="8">GPIO8</option>
+                                        <option value="9">GPIO9</option>
+                                        <option value="10">GPIO10</option>
+                                        <option value="11">GPIO11</option>
+                                        <option value="12">GPIO12</option>
+                                        <option value="13">GPIO13</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>Action: </p>
+                                </td>
+                                <td>
+                                    <select data-bind="value: action">
+                                        <option value="none">none</option>
+                                        <option value="start">start</option>
+                                        <option value="cancel">cancel</option>
+                                        <option value="pause">pause</option>
+                                        <option value="paused">paused</option>
+                                        <option value="resume">resume</option>
+                                        <option value="resumed">resumed</option>
+                                        <option value="disconnect">disconnect</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </form>
