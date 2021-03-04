@@ -107,10 +107,10 @@
         <tbody data-bind="foreach: settingsViewModel.settings.plugins.physicalbutton.buttons">
             <tr>
                 <td>
-                    <a data-bind="attr:{href: '#'+ buttonname() + gpio()}" class="btn" data-toggle="collapse">
+                    <a data-bind="attr:{href: '#'+ id()}" class="btn" data-toggle="collapse">
                         <label data-bind="text: buttonname"></label>
                     </a>
-                    <div class="collapse" data-bind="attr:{id: buttonname() + gpio()}">
+                    <div class="collapse" data-bind="attr:{id: id()}">
                         <table>
                             <tr>
                                 <td></td>
@@ -151,10 +151,10 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>
+                                <td data-bind="visible: show() == 'action'">
                                     <p>Action: </p>
                                 </td>
-                                <td>
+                                <td data-bind="visible: show() == 'action'">
                                     <select data-bind="value: action">
                                         <option value="none">none</option>
                                         <option value="start">start</option>
@@ -165,6 +165,12 @@
                                         <option value="resumed">resumed</option>
                                         <option value="disconnect">disconnect</option>
                                     </select>
+                                </td>
+                                <td data-bind="visible: show() == 'gcode' ">
+                                    <p>GCODE: </p>
+                                </td>
+                                <td data-bind="visible: show() == 'gcode' ">
+                                    <textarea rows="5" data-bind="value: gcode"></textarea>
                                 </td>
                             </tr>
                         </table>
