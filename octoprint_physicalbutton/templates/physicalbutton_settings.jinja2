@@ -32,21 +32,7 @@
                                     <label>GPIO:</label>
                                 </td>
                                 <td>
-                                    <select data-bind="value: newButtonGPIO">
-                                        <option value="0">None</option>
-                                        <option value="2">GPIO2</option>
-                                        <option value="3">GPIO3</option>
-                                        <option value="4">GPIO4</option>
-                                        <option value="5">GPIO5</option>
-                                        <option value="6">GPIO6</option>
-                                        <option value="7">GPIO7</option>
-                                        <option value="8">GPIO8</option>
-                                        <option value="9">GPIO9</option>
-                                        <option value="10">GPIO10</option>
-                                        <option value="11">GPIO11</option>
-                                        <option value="12">GPIO12</option>
-                                        <option value="13">GPIO13</option>
-                                    </select>
+                                    <select data-bind="value: newButtonGPIO, options:gpios, optionsText: function(item){return 'GPIO'+item}"></select>
                                 </td>
                             </tr>
                             <tr>
@@ -63,16 +49,10 @@
                                     <label for="action_activity">Action:</label>
                                 </td>
                                 <td>
-                                    <select data-bind="value: newButtonAction">
-                                        <option value="none">none</option>
-                                        <option value="start">start</option>
-                                        <option value="cancel">cancel</option>
-                                        <option value="pause">pause</option>
-                                        <option value="paused">paused</option>
-                                        <option value="resume">resume</option>
-                                        <option value="resumed">resumed</option>
-                                        <option value="disconnect">disconnect</option>
-                                    </select>
+                                    <div data-bind="visible: $root.checkedButton() == 'checkedAction'">
+                                        <select data-bind="value: newButtonAction, options: actions"></select>
+                                    </div>
+
                                 </td>
                             </tr>
                             <tr>
@@ -80,10 +60,13 @@
                                     <input type="radio" name="activity" value="checkedGcode" id="gcode_activity" data-bind="checked: checkedButton">
                                 </td>
                                 <td>
-                                    <label for="gcode_activity">GCODE:&nbsp</label>
+                                    <label for="gcode_activity">GCODE:</label>
                                 </td>
                                 <td>
-                                    <textarea rows="5" data-bind="value: newButtonGcode"></textarea>
+                                    <div data-bind="visible: $root.checkedButton() == 'checkedGcode'">
+                                        <textarea rows="5" data-bind="value: newButtonGcode"></textarea>
+                                    </div>
+
                                 </td>
                             </tr>
                             <tr>
@@ -133,21 +116,7 @@
                                     <p>GPIO: </p>
                                 </td>
                                 <td>
-                                    <select data-bind="value:gpio">
-                                        <option value="0">None</option>
-                                        <option value="2">GPIO2</option>
-                                        <option value="3">GPIO3</option>
-                                        <option value="4">GPIO4</option>
-                                        <option value="5">GPIO5</option>
-                                        <option value="6">GPIO6</option>
-                                        <option value="7">GPIO7</option>
-                                        <option value="8">GPIO8</option>
-                                        <option value="9">GPIO9</option>
-                                        <option value="10">GPIO10</option>
-                                        <option value="11">GPIO11</option>
-                                        <option value="12">GPIO12</option>
-                                        <option value="13">GPIO13</option>
-                                    </select>
+                                    <select data-bind="value: gpio, options:$root.gpios, optionsText: function(item){return 'GPIO'+item}"></select>
                                 </td>
                             </tr>
                             <tr>
@@ -155,16 +124,7 @@
                                     <p>Action: </p>
                                 </td>
                                 <td data-bind="visible: show() == 'action'">
-                                    <select data-bind="value: action">
-                                        <option value="none">none</option>
-                                        <option value="start">start</option>
-                                        <option value="cancel">cancel</option>
-                                        <option value="pause">pause</option>
-                                        <option value="paused">paused</option>
-                                        <option value="resume">resume</option>
-                                        <option value="resumed">resumed</option>
-                                        <option value="disconnect">disconnect</option>
-                                    </select>
+                                    <select data-bind="value: action, options:$root.actions"></select>
                                 </td>
                                 <td data-bind="visible: show() == 'gcode' ">
                                     <p>GCODE: </p>

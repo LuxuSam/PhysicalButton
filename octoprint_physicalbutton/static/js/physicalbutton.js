@@ -11,6 +11,11 @@ $(function() {
         //settings
         self.settingsViewModel = parameters[0];
 
+        //GPIOs:
+        self.gpios = ko.observable(['2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27']);
+        //actions:
+        self.actions = ko.observable(['none','start','cancel','pause','paused','resume','resumed','disconnect']);
+
         //New Button
         self.newButtonName   = ko.observable();
         self.newButtonGPIO   = ko.observable();
@@ -39,8 +44,13 @@ $(function() {
         }
         */
         self.addButton = function(){
-            if (self.newButtonName == null){
-                log.error("No Name for new button");
+            if (self.newButtonName() == null){
+                alert("You haven't chosen a name for your new button!");
+                return;
+            }
+
+            if (self.checkedButton() == null) {
+                alert("You haven't chosen an activity for your new button!");
                 return;
             }
 
@@ -53,7 +63,7 @@ $(function() {
                 log.info("Added new GCODE button");
 
                 self.settingsViewModel.settings.plugins.physicalbutton.buttons.push(
-                    {buttonname:self.newButtonName, gpio: self.newButtonGPIO, action: ko.observable(null), gcode: self.newButtonGcode, id: ko.observable(Date.now()), show: ko.observable('gcode')});
+                    {buttonname:self.newButtonName, gpio: self.newButtonGPIO, action: ko.observable('none'), gcode: self.newButtonGcode, id: ko.observable(Date.now()), show: ko.observable('gcode')});
                 self.settingsViewModel.saveData();
             }
 
