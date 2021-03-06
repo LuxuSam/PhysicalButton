@@ -38,6 +38,25 @@
                             <tr>
                                 <td></td>
                                 <td>
+                                    <label>Mode:</label>
+                                </td>
+                                <td>
+                                    <select data-bind="value: newButtonMode, options:buttonModes"></select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <label>Debounce Time/<br>Time until active</label>
+                                </td>
+                                <td>
+                                    <input type="number" name="debounce" min="500" value="600" data-bind="value: newButtonTime">
+                                </td>
+                                <td><label>ms</label></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
                                     <h6>Choose the activity for the button:</h6>
                                 </td>
                             </tr>
@@ -64,7 +83,7 @@
                                 </td>
                                 <td>
                                     <div data-bind="visible: $root.checkedButton() == 'checkedGcode'">
-                                        <textarea rows="5" data-bind="value: newButtonGcode"></textarea>
+                                        <textarea rows="5" data-bind="value: newButtonGcode""></textarea>
                                     </div>
 
                                 </td>
@@ -120,6 +139,19 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td>
+                                    <label>Mode:</label>
+                                </td>
+                                <td>
+                                    <select data-bind="value: buttonMode, options:$root.buttonModes"></select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label>Debounce Time/ <br> Time until active</label></td>
+                                <td><input type="number" data-bind="value: buttonTime"></td>
+                                <td><label>ms</label></td>
+                            </tr>
+                            <tr>
                                 <td data-bind="visible: show() == 'action'">
                                     <p>Action: </p>
                                 </td>
@@ -130,7 +162,7 @@
                                     <p>GCODE: </p>
                                 </td>
                                 <td data-bind="visible: show() == 'gcode' ">
-                                    <textarea rows="5" data-bind="value: gcode"></textarea>
+                                    <textarea rows="5" data-bind="value: gcode""></textarea>
                                 </td>
                             </tr>
                         </table>

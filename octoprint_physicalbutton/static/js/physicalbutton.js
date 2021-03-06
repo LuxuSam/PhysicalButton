@@ -15,10 +15,14 @@ $(function() {
         self.gpios = ko.observable(['2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27']);
         //actions:
         self.actions = ko.observable(['none','start','cancel','pause','paused','resume','resumed','disconnect']);
+        //button modes:
+        self.buttonModes = ko.observable(['Normally Open (NO)', 'Normally Closed (NC)']);
 
         //New Button
         self.newButtonName   = ko.observable();
         self.newButtonGPIO   = ko.observable();
+        self.newButtonMode   = ko.observable();
+        self.newButtonTime   = ko.observable();
         self.checkedButton   = ko.observable();
         self.newButtonAction = ko.observable();
         self.newButtonGcode  = ko.observable();
@@ -42,6 +46,14 @@ $(function() {
             }
             self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
         }
+
+        self.onSettingsShown() = function() {
+            self.newButtonName(null);
+            self.newButtonGPIO(0);
+            self.checkedButton(null);
+            self.newButtonAction('none');
+            self.newButtonGcode(null);
+        }
         */
         self.addButton = function(){
             if (self.newButtonName() == null){
@@ -63,7 +75,7 @@ $(function() {
                 log.info("Added new GCODE button");
 
                 self.settingsViewModel.settings.plugins.physicalbutton.buttons.push(
-                    {buttonname:self.newButtonName, gpio: self.newButtonGPIO, action: ko.observable('none'), gcode: self.newButtonGcode, id: ko.observable(Date.now()), show: ko.observable('gcode')});
+                    {buttonname: self.newButtonName, gpio: self.newButtonGPIO, buttonMode: self.newButtonMode, buttonTime: self.newButtonTime, action: ko.observable('none'), gcode: self.newButtonGcode(), id: ko.observable(Date.now()), show: ko.observable('gcode')});
                 self.settingsViewModel.saveData();
             }
 
@@ -71,7 +83,7 @@ $(function() {
                 log.info("Added new Action button");
 
                 self.settingsViewModel.settings.plugins.physicalbutton.buttons.push(
-                    {buttonname:self.newButtonName, gpio: self.newButtonGPIO, action: self.newButtonAction, gcode: ko.observable(null), id: ko.observable(Date.now()), show: ko.observable('action')});
+                    {buttonname: self.newButtonName, gpio: self.newButtonGPIO, buttonMode: self.newButtonMode, buttonTime: self.newButtonTime, action: self.newButtonAction, gcode: ko.observable(null), id: ko.observable(Date.now()), show: ko.observable('action')});
                 self.settingsViewModel.saveData();
             }
 
