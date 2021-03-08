@@ -12,7 +12,9 @@ $(function() {
         self.settingsViewModel = parameters[0];
 
         //GPIOs:
-        self.gpios = ko.observable(['2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27']);
+        self.gpios = ko.observable(['2','3','4','5','6','7','8','9','10','11',
+                                    '12','13','14','15','16','17','18','19',
+                                    '20','21','22','23','24','25','26','27']);
         //actions:
         self.actions = ko.observable(['none','start','cancel','pause','paused','resume','resumed','disconnect']);
         //button modes:
@@ -31,30 +33,20 @@ $(function() {
         self.buttons = ko.observable();
         self.show = ko.observable();
 
-
-        /*
-        self.onBeforeBinding = function() {
-            if (self.settingsViewModel.settings.plugins.physicalbutton.buttons() == null){
-                return
-            }
-            self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
-        };
-
-        self.onEventSettingsUpdated = function (payload) {
-            if (self.settingsViewModel.settings.plugins.physicalbutton.buttons() == null){
-                return
-            }
-            self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
-        }
-
-        self.onSettingsShown() = function() {
+        self.resetAddView = function() {
             self.newButtonName(null);
             self.newButtonGPIO(0);
+            self.newButtonMode('Normally Open (NO)');
+            self.newButtonTime(500);
             self.checkedButton(null);
             self.newButtonAction('none');
             self.newButtonGcode(null);
         }
-        */
+
+        self.onSettingsShown = function() {
+            self.resetAddView();
+        }
+
         self.addButton = function(){
             if (self.newButtonName() == null){
                 alert("You haven't chosen a name for your new button!");
@@ -68,31 +60,39 @@ $(function() {
 
             if (self.settingsViewModel.settings.plugins.physicalbutton.buttons() == null){
                 self.settingsViewModel.settings.plugins.physicalbutton.buttons(new Array());
-                self.settingsViewModel.saveData();
+                  self.settingsViewModel.saveData();
             }
 
             if (self.checkedButton() == "checkedGcode"){
-                log.info("Added new GCODE button");
-
                 self.settingsViewModel.settings.plugins.physicalbutton.buttons.push(
-                    {buttonname: self.newButtonName, gpio: self.newButtonGPIO, buttonMode: self.newButtonMode, buttonTime: self.newButtonTime, action: ko.observable('none'), gcode: self.newButtonGcode(), id: ko.observable(Date.now()), show: ko.observable('gcode')});
-                self.settingsViewModel.saveData();
+                    {buttonname: self.newButtonName,
+                        gpio: self.newButtonGPIO,
+                        buttonMode: self.newButtonMode,
+                        buttonTime: self.newButtonTime,
+                        action: ko.observable('none'),
+                        gcode: self.newButtonGcode(),
+                        id: ko.observable(Date.now()),
+                        show: ko.observable('gcode')});
+                log.info("Added new GCODE button");
             }
 
             if (self.checkedButton() == "checkedAction"){
-                log.info("Added new Action button");
-
                 self.settingsViewModel.settings.plugins.physicalbutton.buttons.push(
-                    {buttonname: self.newButtonName, gpio: self.newButtonGPIO, buttonMode: self.newButtonMode, buttonTime: self.newButtonTime, action: self.newButtonAction, gcode: ko.observable(null), id: ko.observable(Date.now()), show: ko.observable('action')});
-                self.settingsViewModel.saveData();
+                    {buttonname: self.newButtonName,
+                         gpio: self.newButtonGPIO,
+                         buttonMode: self.newButtonMode,
+                         buttonTime: self.newButtonTime,
+                         action: self.newButtonAction,
+                         gcode: ko.observable(null),
+                         id: ko.observable(Date.now()),
+                         show: ko.observable('action')});
+                log.info("Added new Action button");
             }
 
-            self.newButtonName(null);
-            self.newButtonGPIO(0);
-            self.checkedButton(null);
-            self.newButtonAction('none');
-            self.newButtonGcode(null);
-        };
+            self.settingsViewModel.saveData();
+
+            self.resetAddView();
+        }
 
         self.removeButton = function(){
             self.settingsViewModel.settings.plugins.physicalbutton.buttons.remove(this);
