@@ -9,8 +9,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            octoprint.plugin.AssetPlugin
                            ):
     def on_after_startup(self):
-        self._logger.info("Physical Button plugin started")
-        
+        self._logger.info("Saved buttons have been initialized")
+
+    def on_settings_save(self, data):
+        self._logger.info("Saved and initialized buttons")
 
     def get_settings_defaults(self):
         return dict(
