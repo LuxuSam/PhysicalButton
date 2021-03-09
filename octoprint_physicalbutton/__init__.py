@@ -2,6 +2,7 @@
 from __future__ import absolute_import
 
 import octoprint.plugin
+#import RPi.GPIO as GPIO
 
 class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            octoprint.plugin.SettingsPlugin,
@@ -12,13 +13,36 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         self._logger.info("Saved buttons have been initialized")
 
     def on_settings_save(self, data):
-        self._logger.info("Saved and initialized buttons")
+        ##Handle old configuration (remove old interrupts)
+        self._logger.info("Old Button configuration:")
+        for button in self._settings.get(["buttons"]):
+            buttonGPIO = int(button.get("gpio"))
+            #GPIO.remove_event_detect(buttonGPIO)
+
+        ##Save new settings
+        octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
+
+        ##Handle new configuration
+        self._logger.info("New Button configuration:")
+        for button in self._settings.get(["buttons"]):
+            buttonGPIO = int(button.get("gpio"))
+            buttonMode = button.get("buttonMode")
+            buttonTime = int(button.get("buttonTime"))
+            if buttonMode == "Normally Open (NO)" :
+                #GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput(buttonGPIO), bouncetime = buttonTime)
+                self._logger.info("added (NO) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
+            if buttonMode == "Normally Closed (NC)" :
+                #GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput(buttonGPIO), bouncetime = buttonTime)
+                self._logger.info("added (NC) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
+
+
+        self.reactToInput(2)
+        self._logger.info("Saved and initialized new button settings")
 
     def get_settings_defaults(self):
         return dict(
             buttons = []
         )
-
 
 	##~~ Softwareupdate hook
     def get_update_information(self):
@@ -42,6 +66,23 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
     def get_assets(self):
         return dict(js=["js/physicalbutton.js"])
+
+    def reactToInput(self, channel):
+        reactButtons = []
+        #get triggered buttons
+        for button in self._settings.get(["buttons"]):
+            if int(button.get("gpio")) == channel:
+                reactButtons.append(button)
+
+        #execute activity specified by triggered buttons
+        for button in reactButtons:
+            if button.get("show") == "action" :
+                action = button.get("action")
+                self._logger.info(action)
+            else :
+                gcode = button.get("gcode")
+                self._logger.info(gcode)
+
 
 
 
