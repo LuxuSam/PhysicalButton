@@ -73,14 +73,12 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         for button in self._settings.get(["buttons"]):
             if int(button.get("gpio")) == channel:
                 reactButtons.append(button)
-
         #execute activity specified by triggered buttons
         for button in reactButtons:
             if button.get("show") == "action" :
                 #get specified action
                 action = button.get("action")
-                #send action to printer
-                self._logger.info(action)
+                self.sendAction(action)
 
             if button.get("show") == "gcode" :
                 #split gcode lines in single commands without comment and add to list
@@ -90,8 +88,43 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                     command = temp.split(";")[0]
                     commandList.append(command)
                 #send commandList to printer
-                self._logger.info(commandList)
+                self.sendGcode(commandList)
 
+
+    def sendGcode(self, gcodeCommand):
+        self._logger.info(gcodeCommand)
+        #self._printer.commands(gcodeCommand, force = False)
+
+    def sendAction(self, action):
+        if action == "cancel":
+            self._logger.info(action)
+            #self._printer.cancel_print()
+            return
+        if action ==  "connect":
+            self._logger.info(action)
+            #self._printer.connect()
+            return
+        if action ==  "disconnect":
+            self._logger.info(action)
+            #self._printer.disconnect()
+            return
+        if action ==  "home":
+            self._logger.info(action)
+            #self._printer.home(["x","y","z"])
+            return
+        if action ==  "pause":
+            self._logger.info(action)
+            #self._printer.pause_print()
+            return
+        if action ==  "resume":
+            self._logger.info(action)
+            #self._printer.resume_print()
+            return
+        if action ==  "start":
+            self._logger.info(action)
+            #self._printer.start_print()
+            return
+        self._logger.info("No action selected or action (yet) unknown")
 
 
 __plugin_name__ = "Physical Button"
