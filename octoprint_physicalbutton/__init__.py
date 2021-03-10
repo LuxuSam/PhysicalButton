@@ -76,17 +76,14 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         #execute activity specified by triggered buttons
         for button in reactButtons:
             if button.get("show") == "action" :
-                #get specified action
-                action = button.get("action")
-                self.sendAction(action)
+                #send specified action
+                self.sendAction(button.get("action"))
 
             if button.get("show") == "gcode" :
                 #split gcode lines in single commands without comment and add to list
-                gcode = button.get("gcode")
                 commandList = []
-                for temp in gcode.splitlines():
-                    command = temp.split(";")[0].rstrip().lstrip()
-                    commandList.append(command)
+                for temp in button.get("gcode").splitlines():
+                    commandList.append(temp.split(";")[0].strip())
                 #send commandList to printer
                 self.sendGcode(commandList)
 
