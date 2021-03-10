@@ -85,7 +85,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 gcode = button.get("gcode")
                 commandList = []
                 for temp in gcode.splitlines():
-                    command = temp.split(";")[0]
+                    command = temp.split(";")[0].rstrip().lstrip()
                     commandList.append(command)
                 #send commandList to printer
                 self.sendGcode(commandList)
