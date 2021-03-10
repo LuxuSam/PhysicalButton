@@ -28,14 +28,15 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             buttonGPIO = int(button.get("gpio"))
             buttonMode = button.get("buttonMode")
             buttonTime = int(button.get("buttonTime"))
+            ##TODO: maybe check if gpio was already added 
             if buttonMode == "Normally Open (NO)" :
                 #GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput(buttonGPIO), bouncetime = buttonTime)
                 self._logger.info("added (NO) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
             if buttonMode == "Normally Closed (NC)" :
-                #GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput(buttonGPIO), bouncetime = buttonTime)
+                #GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput(buttonGPIO), bouncetime = buttonTime)
                 self._logger.info("added (NC) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
 
-
+        #reactToInput here to test functionality on computer instead of raspberry pi
         self.reactToInput(2)
         self._logger.info("Saved and initialized new button settings")
 
