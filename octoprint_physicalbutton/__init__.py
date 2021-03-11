@@ -2,7 +2,7 @@
 from __future__ import absolute_import
 
 import octoprint.plugin
-#import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 
 class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            octoprint.plugin.SettingsPlugin,
