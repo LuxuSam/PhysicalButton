@@ -21,7 +21,7 @@ plugin_version = "0.0.1"
 plugin_description = """Add physical buttons to your octoprint"""
 
 # The plugin's author. Can be overwritten within OctoPrint's internal data via __plugin_author__ in the plugin module
-plugin_author = "Sam"
+plugin_author = "Sam Mattiussi"
 
 # The plugin's author's mail address.
 plugin_author_email = "you@example.com"
