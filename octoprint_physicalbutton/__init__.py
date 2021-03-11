@@ -17,7 +17,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         self._logger.info("Old Button configuration:")
         for button in self._settings.get(["buttons"]):
             buttonGPIO = int(button.get("gpio"))
-            #GPIO.remove_event_detect(buttonGPIO)
+            GPIO.remove_event_detect(buttonGPIO)
 
         ##Save new settings
         octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
@@ -28,16 +28,16 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             buttonGPIO = int(button.get("gpio"))
             buttonMode = button.get("buttonMode")
             buttonTime = int(button.get("buttonTime"))
-            #GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+            GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
             if buttonMode == "Normally Open (NO)" :
-                #GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput(buttonGPIO), bouncetime = buttonTime)
-                self._logger.info("added (NO) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
+                GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput(buttonGPIO), bouncetime = buttonTime)
+                #self._logger.info("added (NO) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
             if buttonMode == "Normally Closed (NC)" :
-                #GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput(buttonGPIO), bouncetime = buttonTime)
-                self._logger.info("added (NC) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
+                GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput(buttonGPIO), bouncetime = buttonTime)
+                #self._logger.info("added (NC) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
 
         #reactToInput here to test functionality on computer instead of raspberry pi
-        self.reactToInput(2)
+        #self.reactToInput(2)
         self._logger.info("Saved and initialized new button settings")
 
     def get_settings_defaults(self):
@@ -90,37 +90,37 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
 
     def sendGcode(self, gcodeCommand):
-        self._logger.info(gcodeCommand)
-        #self._printer.commands(gcodeCommand, force = False)
+        #self._logger.info(gcodeCommand)
+        self._printer.commands(gcodeCommand, force = False)
 
     def sendAction(self, action):
         if action == "cancel":
-            self._logger.info(action)
-            #self._printer.cancel_print()
+            #self._logger.info(action)
+            self._printer.cancel_print()
             return
         if action ==  "connect":
-            self._logger.info(action)
-            #self._printer.connect()
+            #self._logger.info(action)
+            self._printer.connect()
             return
         if action ==  "disconnect":
-            self._logger.info(action)
-            #self._printer.disconnect()
+            #self._logger.info(action)
+            self._printer.disconnect()
             return
         if action ==  "home":
-            self._logger.info(action)
-            #self._printer.home(["x","y","z"])
+            #self._logger.info(action)
+            self._printer.home(["x","y","z"])
             return
         if action ==  "pause":
-            self._logger.info(action)
-            #self._printer.pause_print()
+            #self._logger.info(action)
+            self._printer.pause_print()
             return
         if action ==  "resume":
-            self._logger.info(action)
-            #self._printer.resume_print()
+            #self._logger.info(action)
+            self._printer.resume_print()
             return
         if action ==  "start":
-            self._logger.info(action)
-            #self._printer.start_print()
+            #self._logger.info(action)
+            self._printer.start_print()
             return
         self._logger.info("No action selected or action (yet) unknown")
 
