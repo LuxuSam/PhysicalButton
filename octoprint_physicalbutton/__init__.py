@@ -31,12 +31,15 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     def on_shutdown(self):
         self._logger.info("Cleaning up GPIOs")
         GPIO.cleanup()
+        for button in self._settings.get(["buttons"]):
+            GPIO.remove_event_detect(int(button.get("gpio")))
 
     def on_settings_save(self, data):
         ##Handle old configuration (remove old interrupts)
         for button in self._settings.get(["buttons"]):
             buttonGPIO = int(button.get("gpio"))
             #self._logger.info("Removed event detect for button %s" %button.get("buttonname"))
+            GPIO.remove_event_detect(buttonGPIO)
             GPIO.cleanup(buttonGPIO)
 
         ##Save new settings
@@ -50,9 +53,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
             if buttonMode == "Normally Open (NO)" :
                 #self._logger.info("added (NO) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
-                GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime = buttonTime)
+                GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime=buttonTime)
             if buttonMode == "Normally Closed (NC)" :
-                GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime = buttonTime)
+                GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime=buttonTime)
                 #self._logger.info("added (NC) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
         #self._logger.info("Saved and initialized new button settings")
 
@@ -85,6 +88,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         return dict(js=["js/physicalbutton.js"])
 
     def reactToInput(self, channel):
+        #time.sleep(0.1)
+        self._logger.info("Button pressed at %s" %time.time())
         reactButtons = []
         #get triggered buttons
         for button in self._settings.get(["buttons"]):
