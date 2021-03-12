@@ -103,8 +103,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
 
     def sendGcode(self, gcodeCommand):
-        self._logger.info(gcodeCommand)
-        #self._printer.commands(gcodeCommand, force = False)
+        self._printer.commands(gcodeCommand, force = False)
 
     def sendAction(self, action):
         if action == "cancel":
