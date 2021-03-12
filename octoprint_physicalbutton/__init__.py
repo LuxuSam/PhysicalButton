@@ -12,8 +12,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            ):
     def on_after_startup(self):
         self._logger.info("Saved buttons have been initialized")
-        GPIO.cleanup()
-        GPIO.setmode(GPIO.BCM)
 
     def on_shutdown(self):
         self._logger.info("Cleaning up GPIOs")
