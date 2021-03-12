@@ -38,10 +38,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             self._logger.info("Setting up GPIO %s" %buttonGPIO)
             GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
             if buttonMode == "Normally Open (NO)" :
-                GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput(buttonGPIO), bouncetime = buttonTime)
                 self._logger.info("added (NO) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
+                GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime = buttonTime)
             if buttonMode == "Normally Closed (NC)" :
-                GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput(buttonGPIO), bouncetime = buttonTime)
+                GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime = buttonTime)
                 self._logger.info("added (NC) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
 
         #reactToInput here to test functionality on computer instead of raspberry pi
@@ -79,6 +79,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     def reactToInput(self, channel):
         reactButtons = []
         #get triggered buttons
+        self._logger.info('react to button method ...')
         for button in self._settings.get(["buttons"]):
             if int(button.get("gpio")) == channel:
                 reactButtons.append(button)
