@@ -7,11 +7,17 @@ import RPi.GPIO as GPIO
 class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            octoprint.plugin.SettingsPlugin,
                            octoprint.plugin.TemplatePlugin,
-                           octoprint.plugin.AssetPlugin
+                           octoprint.plugin.AssetPlugin,
+                           octoprint.plugin.ShutdownPlugin
                            ):
     def on_after_startup(self):
         self._logger.info("Saved buttons have been initialized")
+        GPIO.cleanup()
         GPIO.setmode(GPIO.BCM)
+
+    def on_shutdown(self):
+        self._logger.info("Cleaning up GPIOs")
+        GPIO.cleanup()
 
     def on_settings_save(self, data):
         ##Handle old configuration (remove old interrupts)
@@ -19,7 +25,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         for button in self._settings.get(["buttons"]):
             buttonGPIO = int(button.get("gpio"))
             self._logger.info("Removed event detect for button %s" %button.get("buttonname"))
-            GPIO.remove_event_detect(buttonGPIO)
+            GPIO.cleanup(buttonGPIO)
 
         ##Save new settings
         octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
