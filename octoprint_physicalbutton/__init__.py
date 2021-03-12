@@ -2,7 +2,7 @@
 from __future__ import absolute_import
 
 import octoprint.plugin
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 
 class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            octoprint.plugin.SettingsPlugin,
@@ -17,7 +17,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         self._logger.info("Old Button configuration:")
         for button in self._settings.get(["buttons"]):
             buttonGPIO = int(button.get("gpio"))
-            GPIO.remove_event_detect(buttonGPIO)
+            self._logger.info("Removed event detect for button %s" %button.get("buttonname"))
+            #GPIO.remove_event_detect(buttonGPIO)
 
         ##Save new settings
         octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
@@ -28,12 +29,12 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             buttonGPIO = int(button.get("gpio"))
             buttonMode = button.get("buttonMode")
             buttonTime = int(button.get("buttonTime"))
-            GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+            #GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
             if buttonMode == "Normally Open (NO)" :
-                GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput(buttonGPIO), bouncetime = buttonTime)
+                #GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput(buttonGPIO), bouncetime = buttonTime)
                 self._logger.info("added (NO) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
             if buttonMode == "Normally Closed (NC)" :
-                GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput(buttonGPIO), bouncetime = buttonTime)
+                #GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput(buttonGPIO), bouncetime = buttonTime)
                 self._logger.info("added (NC) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
 
         #reactToInput here to test functionality on computer instead of raspberry pi
