@@ -107,31 +107,31 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         self._logger.info("Send Action:")
         if action == "cancel":
             self._logger.info(action)
-            #self._printer.cancel_print()
+            self._printer.cancel_print()
             return
         if action ==  "connect":
             self._logger.info(action)
-            #self._printer.connect()
+            self._printer.connect()
             return
         if action ==  "disconnect":
             self._logger.info(action)
-            #self._printer.disconnect()
+            self._printer.disconnect()
             return
         if action ==  "home":
             self._logger.info(action)
-            #self._printer.home(["x","y","z"])
+            self._printer.home(["x","y","z"])
             return
         if action ==  "pause":
             self._logger.info(action)
-            #self._printer.pause_print()
+            self._printer.pause_print()
             return
         if action ==  "resume":
             self._logger.info(action)
-            #self._printer.resume_print()
+            self._printer.resume_print()
             return
         if action ==  "start":
             self._logger.info(action)
-            #self._printer.start_print()
+            self._printer.start_print()
             return
         self._logger.info("No action selected or action (yet) unknown")
 
