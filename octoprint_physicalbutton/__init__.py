@@ -22,7 +22,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         ##Handle old configuration (remove old interrupts)
         self._logger.info("Old Button configuration:")
         for button in self._settings.get(["buttons"]):
-            buttonGPIO = "GPIO"+str(button.get("gpio"))
+            buttonGPIO = int(button.get("gpio"))
             self._logger.info("Removed event detect for button %s" %button.get("buttonname"))
             GPIO.cleanup(buttonGPIO)
 
@@ -32,9 +32,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         ##Handle new configuration
         self._logger.info("New Button configuration:")
         for button in self._settings.get(["buttons"]):
-            buttonGPIO = "GPIO"+str(button.get("gpio"))
+            buttonGPIO = int(button.get("gpio"))
             buttonMode = button.get("buttonMode")
             buttonTime = int(button.get("buttonTime"))
+            self._logger.info("Setting up GPIO %s" %buttonGPIO)
             GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
             if buttonMode == "Normally Open (NO)" :
                 #GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput(buttonGPIO), bouncetime = buttonTime)
