@@ -16,7 +16,7 @@ $(function() {
                                     '12','13','14','15','16','17','18','19',
                                     '20','21','22','23','24','25','26','27']);
         //actions:
-        self.actions = ko.observable(['none','start','cancel','pause','resume','connect','disconnect']);
+        self.actions = ko.observable(['none','start','cancel','pause','resume','connect','disconnect','home']);
         //button modes:
         self.buttonModes = ko.observable(['Normally Open (NO)', 'Normally Closed (NC)']);
 
