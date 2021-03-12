@@ -11,25 +11,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            octoprint.plugin.ShutdownPlugin
                            ):
     def on_after_startup(self):
-        self._logger.info("Saved buttons have been initialized")
         GPIO.setmode(GPIO.BCM)
 
-    def on_shutdown(self):
-        self._logger.info("Cleaning up GPIOs")
-        GPIO.cleanup()
-
-    def on_settings_save(self, data):
-        ##Handle old configuration (remove old interrupts)
-        self._logger.info("Old Button configuration:")
-        for button in self._settings.get(["buttons"]):
-            buttonGPIO = int(button.get("gpio"))
-            self._logger.info("Removed event detect for button %s" %button.get("buttonname"))
-            GPIO.cleanup(buttonGPIO)
-
-        ##Save new settings
-        octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
-
-        ##Handle new configuration
         self._logger.info("New Button configuration:")
         for button in self._settings.get(["buttons"]):
             buttonGPIO = int(button.get("gpio"))
@@ -43,10 +26,35 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             if buttonMode == "Normally Closed (NC)" :
                 GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime = buttonTime)
                 self._logger.info("added (NC) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
+            self._logger.info("Saved buttons have been initialized")
 
-        #reactToInput here to test functionality on computer instead of raspberry pi
-        #self.reactToInput(2)
-        self._logger.info("Saved and initialized new button settings")
+    def on_shutdown(self):
+        self._logger.info("Cleaning up GPIOs")
+        GPIO.cleanup()
+
+    def on_settings_save(self, data):
+        ##Handle old configuration (remove old interrupts)
+        for button in self._settings.get(["buttons"]):
+            buttonGPIO = int(button.get("gpio"))
+            #self._logger.info("Removed event detect for button %s" %button.get("buttonname"))
+            GPIO.cleanup(buttonGPIO)
+
+        ##Save new settings
+        octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
+
+        ##Handle new configuration
+        for button in self._settings.get(["buttons"]):
+            buttonGPIO = int(button.get("gpio"))
+            buttonMode = button.get("buttonMode")
+            buttonTime = int(button.get("buttonTime"))
+            GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+            if buttonMode == "Normally Open (NO)" :
+                #self._logger.info("added (NO) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
+                GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime = buttonTime)
+            if buttonMode == "Normally Closed (NC)" :
+                GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime = buttonTime)
+                #self._logger.info("added (NC) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
+        #self._logger.info("Saved and initialized new button settings")
 
     def get_settings_defaults(self):
         return dict(
@@ -79,7 +87,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     def reactToInput(self, channel):
         reactButtons = []
         #get triggered buttons
-        self._logger.info('react to button method ...')
         for button in self._settings.get(["buttons"]):
             if int(button.get("gpio")) == channel:
                 reactButtons.append(button)
