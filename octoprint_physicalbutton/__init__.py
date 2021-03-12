@@ -3,7 +3,6 @@ from __future__ import absolute_import
 
 import octoprint.plugin
 import RPi.GPIO as GPIO
-import time
 
 class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            octoprint.plugin.SettingsPlugin,
@@ -11,26 +10,23 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            octoprint.plugin.AssetPlugin,
                            octoprint.plugin.ShutdownPlugin
                            ):
+
     def on_after_startup(self):
         GPIO.setmode(GPIO.BCM)
-
-        self._logger.info("New Button configuration:")
         for button in self._settings.get(["buttons"]):
             buttonGPIO = int(button.get("gpio"))
             buttonMode = button.get("buttonMode")
             buttonTime = int(button.get("buttonTime"))
-            self._logger.info("Setting up GPIO %s" %buttonGPIO)
+            #self._logger.info("Setting up GPIO %s" %buttonGPIO)
             GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
             if buttonMode == "Normally Open (NO)" :
-                self._logger.info("added (NO) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
                 GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime = buttonTime)
             if buttonMode == "Normally Closed (NC)" :
                 GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime = buttonTime)
-                self._logger.info("added (NC) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
             self._logger.info("Saved buttons have been initialized")
 
     def on_shutdown(self):
-        self._logger.info("Cleaning up GPIOs")
+        self._logger.info("Cleaning up used GPIOs before shutting down ...")
         GPIO.cleanup()
         for button in self._settings.get(["buttons"]):
             GPIO.remove_event_detect(int(button.get("gpio")))
@@ -53,12 +49,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             buttonTime = int(button.get("buttonTime"))
             GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
             if buttonMode == "Normally Open (NO)" :
-                #self._logger.info("added (NO) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
                 GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime=buttonTime)
             if buttonMode == "Normally Closed (NC)" :
                 GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime=buttonTime)
-                #self._logger.info("added (NC) button for gpio%s with buttontime : %s" %(buttonGPIO,buttonTime))
-        #self._logger.info("Saved and initialized new button settings")
 
     def get_settings_defaults(self):
         return dict(
@@ -89,8 +82,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         return dict(js=["js/physicalbutton.js"])
 
     def reactToInput(self, channel):
-        #time.sleep(0.1)
-        self._logger.info("Button pressed at %s" %time.time())
         reactButtons = []
         #get triggered buttons
         for button in self._settings.get(["buttons"]):
@@ -112,38 +103,29 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
 
     def sendGcode(self, gcodeCommand):
-        self._logger.info("Send GCODE:")
         self._logger.info(gcodeCommand)
         #self._printer.commands(gcodeCommand, force = False)
 
     def sendAction(self, action):
-        self._logger.info("Send Action:")
         if action == "cancel":
-            self._logger.info(action)
             self._printer.cancel_print()
             return
         if action ==  "connect":
-            self._logger.info(action)
             self._printer.connect()
             return
         if action ==  "disconnect":
-            self._logger.info(action)
             self._printer.disconnect()
             return
         if action ==  "home":
-            self._logger.info(action)
             self._printer.home(["x","y","z"])
             return
         if action ==  "pause":
-            self._logger.info(action)
             self._printer.pause_print()
             return
         if action ==  "resume":
-            self._logger.info(action)
             self._printer.resume_print()
             return
         if action ==  "start":
-            self._logger.info(action)
             self._printer.start_print()
             return
         self._logger.info("No action selected or action (yet) unknown")
