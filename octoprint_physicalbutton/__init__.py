@@ -86,7 +86,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         for button in reactButtons:
             if button.get("show") == "action" :
                 #send specified action
-                self.sendAction(button.get("action"))
+                self._logger.info("Send Action!")
+                #self.sendAction(button.get("action"))
 
             if button.get("show") == "gcode" :
                 #split gcode lines in single commands without comment and add to list
@@ -94,7 +95,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 for temp in button.get("gcode").splitlines():
                     commandList.append(temp.split(";")[0].strip())
                 #send commandList to printer
-                self.sendGcode(commandList)
+                self._logger.info("Send Gcode!")
+                #self.sendGcode(commandList)
 
 
     def sendGcode(self, gcodeCommand):
