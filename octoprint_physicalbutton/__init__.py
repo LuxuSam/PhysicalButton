@@ -3,6 +3,7 @@ from __future__ import absolute_import
 
 import octoprint.plugin
 import RPi.GPIO as GPIO
+import time
 
 class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            octoprint.plugin.SettingsPlugin,
