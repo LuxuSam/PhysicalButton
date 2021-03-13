@@ -3,6 +3,7 @@ from __future__ import absolute_import
 
 import octoprint.plugin
 import RPi.GPIO as GPIO
+import time
 
 class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            octoprint.plugin.SettingsPlugin,
@@ -87,6 +88,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         for button in self._settings.get(["buttons"]):
             if int(button.get("gpio")) == channel:
                 reactButtons.append(button)
+
+         if not debounce(channel):
+             return
+
         #execute activity specified by triggered buttons
         for button in reactButtons:
             if button.get("show") == "action" :
@@ -100,6 +105,16 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                     commandList.append(temp.split(";")[0].strip())
                 #send commandList to printer
                 self.sendGcode(commandList)
+
+    def debounce(self, channel):
+        timepressedButton = time.time()
+        buttonState = GPIO.input(channel)
+        bounceTime = int(button.get("buttonTime"))
+        while (time.time() < timepressedButton + bounceTime):
+            pass
+        if (buttonState != GPIO.input(channel)):
+            return False
+        return True
 
 
     def sendGcode(self, gcodeCommand):
