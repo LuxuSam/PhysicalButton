@@ -89,7 +89,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             if int(button.get("gpio")) == channel:
                 reactButtons.append(button)
 
-        if not debounce(channel):
+        if not debounce(channel) :
             return
 
         #execute activity specified by triggered buttons
