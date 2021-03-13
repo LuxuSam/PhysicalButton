@@ -11,6 +11,7 @@ or manually using this URL:
     https://github.com/LuxuSam/PhysicalButton/archive/master.zip
 
 The Buttons have to be plugged in to a ground pin and the desired GPIO Pin that you want to use.
+The GPIO is chosen in BOARD mode.
 
 
 ## Configuration
