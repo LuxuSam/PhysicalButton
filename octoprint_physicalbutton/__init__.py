@@ -101,27 +101,21 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         #    pass
         time.sleep(bounceTime/1000)
 
-        if GPIO.input(channel) != buttonState:
-            self._logger.info("GPIO Input: %s" %GPIO.input(channel))
-            self._logger.info("Bttn State: %s" %buttonState)
-            return
+        if GPIO.input(channel) == buttonState:
+            #execute activity specified by triggered buttons
+            for button in reactButtons:
+                self._logger.info("Reacting to button: %s" %button.get("buttonname"))
+                if button.get("show") == "action" :
+                    #send specified action
+                    self.sendAction(button.get("action"))
 
-        #execute activity specified by triggered buttons
-        for button in reactButtons:
-            self._logger.info("Reacting to button: %s" %button.get("buttonname"))
-            if button.get("show") == "action" :
-                #send specified action
-                self.sendAction(button.get("action"))
-
-            if button.get("show") == "gcode" :
-                #split gcode lines in single commands without comment and add to list
-                commandList = []
-                for temp in button.get("gcode").splitlines():
-                    commandList.append(temp.split(";")[0].strip())
-                #send commandList to printer
-                self.sendGcode(commandList)
-
-        alreadyRunning = False
+                if button.get("show") == "gcode" :
+                    #split gcode lines in single commands without comment and add to list
+                    commandList = []
+                    for temp in button.get("gcode").splitlines():
+                        commandList.append(temp.split(";")[0].strip())
+                    #send commandList to printer
+                    self.sendGcode(commandList)
 
     def sendGcode(self, gcodeCommand):
         self._printer.commands(gcodeCommand, force = False)
