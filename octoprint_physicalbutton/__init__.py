@@ -85,6 +85,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         return dict(js=["js/physicalbutton.js"])
 
     def reactToInput(self, channel):
+        GPIO.remove_event_detect(channel)
+
         reactButtons = []
         #get triggered buttons
         for button in self._settings.get(["buttons"]):
@@ -95,6 +97,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         timePressedButton = time.time()
         button = reactButtons[0]
         bounceTime = int(button.get("buttonTime"))
+
+        buttonState = 0
         if button.get("buttonMode") == "Normally Open (NO)":
             buttonState = 0
         else:
@@ -125,6 +129,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                     self.sendGcode(commandList)
                 #Give user time to release button again
                 time.sleep(0.75)
+        if buttonState == 0:
+            GPIO.add_event_detect(channel, GPIO.FALLING, callback=self.reactToInput, bouncetime=bounceTime)
+        else:
+            GPIO.add_event_detect(channel, GPIO.RISING, callback=self.reactToInput, bounceTime=bounceTime)
 
     def sendGcode(self, gcodeCommand):
         self._printer.commands(gcodeCommand, force = False)
