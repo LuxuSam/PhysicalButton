@@ -21,18 +21,20 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             #self._logger.info("Setting up GPIO %s" %buttonGPIO)
             GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
             if buttonMode == "Normally Open (NO)" :
-                GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime = buttonTime)
+                GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput)
             if buttonMode == "Normally Closed (NC)" :
-                GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime = buttonTime)
+                GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput)
             self._logger.info("Saved buttons have been initialized")
 
     def on_shutdown(self):
         self._logger.info("Cleaning up used GPIOs before shutting down ...")
-        GPIO.cleanup()
+        GPIO.setmode(GPIO.BCM)
         for button in self._settings.get(["buttons"]):
             GPIO.remove_event_detect(int(button.get("gpio")))
+        GPIO.cleanup()
 
     def on_settings_save(self, data):
+        GPIO.setmode(GPIO.BCM)
         ##Handle old configuration (remove old interrupts)
         for button in self._settings.get(["buttons"]):
             buttonGPIO = int(button.get("gpio"))
@@ -52,7 +54,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             if buttonMode == "Normally Open (NO)" :
                 GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime=buttonTime)
             if buttonMode == "Normally Closed (NC)" :
-                GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime=buttonTime)
+                GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bounceTime=buttonTime)
 
     def get_settings_defaults(self):
         return dict(
@@ -83,45 +85,54 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         return dict(js=["js/physicalbutton.js"])
 
     def reactToInput(self, channel):
+        GPIO.remove_event_detect(channel)
+
         reactButtons = []
         #get triggered buttons
         for button in self._settings.get(["buttons"]):
             if int(button.get("gpio")) == channel:
                 reactButtons.append(button)
 
-
-        #timepressedButton = time.time()
-        #buttonState = GPIO.input(channel)
-        #bounceTime = int(button.get("buttonTime"))
-        #while (time.time() < timepressedButton + bounceTime):
-        #    pass
-        #if (buttonState != GPIO.input(channel)):
-        #    return
-
-        #execute activity specified by triggered buttons
-        for button in reactButtons:
-            if button.get("show") == "action" :
-                #send specified action
-                self.sendAction(button.get("action"))
-
-            if button.get("show") == "gcode" :
-                #split gcode lines in single commands without comment and add to list
-                commandList = []
-                for temp in button.get("gcode").splitlines():
-                    commandList.append(temp.split(";")[0].strip())
-                #send commandList to printer
-                self.sendGcode(commandList)
-
-    def debounce(self, channel):
-        timepressedButton = time.time()
-        buttonState = GPIO.input(channel)
+        #debounce button / wait until active
+        timePressedButton = time.time()
+        button = reactButtons[0]
         bounceTime = int(button.get("buttonTime"))
-        while (time.time() < timepressedButton + bounceTime):
-            pass
-        if (buttonState != GPIO.input(channel)):
-            return False
-        return True
 
+        buttonState = 0
+        if button.get("buttonMode") == "Normally Open (NO)":
+            buttonState = 0
+        else:
+            buttonState = 1
+        react = False
+
+        #while (time.time()*1000 < timePressedButton*1000 + bounceTime):
+        #    pass
+        time.sleep(bounceTime/1000)
+
+        if GPIO.input(channel) == buttonState:
+            react = True
+
+        if react:
+            #execute activity specified by triggered buttons
+            for button in reactButtons:
+                self._logger.info("Reacting to button: %s" %button.get("buttonname"))
+                if button.get("show") == "action" :
+                    #send specified action
+                    self.sendAction(button.get("action"))
+
+                if button.get("show") == "gcode" :
+                    #split gcode lines in single commands without comment and add to list
+                    commandList = []
+                    for temp in button.get("gcode").splitlines():
+                        commandList.append(temp.split(";")[0].strip())
+                    #send commandList to printer
+                    self.sendGcode(commandList)
+                #Give user time to release button again
+                time.sleep(0.75)
+        if buttonState == 0:
+            GPIO.add_event_detect(channel, GPIO.FALLING, callback=self.reactToInput, bouncetime=bounceTime)
+        else:
+            GPIO.add_event_detect(channel, GPIO.RISING, callback=self.reactToInput, bounceTime=bounceTime)
 
     def sendGcode(self, gcodeCommand):
         self._printer.commands(gcodeCommand, force = False)
