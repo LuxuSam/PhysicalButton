@@ -99,9 +99,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             if buttonState != GPIO.input(channel):
                 self._logger.info("released button")
 
-        if (buttonState != GPIO.input(channel)):
+        if buttonState != GPIO.input(channel):
+            self._logger.info("leaving reachtToInput()!")
             return
-
+        self._logger.info("continue with reachtToInput()")
         #execute activity specified by triggered buttons
         for button in reactButtons:
             if button.get("show") == "action" :
