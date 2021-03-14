@@ -96,7 +96,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         buttonState = GPIO.input(channel)
         bounceTime = int(button.get("buttonTime"))
         while (time.time()*1000 < timePressedButton*1000 + bounceTime):
-            if buttonState != GPIO.input(channel)
+            if buttonState != GPIO.input(channel):
                 self._logger.info("released button")
 
         if (buttonState != GPIO.input(channel)):
