@@ -64,7 +64,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 	##~~ Softwareupdate hook
     def get_update_information(self):
         return {
-            physicalbutton: {
+            "physicalbutton": {
                 "displayName" : "Physical Button",
                 "displayVersion" : self._plugin_version,
                 "type" : "github_release",
