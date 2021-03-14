@@ -94,14 +94,21 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         #debounce button / wait until active
         timePressedButton = time.time()
         button = reactButtons[0]
-        buttonState = GPIO.input(channel)
         bounceTime = int(button.get("buttonTime"))
+        if button.get("buttonMode") == "Normally Open (NO)":
+            buttonState = 0
+        else:
+            buttonState = 1
+        react = False
 
         #while (time.time()*1000 < timePressedButton*1000 + bounceTime):
         #    pass
         time.sleep(bounceTime/1000)
 
         if GPIO.input(channel) == buttonState:
+            react = True
+
+        if react:
             #execute activity specified by triggered buttons
             for button in reactButtons:
                 self._logger.info("Reacting to button: %s" %button.get("buttonname"))
