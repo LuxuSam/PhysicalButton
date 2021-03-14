@@ -92,10 +92,12 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         #debounce button / wait until active
         timePressedButton = time.time()
         buttonState = GPIO.input(channel)
-        bounceTime = int(button.get("buttonTime"))
+        bounceTime = int(reactButtons[0].get("buttonTime"))
+        inputCount = 0
         while (time.time()*1000 < timePressedButton*1000 + bounceTime):
-            pass
-        if (buttonState != GPIO.input(channel)):
+            if GPIO.input(channel) == buttonState:
+                inputCount += 1
+        if (buttonState != GPIO.input(channel) && inputCount <= bounceTime/100):
             return
 
         #execute activity specified by triggered buttons
