@@ -28,11 +28,13 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
     def on_shutdown(self):
         self._logger.info("Cleaning up used GPIOs before shutting down ...")
+        GPIO.setmode(GPIO.BCM)
         GPIO.cleanup()
         for button in self._settings.get(["buttons"]):
             GPIO.remove_event_detect(int(button.get("gpio")))
 
     def on_settings_save(self, data):
+        GPIO.setmode(GPIO.BCM)
         ##Handle old configuration (remove old interrupts)
         for button in self._settings.get(["buttons"]):
             buttonGPIO = int(button.get("gpio"))
@@ -92,9 +94,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         #debounce button / wait until active
         timePressedButton = time.time()
         buttonState = GPIO.input(channel)
-        bounceTime = int(reactButtons[0].get("buttonTime"))
+        bounceTime = int(button.get("buttonTime"))
         while (time.time()*1000 < timePressedButton*1000 + bounceTime):
             pass
+
         if (buttonState != GPIO.input(channel)):
             return
 
