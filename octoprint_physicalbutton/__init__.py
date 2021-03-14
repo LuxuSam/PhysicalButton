@@ -97,7 +97,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         while (time.time()*1000 < timePressedButton*1000 + bounceTime):
             if GPIO.input(channel) == buttonState:
                 inputCount += 1
-        if (buttonState != GPIO.input(channel) && inputCount <= bounceTime/100):
+        if (buttonState != GPIO.input(channel) and inputCount <= bounceTime/100):
             return
 
         #execute activity specified by triggered buttons
