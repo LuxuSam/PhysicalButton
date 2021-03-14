@@ -63,17 +63,29 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
 	##~~ Softwareupdate hook
     def get_update_information(self):
-        return dict(
-        physicalbutton = dict(
-        displayName = "Physical Button",
-        displayVersion = self._plugin_version,
-        type = "github_release",
-        user = "LuxuSam",
-        repo = "PhysicalButton",
-        current = self._plugin_version,
-        pip = "https://github.com/LuxuSam/PhysicalButton/archive/{target_version}.zip"
-        )
-        )
+        return {
+            "physicalbutton": {
+                "displayName" : "Physical Button",
+                "displayVersion" : self._plugin_version,
+                "type" : "github_release",
+                "user" : "LuxuSam",
+                "repo" : "PhysicalButton",
+                "current" : self._plugin_version,
+                "pip" : "https://github.com/LuxuSam/PhysicalButton/archive/{target_version}.zip",
+                "stable_branch": {
+                    "name": "Stable",
+                    "branch": "master",
+                    "comittish": ["master"],
+                },
+                "prerelease_branches": [
+                    {
+                        "name": "Development",
+                        "branch": "development",
+                        "comittish": ["development", "master"],
+                    }
+                ]
+            }
+        }
 
 
     def get_template_configs(self):
