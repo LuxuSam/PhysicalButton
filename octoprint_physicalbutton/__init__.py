@@ -84,7 +84,14 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     def get_assets(self):
         return dict(js=["js/physicalbutton.js"])
 
+    alreadyRunning = False
+
     def reactToInput(self, channel):
+        global alreadyRunning
+        if alreadyRunning == True:
+            return
+        alreadyRunning = True
+
         reactButtons = []
         #get triggered buttons
         for button in self._settings.get(["buttons"]):
@@ -93,15 +100,20 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
         #debounce button / wait until active
         timePressedButton = time.time()
+        button = reactButtons[0]
         buttonState = GPIO.input(channel)
         bounceTime = int(button.get("buttonTime"))
-        while (time.time()*1000 < timePressedButton*1000 + bounceTime):
-            if buttonState != GPIO.input(channel):
-                self._logger.info("released button")
 
-        if buttonState != GPIO.input(channel):
+        while (time.time()*1000 < timePressedButton*1000 + bounceTime):
+            if GPIO.input(channel) != buttonState:
+                self._logger.info("released button")
+            else:
+                self._logger.info("pressed button again")
+
+        if GPIO.input(channel) != buttonState:
             self._logger.info("leaving reachtToInput()!")
             return
+
         self._logger.info("continue with reachtToInput()")
         #execute activity specified by triggered buttons
         for button in reactButtons:
@@ -117,6 +129,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 #send commandList to printer
                 self.sendGcode(commandList)
 
+        alreadyRunning = False
 
     def sendGcode(self, gcodeCommand):
         self._printer.commands(gcodeCommand, force = False)
