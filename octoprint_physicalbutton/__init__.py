@@ -29,9 +29,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     def on_shutdown(self):
         self._logger.info("Cleaning up used GPIOs before shutting down ...")
         GPIO.setmode(GPIO.BCM)
-        GPIO.cleanup()
         for button in self._settings.get(["buttons"]):
             GPIO.remove_event_detect(int(button.get("gpio")))
+        GPIO.cleanup()
 
     def on_settings_save(self, data):
         GPIO.setmode(GPIO.BCM)
