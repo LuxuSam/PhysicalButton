@@ -18,13 +18,13 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             buttonGPIO = int(button.get("gpio"))
             buttonMode = button.get("buttonMode")
             buttonTime = int(button.get("buttonTime"))
-            #self._logger.info("Setting up GPIO %s" %buttonGPIO)
             GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
             if buttonMode == "Normally Open (NO)" :
                 GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput)
             if buttonMode == "Normally Closed (NC)" :
                 GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput)
-            self._logger.info("Saved buttons have been initialized")
+        self._logger.info("Buttons have been set up!")
+
 
     def on_shutdown(self):
         self._logger.info("Cleaning up used GPIOs before shutting down ...")
@@ -32,15 +32,18 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         for button in self._settings.get(["buttons"]):
             GPIO.remove_event_detect(int(button.get("gpio")))
         GPIO.cleanup()
+        self._logger.info("Done!")
+
 
     def on_settings_save(self, data):
         GPIO.setmode(GPIO.BCM)
+
         ##Handle old configuration (remove old interrupts)
         for button in self._settings.get(["buttons"]):
             buttonGPIO = int(button.get("gpio"))
-            #self._logger.info("Removed event detect for button %s" %button.get("buttonname"))
             GPIO.remove_event_detect(buttonGPIO)
             GPIO.cleanup(buttonGPIO)
+        self._logger.info("Removed old button configuration")
 
         ##Save new settings
         octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
@@ -55,11 +58,14 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime=buttonTime)
             if buttonMode == "Normally Closed (NC)" :
                 GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bounceTime=buttonTime)
+        self._logger.info("Added new button configuration")
+
 
     def get_settings_defaults(self):
         return dict(
             buttons = []
         )
+
 
 	##~~ Softwareupdate hook
     def get_update_information(self):
@@ -79,7 +85,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 },
                 "prerelease_branches": [
                     {
-                        "name": "Development",
+                        "name": "Development Releases",
                         "branch": "development",
                         "comittish": ["development", "master"],
                     }
@@ -93,20 +99,22 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             dict(type = "settings", custom_bindings = True)
         ]
 
+
     def get_assets(self):
         return dict(js=["js/physicalbutton.js"])
 
+
     def reactToInput(self, channel):
+        #remove event detect so callback is not called more than once at a time
         GPIO.remove_event_detect(channel)
 
-        reactButtons = []
         #get triggered buttons
+        reactButtons = []
         for button in self._settings.get(["buttons"]):
             if int(button.get("gpio")) == channel:
                 reactButtons.append(button)
 
         #debounce button / wait until active
-        timePressedButton = time.time()
         button = reactButtons[0]
         bounceTime = int(button.get("buttonTime"))
 
@@ -117,17 +125,16 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             buttonState = 1
         react = False
 
-        #while (time.time()*1000 < timePressedButton*1000 + bounceTime):
-        #    pass
+        #Wait time specified by user until recheck the button state
         time.sleep(bounceTime/1000)
-
         if GPIO.input(channel) == buttonState:
             react = True
 
+
+        #execute activity specified by triggered buttons
         if react:
-            #execute activity specified by triggered buttons
             for button in reactButtons:
-                self._logger.info("Reacting to button: %s" %button.get("buttonname"))
+                self._logger.info("Reacting to button: %s ..." %button.get("buttonname"))
                 if button.get("show") == "action" :
                     #send specified action
                     self.sendAction(button.get("action"))
@@ -137,17 +144,23 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                     commandList = []
                     for temp in button.get("gcode").splitlines():
                         commandList.append(temp.split(";")[0].strip())
+
                     #send commandList to printer
                     self.sendGcode(commandList)
+
                 #Give user time to release button again
                 time.sleep(0.75)
+
+        #re-add event detect so callback can be called again
         if buttonState == 0:
             GPIO.add_event_detect(channel, GPIO.FALLING, callback=self.reactToInput, bouncetime=bounceTime)
         else:
             GPIO.add_event_detect(channel, GPIO.RISING, callback=self.reactToInput, bounceTime=bounceTime)
 
+
     def sendGcode(self, gcodeCommand):
         self._printer.commands(gcodeCommand, force = False)
+
 
     def sendAction(self, action):
         if action == "cancel":
@@ -176,6 +189,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
 __plugin_name__ = "Physical Button"
 __plugin_pythoncompat__ = ">=2.7,<4" # python 2 and 3
+
 
 def __plugin_load__():
 	global __plugin_implementation__
