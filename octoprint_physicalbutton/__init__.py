@@ -123,6 +123,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                         commandList.append(temp.split(";")[0].strip())
                     #send commandList to printer
                     self.sendGcode(commandList)
+                #Give user time to release button again
+                time.wait(1)
 
     def sendGcode(self, gcodeCommand):
         self._printer.commands(gcodeCommand, force = False)
