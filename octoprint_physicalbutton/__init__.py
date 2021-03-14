@@ -89,7 +89,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             if int(button.get("gpio")) == channel:
                 reactButtons.append(button)
 
-
+        #debounce button / wait until active
         timePressedButton = time.time()
         buttonState = GPIO.input(channel)
         bounceTime = int(button.get("buttonTime"))
@@ -111,16 +111,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                     commandList.append(temp.split(";")[0].strip())
                 #send commandList to printer
                 self.sendGcode(commandList)
-
-    def debounce(self, channel):
-        timepressedButton = time.time()
-        buttonState = GPIO.input(channel)
-        bounceTime = int(button.get("buttonTime"))
-        while (time.time() < timepressedButton + bounceTime):
-            pass
-        if (buttonState != GPIO.input(channel)):
-            return False
-        return True
 
 
     def sendGcode(self, gcodeCommand):
