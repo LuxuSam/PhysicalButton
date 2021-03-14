@@ -84,14 +84,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     def get_assets(self):
         return dict(js=["js/physicalbutton.js"])
 
-    alreadyRunning = False
-
     def reactToInput(self, channel):
-        global alreadyRunning
-        if alreadyRunning == True:
-            return
-        alreadyRunning = True
-
         reactButtons = []
         #get triggered buttons
         for button in self._settings.get(["buttons"]):
@@ -104,19 +97,16 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         buttonState = GPIO.input(channel)
         bounceTime = int(button.get("buttonTime"))
 
-        while (time.time()*1000 < timePressedButton*1000 + bounceTime):
-            if GPIO.input(channel) != buttonState:
-                self._logger.info("released button")
-            else:
-                self._logger.info("pressed button again")
+        #while (time.time()*1000 < timePressedButton*1000 + bounceTime):
+        #    pass
+        time.sleep(bounceTime/1000)
 
         if GPIO.input(channel) != buttonState:
-            self._logger.info("leaving reachtToInput()!")
             return
 
-        self._logger.info("continue with reachtToInput()")
         #execute activity specified by triggered buttons
         for button in reactButtons:
+            self._logger.info("Reacting to button: %s" %button.get("buttonname"))
             if button.get("show") == "action" :
                 #send specified action
                 self.sendAction(button.get("action"))
