@@ -102,6 +102,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         time.sleep(bounceTime/1000)
 
         if GPIO.input(channel) != buttonState:
+            self._logger.info("GPIO Input: %s" %GPIO.input(channel))
+            self._logger.info("Bttn State: %s" %buttonState)
             return
 
         #execute activity specified by triggered buttons
