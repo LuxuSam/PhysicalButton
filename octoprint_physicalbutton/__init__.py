@@ -14,15 +14,21 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
     def on_after_startup(self):
         GPIO.setmode(GPIO.BCM)
+        NO = []
+        NC = []
         for button in self._settings.get(["buttons"]):
             buttonGPIO = int(button.get("gpio"))
             buttonMode = button.get("buttonMode")
             buttonTime = int(button.get("buttonTime"))
             GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
-            if buttonMode == "Normally Open (NO)" :
-                GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput)
-            if buttonMode == "Normally Closed (NC)" :
-                GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput)
+            if buttonMode == "Normally Open (NO)" and buttonGPIO not in NO:
+                GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime=buttonTime)
+                NO.append(buttonGPIO)
+            if buttonMode == "Normally Closed (NC)" and buttonGPIO not in NC :
+                GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime=buttonTime)
+                NC.append(buttonGPIO)
+        NO.clear()
+        NC.clear()
         self._logger.info("Buttons have been set up!")
 
 
@@ -60,7 +66,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime=buttonTime)
                 NO.append(buttonGPIO)
             if buttonMode == "Normally Closed (NC)" and buttonGPIO not in NC :
-                GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bounceTime=buttonTime)
+                GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime=buttonTime)
                 NC.append(buttonGPIO)
         NO.clear()
         NC.clear()
