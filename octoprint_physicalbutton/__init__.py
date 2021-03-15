@@ -117,7 +117,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         reactButtons = []
         for button in self._settings.get(["buttons"]):
             if int(button.get("gpio")) == channel:
-                if rising and button.get("buttonMode") == "Normally Closed (NC)": 
+                #add button for corresponding edge detection
+                if rising and button.get("buttonMode") == "Normally Closed (NC)":
                     reactButtons.append(button)
                 if not rising and button.get("buttonMode") == "Normally Open (NO)":
                     reactButtons.append(button)
