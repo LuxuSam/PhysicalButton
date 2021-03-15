@@ -175,7 +175,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         if buttonState == 0:
             GPIO.add_event_detect(channel, GPIO.FALLING, callback=self.reactToInput, bouncetime=bounceTime)
         else:
-            GPIO.add_event_detect(channel, GPIO.RISING, callback=self.reactToInput, bounceTime=bounceTime)
+            GPIO.add_event_detect(channel, GPIO.RISING, callback=self.reactToInput, bouncetime=bounceTime)
 
 
     def sendGcode(self, gcodeCommand):
