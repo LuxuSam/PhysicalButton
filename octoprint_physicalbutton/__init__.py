@@ -121,9 +121,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         GPIO.remove_event_detect(channel)
 
         if GPIO.input(channel) == 1:
-            rising = False
-        else:
             rising = True
+        else:
+            rising = False
 
         #get triggered buttons
         reactButtons = []
