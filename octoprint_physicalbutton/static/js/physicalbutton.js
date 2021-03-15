@@ -12,9 +12,9 @@ $(function() {
         self.settingsViewModel = parameters[0];
 
         //GPIOs:
-        self.gpios = ko.observable(['2','3','4','5','6','7','8','9','10','11',
-                                    '12','13','14','15','16','17','18','19',
-                                    '20','21','22','23','24','25','26','27']);
+        self.gpios = ko.observable(['4','5','6','7','8','9','10','11','12',
+                                    '13','16','17','18','20','21','22','23',
+                                    '24','25','26','27']);
         //actions:
         self.actions = ko.observable(['cancel','connect','disconnect','home','pause','resume','start']);
         //button modes:
