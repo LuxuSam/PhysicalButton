@@ -49,13 +49,13 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
 
         ##Handle new configuration
+        NO = []
+        NC = []
         for button in self._settings.get(["buttons"]):
             buttonGPIO = int(button.get("gpio"))
             buttonMode = button.get("buttonMode")
             buttonTime = int(button.get("buttonTime"))
             GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
-            NO = []
-            NC = []
             if buttonMode == "Normally Open (NO)" and buttonGPIO not in NO:
                 GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime=buttonTime)
                 NO.append(buttonGPIO)
