@@ -14,8 +14,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
     def on_after_startup(self):
         GPIO.setmode(GPIO.BCM)
-        NO = []
-        NC = []
+        alreadyAdded = []
         for button in self._settings.get(["buttons"]):
             buttonGPIO = int(button.get("gpio"))
             buttonMode = button.get("buttonMode")
@@ -23,12 +22,11 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
             if buttonMode == "Normally Open (NO)" and buttonGPIO not in NO:
                 GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime=buttonTime)
-                NO.append(buttonGPIO)
+                alreadyAdded.append(buttonGPIO)
             if buttonMode == "Normally Closed (NC)" and buttonGPIO not in NC :
                 GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime=buttonTime)
-                NC.append(buttonGPIO)
-        NO.clear()
-        NC.clear()
+                alreadyAdded.append(buttonGPIO)
+        alreadyAdded.clear()
         self._logger.info("Buttons have been set up!")
 
 
@@ -55,21 +53,19 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
 
         ##Handle new configuration
-        NO = []
-        NC = []
+        alreadyAdded = []
         for button in self._settings.get(["buttons"]):
             buttonGPIO = int(button.get("gpio"))
             buttonMode = button.get("buttonMode")
             buttonTime = int(button.get("buttonTime"))
             GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
-            if buttonMode == "Normally Open (NO)" and buttonGPIO not in NO:
+            if buttonMode == "Normally Open (NO)" and buttonGPIO not in alreadyAdded:
                 GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime=buttonTime)
-                NO.append(buttonGPIO)
-            if buttonMode == "Normally Closed (NC)" and buttonGPIO not in NC :
+                alreadyAdded.append(buttonGPIO)
+            if buttonMode == "Normally Closed (NC)" and buttonGPIO not in alreadyAdded :
                 GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime=buttonTime)
-                NC.append(buttonGPIO)
-        NO.clear()
-        NC.clear()
+                alreadyAdded.append(buttonGPIO)
+        alreadyAdded.clear()
         self._logger.info("Added new button configuration")
 
 
