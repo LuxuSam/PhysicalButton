@@ -41,8 +41,13 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
         self._logger.info("Cleaning up used GPIOs before shutting down ...")
         GPIO.setmode(GPIO.BCM)
+        alreadyRemoved = []
         for button in self._settings.get(["buttons"]):
-            GPIO.remove_event_detect(int(button.get("gpio")))
+            buttonGPIO = int(button.get("gpio"))
+            if buttonGPIO not in alreadyRemoved:
+                GPIO.remove_event_detect(buttonGPIO)
+                alreadyRemoved.append(buttonGPIO)
+        alreadyRemoved.clean()
         GPIO.cleanup()
         self._logger.info("Done!")
 
@@ -52,12 +57,15 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
         if self._settings.get(["buttons"]) != None and self._settings.get(["buttons"]) != []:
             ##Handle old configuration (remove old interrupts)
+            alreadyRemoved = []
             for button in self._settings.get(["buttons"]):
                 buttonGPIO = int(button.get("gpio"))
-                GPIO.remove_event_detect(buttonGPIO)
-                GPIO.cleanup(buttonGPIO)
-                self._logger.info("Removed old button configuration")
-
+                if buttonGPIO not in alreadyRemoved:
+                    GPIO.remove_event_detect(buttonGPIO)
+                    GPIO.cleanup(buttonGPIO)
+                    alreadyRemoved.append(buttonGPIO)
+            self._logger.info("Removed old button configuration")
+            alreadyRemoved.clean()
                 ##Save new settings
         octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
 
