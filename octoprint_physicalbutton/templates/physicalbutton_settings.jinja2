@@ -146,7 +146,9 @@
                                     <label>Mode:</label>
                                 </td>
                                 <td>
-                                    <select data-bind="value: buttonMode, options:$root.buttonModes"></select>
+                                    <!--TODO: Maybe exchange selct to Label so Mode cannot be changed after initial setup-->
+                                    <label data-bind="text: buttonMode"></label>
+                                    <!--<select data-bind="value: buttonMode, options:$root.buttonModes"></select>-->
                                 </td>
                             </tr>
                             <tr>

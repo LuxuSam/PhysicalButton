@@ -35,7 +35,7 @@ $(function() {
 
         self.resetAddView = function() {
             self.newButtonName(null);
-            self.newButtonGPIO(null);
+            self.newButtonGPIO(' None');
             self.newButtonMode('Normally Open (NO)');
             self.newButtonTime(500);
             self.checkedButton(null);
