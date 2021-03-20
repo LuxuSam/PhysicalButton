@@ -1,4 +1,4 @@
-# Physical Button
+# 🎛 Physical Button 🎛
 
 The PhysicalButton Plugin (hence the name) lets you add physical buttons to your Raspberry Pi.
 The buttons are then able to send GCODE or actions to your printer.
@@ -15,13 +15,19 @@ The GPIO must be chosen in BCM mode (see https://pinout.xyz/).
 If you have other plugins installed that use GPIOs, make sure those plugins are also set to BCM mode.
 
 
-## Configuration
- To add a new button you have to click on the +.
+## 🔧 Configuration 🔧
+ To add a new button you have to click on the ➕.
 
  From there you must enter a button name, the used GPIO and the mode (NO or NC) of the button.
 
- In addition you have to specify a debounce time (or time after which the button activates)
- The last step is to either select Action or GCODE and then specify what should happen upon button activation
+ In addition you have to specify a debounce time (or time after which the button activates).
+ The last step is to either select Action or GCODE and then specify what should happen upon button activation.
 
- After an initial save you can still set the button name, GPIO mode, debounce time and activity.
- You are not able to switch from action to GCODE or from GCODE to action anymore for that button
+ After an initial save you can still set the button name, debounce time and activity.
+ You are not able to switch from action to GCODE or from GCODE to action anymore for that button.
+
+## ⚠️ Use at your own risk ⚠️
+  I am not accountable for any damages made to your printer/raspberry pi when using this plugin (e.g. wrong wiring
+  of buttons, gcode commands that you send with the buttons to your printer, ...).
+
+  When setting the plugin up corresponding to my instructions, nothing should happen.
