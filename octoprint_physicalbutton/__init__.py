@@ -148,7 +148,11 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                     reactButtons.append(button)
                 if not rising and button.get("buttonMode") == "Normally Open (NO)":
                     reactButtons.append(button)
+
         #debounce button / wait until active
+        if not reactButtons:
+            return
+
         button = reactButtons[0]
         bounceTime = int(button.get("buttonTime"))
 
