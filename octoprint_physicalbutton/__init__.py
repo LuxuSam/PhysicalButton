@@ -133,41 +133,46 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     def reactToInput(self, channel):
         #remove event detect so callback is not called more than once at a time
         GPIO.remove_event_detect(channel)
-
         if GPIO.input(channel) == 1:
             rising = True
+            reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Closed (NC)", self._settings.get(["buttons"])))
         else:
             rising = False
+            reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Open (NO)", self._settings.get(["buttons"])))
 
         #get triggered buttons
-        reactButtons = []
-        for button in self._settings.get(["buttons"]):
-            if int(button.get("gpio")) == channel:
-                #add button for corresponding edge detection
-                if rising and button.get("buttonMode") == "Normally Closed (NC)":
-                    reactButtons.append(button)
-                if not rising and button.get("buttonMode") == "Normally Open (NO)":
-                    reactButtons.append(button)
+        #reactButtons = []
+        #for button in self._settings.get(["buttons"]):
+        #    if int(button.get("gpio")) == channel:
+        #        #add button for corresponding edge detection
+        #        if rising and button.get("buttonMode") == "Normally Closed (NC)":
+        #            reactButtons.append(button)
+        #        if not rising and button.get("buttonMode") == "Normally Open (NO)":
+        #            reactButtons.append(button)
 
         #debounce button / wait until active
         if not reactButtons:
+            if rising:
+                GPIO.add_event_detect(channel, GPIO.RISING, callback=self.reactToInput, bouncetime=100)
+            else:
+                GPIO.add_event_detect(channel, GPIO.FALLING, callback=self.reactToInput, bouncetime=100)
             return
 
         button = reactButtons[0]
         bounceTime = int(button.get("buttonTime"))
 
-        buttonState = 0
         if button.get("buttonMode") == "Normally Open (NO)":
             buttonState = 0
+            eventDetectMode = GPIO.FALLING
         else:
             buttonState = 1
+            eventDetectMode = GPIO.RISING
         react = False
 
         #Wait time specified by user until recheck the button state
         time.sleep(bounceTime/1000)
         if GPIO.input(channel) == buttonState:
             react = True
-
 
         #execute activity specified by triggered buttons
         if react:
@@ -182,7 +187,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                     commandList = []
                     for temp in button.get("gcode").splitlines():
                         commandList.append(temp.split(";")[0].strip())
-
                     #send commandList to printer
                     self.sendGcode(commandList)
 
@@ -190,10 +194,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 time.sleep(0.75)
 
         #re-add event detect so callback can be called again
-        if buttonState == 0:
-            GPIO.add_event_detect(channel, GPIO.FALLING, callback=self.reactToInput, bouncetime=100)
-        else:
-            GPIO.add_event_detect(channel, GPIO.RISING, callback=self.reactToInput, bouncetime=100)
+        GPIO.add_event_detect(channel, eventDetectMode, callback=self.reactToInput, bouncetime=100)
 
 
     def sendGcode(self, gcodeCommand):
