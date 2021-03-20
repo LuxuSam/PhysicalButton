@@ -26,7 +26,7 @@ If you have other plugins installed that use GPIOs, make sure those plugins are 
  After an initial save you can still set the button name, debounce time and activity.
  You are not able to switch from action to GCODE or from GCODE to action anymore for that button.
 
-# Note:
+### Note:
  When you set up multiple "buttons" for one GPIO, only the bounce time of the first created button is used.
  The specified GCODE commands or actions for the other "buttons" will be executed in order of your button list.
 
