@@ -23,5 +23,5 @@ If you have other plugins installed that use GPIOs, make sure those plugins are 
  In addition you have to specify a debounce time (or time after which the button activates)
  The last step is to either select Action or GCODE and then specify what should happen upon button activation
 
- After an initial save you can still set the button name, GPIO mode, debounce time and activity.
+ After an initial save you can still set the button name, debounce time and activity.
  You are not able to switch from action to GCODE or from GCODE to action anymore for that button
