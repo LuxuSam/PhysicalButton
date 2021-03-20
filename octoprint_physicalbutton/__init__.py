@@ -47,7 +47,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             if buttonGPIO not in alreadyRemoved:
                 GPIO.remove_event_detect(buttonGPIO)
                 alreadyRemoved.append(buttonGPIO)
-        alreadyRemoved.clean()
+        alreadyRemoved.clear()
         GPIO.cleanup()
         self._logger.info("Done!")
 
@@ -65,7 +65,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                     GPIO.cleanup(buttonGPIO)
                     alreadyRemoved.append(buttonGPIO)
             self._logger.info("Removed old button configuration")
-            alreadyRemoved.clean()
+            alreadyRemoved.clear()
                 ##Save new settings
         octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
 
