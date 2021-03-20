@@ -12,7 +12,7 @@ $(function() {
         self.settingsViewModel = parameters[0];
 
         //GPIOs:
-        self.gpios = ko.observable(['4','5','6','7','8','9','10','11','12',
+        self.gpios = ko.observable([' None','4','5','6','7','8','9','10','11','12',
                                     '13','16','17','18','20','21','22','23',
                                     '24','25','26','27']);
         //actions:
@@ -83,6 +83,11 @@ $(function() {
         self.addButton = function(){
             if (self.newButtonName() == null){
                 alert("You haven't chosen a name for your new button!");
+                return;
+            }
+
+            if (self.newButtonGPIO() == ' None') {
+                alert("You haven't chosen a GPIO for your new button!");
                 return;
             }
 

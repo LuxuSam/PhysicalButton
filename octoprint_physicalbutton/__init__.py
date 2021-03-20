@@ -15,7 +15,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     def on_after_startup(self):
         GPIO.setmode(GPIO.BCM)
         alreadyAdded = []
-        if self._settings.get(["buttons"]) == null:
+        if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
             self._logger.info("No buttons to initialize!")
             return
 
@@ -35,10 +35,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
 
     def on_shutdown(self):
-        if self._settings.get(["buttons"]) == null:
+        if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
             self._logger.info("No buttons to clean up ...")
             return
-        
+
         self._logger.info("Cleaning up used GPIOs before shutting down ...")
         GPIO.setmode(GPIO.BCM)
         for button in self._settings.get(["buttons"]):
@@ -50,7 +50,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     def on_settings_save(self, data):
         GPIO.setmode(GPIO.BCM)
 
-        if self._settings.get(["buttons"]) != null:
+        if self._settings.get(["buttons"]) != None and self._settings.get(["buttons"]) != []:
             ##Handle old configuration (remove old interrupts)
             for button in self._settings.get(["buttons"]):
                 buttonGPIO = int(button.get("gpio"))
@@ -59,23 +59,24 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 self._logger.info("Removed old button configuration")
 
                 ##Save new settings
-                octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
+        octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
 
-        ##Handle new configuration
-        alreadyAdded = []
-        for button in self._settings.get(["buttons"]):
-            buttonGPIO = int(button.get("gpio"))
-            buttonMode = button.get("buttonMode")
-            buttonTime = int(button.get("buttonTime"))
-            GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
-            if buttonMode == "Normally Open (NO)" and buttonGPIO not in alreadyAdded:
-                GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime=buttonTime)
-                alreadyAdded.append(buttonGPIO)
-            if buttonMode == "Normally Closed (NC)" and buttonGPIO not in alreadyAdded :
-                GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime=buttonTime)
-                alreadyAdded.append(buttonGPIO)
-        alreadyAdded.clear()
-        self._logger.info("Added new button configuration")
+        if self._settings.get(["buttons"]) != None and self._settings.get(["buttons"]) != []:
+            ##Handle new configuration
+            alreadyAdded = []
+            for button in self._settings.get(["buttons"]):
+                buttonGPIO = int(button.get("gpio"))
+                buttonMode = button.get("buttonMode")
+                buttonTime = int(button.get("buttonTime"))
+                GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+                if buttonMode == "Normally Open (NO)" and buttonGPIO not in alreadyAdded:
+                    GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime=buttonTime)
+                    alreadyAdded.append(buttonGPIO)
+                if buttonMode == "Normally Closed (NC)" and buttonGPIO not in alreadyAdded :
+                    GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime=buttonTime)
+                    alreadyAdded.append(buttonGPIO)
+            alreadyAdded.clear()
+            self._logger.info("Added new button configuration")
 
 
     def get_settings_defaults(self):
