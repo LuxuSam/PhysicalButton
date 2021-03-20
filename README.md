@@ -1,4 +1,4 @@
-# Physical Button
+# 🎛 Physical Button 🎛
 
 The PhysicalButton Plugin (hence the name) lets you add physical buttons to your Raspberry Pi.
 The buttons are then able to send GCODE or actions to your printer.
@@ -15,7 +15,7 @@ The GPIO must be chosen in BCM mode (see https://pinout.xyz/).
 If you have other plugins installed that use GPIOs, make sure those plugins are also set to BCM mode.
 
 
-## Configuration
+## 🔧 Configuration 🔧
  To add a new button you have to click on the +.
 
  From there you must enter a button name, the used GPIO and the mode (NO or NC) of the button.
