@@ -20,10 +20,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             buttonMode = button.get("buttonMode")
             buttonTime = int(button.get("buttonTime"))
             GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
-            if buttonMode == "Normally Open (NO)" and buttonGPIO not in NO:
+            if buttonMode == "Normally Open (NO)" and buttonGPIO not in alreadyAdded:
                 GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime=buttonTime)
                 alreadyAdded.append(buttonGPIO)
-            if buttonMode == "Normally Closed (NC)" and buttonGPIO not in NC :
+            if buttonMode == "Normally Closed (NC)" and buttonGPIO not in alreadyAdded :
                 GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime=buttonTime)
                 alreadyAdded.append(buttonGPIO)
         alreadyAdded.clear()

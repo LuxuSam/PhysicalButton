@@ -35,13 +35,46 @@ $(function() {
 
         self.resetAddView = function() {
             self.newButtonName(null);
-            self.newButtonGPIO(0);
+            self.newButtonGPIO(null);
             self.newButtonMode('Normally Open (NO)');
             self.newButtonTime(500);
             self.checkedButton(null);
             self.newButtonAction('none');
             self.newButtonGcode(null);
         }
+
+        self.noEnabled = ko.observable(true);
+        self.ncEnabled = ko.observable(true);
+
+        self.changeEnabled = function() {
+            if (!self.settingsViewModel.settings.plugins.physicalbutton.buttons()){
+                return
+            }
+            const buttons = self.settingsViewModel.settings.plugins.physicalbutton.buttons();
+            const button = buttons.find(b => b.gpio() == self.newButtonGPIO());
+            if (!button){
+                self.noEnabled(true);
+                self.ncEnabled(true);
+                return
+            }
+            if (button.buttonMode() == 'Normally Open (NO)'){
+                self.noEnabled(true);
+                self.ncEnabled(false);
+            }else {
+                self.noEnabled(false);
+                self.ncEnabled(true);
+            }
+
+        }
+
+        self.no_nc_Enabled = function(option, item) {
+            if (item == 'Normally Open (NO)') {
+                ko.applyBindingsToNode(option, {disable: !self.noEnabled()}, item);
+            }else {
+                ko.applyBindingsToNode(option, {disable: !self.ncEnabled()}, item);
+            }
+        }
+
 
         self.onSettingsShown = function() {
             self.resetAddView();

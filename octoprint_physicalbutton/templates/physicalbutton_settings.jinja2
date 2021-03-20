@@ -32,7 +32,7 @@
                                     <label>GPIO:</label>
                                 </td>
                                 <td>
-                                    <select data-bind="value: newButtonGPIO, options:gpios, optionsText: function(item){return 'GPIO'+item}"></select>
+                                    <select data-bind="value: newButtonGPIO, options:gpios, optionsText: function(item){return 'GPIO'+item}, event: {change: changeEnabled}"></select>
                                 </td>
                             </tr>
                             <tr>
@@ -41,7 +41,11 @@
                                     <label>Mode:</label>
                                 </td>
                                 <td>
-                                    <select data-bind="value: newButtonMode, options:buttonModes"></select>
+                                    <!--<select data-bind="value: newButtonMode, options:buttonModes, optionsAfterRender: no_nc_Enabled">-->
+                                    <select data-bind="value: newButtonMode">
+                                        <option value="Normally Open (NO)"   data-bind="enable: noEnabled">Normally Open (NO)</option>
+                                        <option value="Normally Closed (NC)" data-bind="enable: ncEnabled">Normally Closed (NC)</option>
+                                    </select>
                                 </td>
                             </tr>
                             <tr>
