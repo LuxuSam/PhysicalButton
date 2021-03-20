@@ -25,10 +25,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             buttonTime = int(button.get("buttonTime"))
             GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
             if buttonMode == "Normally Open (NO)" and buttonGPIO not in alreadyAdded:
-                GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime=buttonTime)
+                GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime=100)
                 alreadyAdded.append(buttonGPIO)
             if buttonMode == "Normally Closed (NC)" and buttonGPIO not in alreadyAdded :
-                GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime=buttonTime)
+                GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime=100)
                 alreadyAdded.append(buttonGPIO)
         alreadyAdded.clear()
         self._logger.info("Buttons have been set up!")
@@ -78,10 +78,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 buttonTime = int(button.get("buttonTime"))
                 GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
                 if buttonMode == "Normally Open (NO)" and buttonGPIO not in alreadyAdded:
-                    GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime=buttonTime)
+                    GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime=100)
                     alreadyAdded.append(buttonGPIO)
                 if buttonMode == "Normally Closed (NC)" and buttonGPIO not in alreadyAdded :
-                    GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime=buttonTime)
+                    GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime=100)
                     alreadyAdded.append(buttonGPIO)
             alreadyAdded.clear()
             self._logger.info("Added new button configuration")
@@ -191,9 +191,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
         #re-add event detect so callback can be called again
         if buttonState == 0:
-            GPIO.add_event_detect(channel, GPIO.FALLING, callback=self.reactToInput, bouncetime=bounceTime)
+            GPIO.add_event_detect(channel, GPIO.FALLING, callback=self.reactToInput, bouncetime=100)
         else:
-            GPIO.add_event_detect(channel, GPIO.RISING, callback=self.reactToInput, bouncetime=bounceTime)
+            GPIO.add_event_detect(channel, GPIO.RISING, callback=self.reactToInput, bouncetime=100)
 
 
     def sendGcode(self, gcodeCommand):
@@ -204,23 +204,26 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         if action == "cancel":
             self._printer.cancel_print()
             return
-        if action ==  "connect":
+        if action == "connect":
             self._printer.connect()
             return
-        if action ==  "disconnect":
+        if action == "disconnect":
             self._printer.disconnect()
             return
-        if action ==  "home":
+        if action == "home":
             self._printer.home(["x","y","z"])
             return
-        if action ==  "pause":
+        if action == "pause":
             self._printer.pause_print()
             return
-        if action ==  "resume":
+        if action == "resume":
             self._printer.resume_print()
             return
-        if action ==  "start":
+        if action == "start":
             self._printer.start_print()
+            return
+        if action == "debug":
+            self._logger.info("This is a debug message for testing purposes!")
             return
         self._logger.info("No action selected or action (yet) unknown")
 
