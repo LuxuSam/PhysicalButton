@@ -25,3 +25,8 @@ If you have other plugins installed that use GPIOs, make sure those plugins are 
 
  After an initial save you can still set the button name, debounce time and activity.
  You are not able to switch from action to GCODE or from GCODE to action anymore for that button
+
+## ⚠️ Use at own your risk ⚠️
+  I am not accountable for any damages to your printer/raspberry pi when using this plugin (e.g. wrong wiring
+  of buttons, gcode commands that you send with the buttons to your printer, ...). When using the plugin corresponding
+  to my instructions, nothing should happen.
