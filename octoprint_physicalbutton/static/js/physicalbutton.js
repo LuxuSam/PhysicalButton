@@ -12,11 +12,11 @@ $(function() {
         self.settingsViewModel = parameters[0];
 
         //GPIOs:
-        self.gpios = ko.observable(['2','3','4','5','6','7','8','9','10','11',
-                                    '12','13','14','15','16','17','18','19',
-                                    '20','21','22','23','24','25','26','27']);
+        self.gpios = ko.observable([' None','4','5','6','7','8','9','10','11','12',
+                                    '13','16','17','18','20','21','22','23',
+                                    '24','25','26','27']);
         //actions:
-        self.actions = ko.observable(['none','start','cancel','pause','resume','connect','disconnect','home']);
+        self.actions = ko.observable(['none','cancel','connect','disconnect','home','pause','resume','start','debug']);
         //button modes:
         self.buttonModes = ko.observable(['Normally Open (NO)', 'Normally Closed (NC)']);
 
@@ -35,13 +35,46 @@ $(function() {
 
         self.resetAddView = function() {
             self.newButtonName(null);
-            self.newButtonGPIO(0);
+            self.newButtonGPIO(' None');
             self.newButtonMode('Normally Open (NO)');
             self.newButtonTime(500);
             self.checkedButton(null);
             self.newButtonAction('none');
             self.newButtonGcode(null);
         }
+
+        self.noEnabled = ko.observable(true);
+        self.ncEnabled = ko.observable(true);
+
+        self.changeEnabled = function() {
+            if (!self.settingsViewModel.settings.plugins.physicalbutton.buttons()){
+                return
+            }
+            const buttons = self.settingsViewModel.settings.plugins.physicalbutton.buttons();
+            const button = buttons.find(b => b.gpio() == self.newButtonGPIO());
+            if (!button){
+                self.noEnabled(true);
+                self.ncEnabled(true);
+                return
+            }
+            if (button.buttonMode() == 'Normally Open (NO)'){
+                self.noEnabled(true);
+                self.ncEnabled(false);
+            }else {
+                self.noEnabled(false);
+                self.ncEnabled(true);
+            }
+
+        }
+
+        self.no_nc_Enabled = function(option, item) {
+            if (item == 'Normally Open (NO)') {
+                ko.applyBindingsToNode(option, {disable: !self.noEnabled()}, item);
+            }else {
+                ko.applyBindingsToNode(option, {disable: !self.ncEnabled()}, item);
+            }
+        }
+
 
         self.onSettingsShown = function() {
             self.resetAddView();
@@ -50,6 +83,11 @@ $(function() {
         self.addButton = function(){
             if (self.newButtonName() == null){
                 alert("You haven't chosen a name for your new button!");
+                return;
+            }
+
+            if (self.newButtonGPIO() == ' None') {
+                alert("You haven't chosen a GPIO for your new button!");
                 return;
             }
 

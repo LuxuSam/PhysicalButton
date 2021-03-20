@@ -11,6 +11,8 @@ or manually using this URL:
     https://github.com/LuxuSam/PhysicalButton/archive/master.zip
 
 The Buttons have to be plugged in to a ground pin and the desired GPIO Pin that you want to use.
+The GPIO must be chosen in BCM mode (see https://pinout.xyz/).
+If you have other plugins installed that use GPIOs, make sure those plugins are also set to BCM mode.
 
 
 ## Configuration
