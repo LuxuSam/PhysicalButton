@@ -75,6 +75,15 @@ $(function() {
             }
         }
 
+        self.onBeforeBinding = function() {
+			self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
+		};
+
+        self.onSettingsBeforeSave = function() {
+            self.settingsViewModel.settings.plugins.physicalbutton.buttons(self.buttons());
+        }
+
+
 
         self.onSettingsShown = function() {
             self.resetAddView();
@@ -98,7 +107,7 @@ $(function() {
 
             if (self.settingsViewModel.settings.plugins.physicalbutton.buttons() == null){
                 self.settingsViewModel.settings.plugins.physicalbutton.buttons(new Array());
-                  self.settingsViewModel.saveData();
+                self.settingsViewModel.saveData();
             }
 
             if (self.checkedButton() == "checkedGcode"){
