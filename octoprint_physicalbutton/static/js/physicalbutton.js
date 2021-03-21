@@ -52,30 +52,27 @@ $(function() {
                 return
             }
             const buttons = self.buttons();
-            console.dir(buttons);
             const button = buttons.find(b => b.gpio == self.newButtonGPIO() || (typeof(b.gpio) === 'function' && b.gpio() == self.newButtonGPIO() ));
             if (!button){
                 self.noEnabled(true);
                 self.ncEnabled(true);
-                self.newButtonMode('Normally Open (NO)');
                 return
             }
             if (button.buttonMode == 'Normally Open (NO)' || (typeof(button.buttonMode) === 'function' && button.buttonMode() == 'Normally Open (NO)')) {
                 self.noEnabled(true);
                 self.ncEnabled(false);
                 self.newButtonMode('Normally Open (NO)');
-            }else {
+            } else {
                 self.noEnabled(false);
                 self.ncEnabled(true);
                 self.newButtonMode('Normally Closed (NC)');
             }
-
         }
 
         self.no_nc_Enabled = function(option, item) {
             if (item == 'Normally Open (NO)') {
                 ko.applyBindingsToNode(option, {disable: !self.noEnabled()}, item);
-            }else {
+            } else {
                 ko.applyBindingsToNode(option, {disable: !self.ncEnabled()}, item);
             }
         }
@@ -142,7 +139,6 @@ $(function() {
                 log.info("Added new Action button");
             }
             self.resetAddView();
-
         }
 
         self.removeButton = function(){
