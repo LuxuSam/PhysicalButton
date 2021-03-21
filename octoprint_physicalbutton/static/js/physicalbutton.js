@@ -30,7 +30,7 @@ $(function() {
         self.newButtonGcode  = ko.observable();
 
         //Saved Buttons
-        self.buttons = ko.observable();
+        self.buttons = ko.observableArray();
         self.show = ko.observable();
 
         self.resetAddView = function() {
@@ -43,42 +43,55 @@ $(function() {
             self.newButtonGcode(null);
         }
 
+        //Necessary observables to diasble NO or NC for a button and change selection respectively
         self.noEnabled = ko.observable(true);
         self.ncEnabled = ko.observable(true);
 
         self.changeEnabled = function() {
-            if (!self.settingsViewModel.settings.plugins.physicalbutton.buttons()){
+            if (!self.buttons()){
                 return
             }
-            const buttons = self.settingsViewModel.settings.plugins.physicalbutton.buttons();
-            const button = buttons.find(b => b.gpio() == self.newButtonGPIO());
+            const buttons = self.buttons();
+            const button = buttons.find(b => b.gpio == self.newButtonGPIO() || (typeof(b.gpio) === 'function' && b.gpio() == self.newButtonGPIO() ));
             if (!button){
                 self.noEnabled(true);
                 self.ncEnabled(true);
                 return
             }
-            if (button.buttonMode() == 'Normally Open (NO)'){
+            if (button.buttonMode == 'Normally Open (NO)' || (typeof(button.buttonMode) === 'function' && button.buttonMode() == 'Normally Open (NO)')) {
                 self.noEnabled(true);
                 self.ncEnabled(false);
-            }else {
+                self.newButtonMode('Normally Open (NO)');
+            } else {
                 self.noEnabled(false);
                 self.ncEnabled(true);
+                self.newButtonMode('Normally Closed (NC)');
             }
-
         }
 
         self.no_nc_Enabled = function(option, item) {
             if (item == 'Normally Open (NO)') {
                 ko.applyBindingsToNode(option, {disable: !self.noEnabled()}, item);
-            }else {
+            } else {
                 ko.applyBindingsToNode(option, {disable: !self.ncEnabled()}, item);
             }
         }
 
 
+        self.onBeforeBinding = function() {
+			self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
+		};
+
+        self.onSettingsBeforeSave = function() {
+            self.settingsViewModel.settings.plugins.physicalbutton.buttons(self.buttons());
+        }
+
         self.onSettingsShown = function() {
+            self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
             self.resetAddView();
         }
+
+
 
         self.addButton = function(){
             if (self.newButtonName() == null){
@@ -96,17 +109,16 @@ $(function() {
                 return;
             }
 
-            if (self.settingsViewModel.settings.plugins.physicalbutton.buttons() == null){
-                self.settingsViewModel.settings.plugins.physicalbutton.buttons(new Array());
-                  self.settingsViewModel.saveData();
+            if (!self.buttons()){
+                self.buttons(new Array());
             }
 
             if (self.checkedButton() == "checkedGcode"){
-                self.settingsViewModel.settings.plugins.physicalbutton.buttons.push(
-                    {buttonname: self.newButtonName,
-                        gpio: self.newButtonGPIO,
-                        buttonMode: self.newButtonMode,
-                        buttonTime: self.newButtonTime,
+                self.buttons.push(
+                    {buttonname: self.newButtonName(),
+                        gpio: self.newButtonGPIO(),
+                        buttonMode: self.newButtonMode(),
+                        buttonTime: self.newButtonTime(),
                         action: ko.observable('none'),
                         gcode: self.newButtonGcode(),
                         id: ko.observable(Date.now()),
@@ -115,26 +127,22 @@ $(function() {
             }
 
             if (self.checkedButton() == "checkedAction"){
-                self.settingsViewModel.settings.plugins.physicalbutton.buttons.push(
-                    {buttonname: self.newButtonName,
-                         gpio: self.newButtonGPIO,
-                         buttonMode: self.newButtonMode,
-                         buttonTime: self.newButtonTime,
-                         action: self.newButtonAction,
+                self.buttons.push(
+                    {buttonname: self.newButtonName(),
+                         gpio: self.newButtonGPIO(),
+                         buttonMode: self.newButtonMode(),
+                         buttonTime: self.newButtonTime(),
+                         action: self.newButtonAction(),
                          gcode: ko.observable(null),
                          id: ko.observable(Date.now()),
                          show: ko.observable('action')});
                 log.info("Added new Action button");
             }
-
-            self.settingsViewModel.saveData();
-
             self.resetAddView();
         }
 
         self.removeButton = function(){
-            self.settingsViewModel.settings.plugins.physicalbutton.buttons.remove(this);
-            self.settingsViewModel.saveData();
+            self.buttons.remove(this)
         };
     }
 
