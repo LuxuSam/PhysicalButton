@@ -43,7 +43,7 @@ $(function() {
             self.newButtonGcode(null);
         }
 
-        //Necessary observables to diasble NO or NC for a button
+        //Necessary observables to diasble NO or NC for a button and change selection respectively
         self.noEnabled = ko.observable(true);
         self.ncEnabled = ko.observable(true);
 
@@ -57,14 +57,17 @@ $(function() {
             if (!button){
                 self.noEnabled(true);
                 self.ncEnabled(true);
+                self.newButtonMode('Normally Open (NO)');
                 return
             }
             if (button.buttonMode == 'Normally Open (NO)' || (typeof(button.buttonMode) === 'function' && button.buttonMode() == 'Normally Open (NO)')) {
                 self.noEnabled(true);
                 self.ncEnabled(false);
+                self.newButtonMode('Normally Open (NO)');
             }else {
                 self.noEnabled(false);
                 self.ncEnabled(true);
+                self.newButtonMode('Normally Closed (NC)');
             }
 
         }
