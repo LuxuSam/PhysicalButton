@@ -43,21 +43,23 @@ $(function() {
             self.newButtonGcode(null);
         }
 
+        //Necessary observables to diasble NO or NC for a button
         self.noEnabled = ko.observable(true);
         self.ncEnabled = ko.observable(true);
 
         self.changeEnabled = function() {
-            if (!self.settingsViewModel.settings.plugins.physicalbutton.buttons()){
+            if (!self.buttons()){
                 return
             }
-            const buttons = self.settingsViewModel.settings.plugins.physicalbutton.buttons();
-            const button = buttons.find(b => b.gpio() == self.newButtonGPIO());
+            const buttons = self.buttons();
+            console.dir(buttons);
+            const button = buttons.find(b => b.gpio == self.newButtonGPIO() || (typeof(b.gpio) === 'function' && b.gpio() == self.newButtonGPIO() ));
             if (!button){
                 self.noEnabled(true);
                 self.ncEnabled(true);
                 return
             }
-            if (button.buttonMode() == 'Normally Open (NO)'){
+            if (button.buttonMode == 'Normally Open (NO)' || (typeof(button.buttonMode) === 'function' && button.buttonMode() == 'Normally Open (NO)')) {
                 self.noEnabled(true);
                 self.ncEnabled(false);
             }else {
@@ -75,6 +77,7 @@ $(function() {
             }
         }
 
+
         self.onBeforeBinding = function() {
 			self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
 		};
@@ -83,12 +86,12 @@ $(function() {
             self.settingsViewModel.settings.plugins.physicalbutton.buttons(self.buttons());
         }
 
-
-
         self.onSettingsShown = function() {
             self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
             self.resetAddView();
         }
+
+
 
         self.addButton = function(){
             if (self.newButtonName() == null){
