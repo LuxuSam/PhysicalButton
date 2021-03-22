@@ -5,7 +5,7 @@ id: physicalbutton
 title: Physical Button
 description: Add physical buttons to your octoprint
 authors:
-- Sam
+- LuxuSam
 license: AGPLv3
 
 # TODO
@@ -22,11 +22,17 @@ archive: https://github.com/LuxuSam/PhysicalButton/archive/master.zip
 
 # TODO
 tags:
-- a list
-- of tags
-- that apply
-- to your plugin
-- (take a look at the existing plugins for what makes sense here)
+- physical
+- button
+- buttons
+- gpio
+- pins
+- external
+- send
+- action
+- actions
+- gcode
+
 
 # TODO
 screenshots:
@@ -58,8 +64,8 @@ compatibility:
   # You can also remove the whole "octoprint" block. Removing it will default to all
   # OctoPrint versions being supported.
 
-  octoprint:
-  - 1.2.0
+  #octoprint:
+  #- 1.2.0
 
   # List of compatible operating systems
   #
@@ -94,9 +100,16 @@ compatibility:
   # is EOL), leave at ">=2.7,<3" - be aware that your plugin will not be allowed to register on the
   # plugin repository if it only support Python 2.
 
-  python: ">=2.7,<3"
+  python: ">=2.7,<4"
 
 ---
 
-**TODO**: Longer description of your plugin, configuration examples etc. This part will be visible on the page at
-http://plugins.octoprint.org/plugin/physicalbutton/
+# 🎛 Physical Button 🎛
+
+The PhysicalButton Plugin (hence the name) lets you add physical buttons to your Raspberry Pi.
+The buttons are then able to send GCODE or actions to your printer.
+
+# Screenshots
+![NewGcodeButton](/assets/img/NewGcodeButton.png)
+![NewActionButton](/assets/img/NewActionButton.png)
+![ListButtons](/assets/img/ListButtons.png)
