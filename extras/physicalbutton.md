@@ -114,4 +114,5 @@ The buttons are then able to send GCODE or actions to your printer.
   <img src="/assets/img/NewGcodeButton.png" width="49%"/>
   <img src="/assets/img/NewActionButton.png" width="49%"/>
   <img src="/assets/img/ListButtons.png" width="49%"/>
+  <img src="/assets/img/ButtonList2.png" width="49%"/>
 </p>
