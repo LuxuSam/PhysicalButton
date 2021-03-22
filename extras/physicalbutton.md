@@ -110,5 +110,8 @@ The PhysicalButton Plugin (hence the name) lets you add physical buttons to your
 The buttons are then able to send GCODE or actions to your printer.
 
 # Screenshots
-
-![NewGcodeButton](/assets/img/NewGcodeButton.png) | ![NewActionButton](/assets/img/NewActionButton.png) | ![ListButtons](/assets/img/ListButtons.png)
+<p align="middle">
+  <img src="/assets/img/NewGcodeButton.png" width="30%"/>
+  <img src="/assets/img/NewActionButton.png" width="30%"/>
+  <img src="/assets/img/ListButtons.png" width="30%"/>
+</p>
