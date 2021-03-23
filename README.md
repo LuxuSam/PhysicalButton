@@ -33,5 +33,17 @@ If you have other plugins installed that use GPIOs, make sure those plugins are 
 ## ⚠️ Use at your own risk ⚠️
   I am not accountable for any damages made to your printer/raspberry pi when using this plugin (e.g. wrong wiring
   of buttons, GCODE commands that you send with the buttons to your printer, ...).
+  
+## Get Help / Feature request
+
+If you encounter problems using the plugin or if you have an idea for a new feature please use the issue tracker https://github.com/LuxuSam/PhysicalButton/issues
+
+## ❤️ Support me ❤️
+
+If you enjoy my plugin and want to support me and the development, you can do so by sending me a donation on 
+
+[![paypal](https://www.paypalobjects.com/webstatic/de_DE/i/de-pp-logo-150px.png)](https://www.paypal.com/paypalme/luxusam3d)  
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/donate?business=luxusam3d%40gmail.com&currency_code=EUR)
 
   When setting the plugin up corresponding to my instructions, nothing should happen.
