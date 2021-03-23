@@ -36,9 +36,9 @@ If you have other plugins installed that use GPIOs, make sure those plugins are 
   
 ## Get Help / Feature request
 
-If you encounter problems using the plugin or if you have an idea for a new feature please use the issue tracker https://github.com/LuxuSam/PhysicalButton/issues
+If you encounter problems using the plugin or if you have an idea for a new feature please use the [issue tracker](https://github.com/LuxuSam/PhysicalButton/issues)
 
-## ❤️ Support me ❤️
+# ❤️ Support me ❤️
 
 If you enjoy my plugin and want to support me and the development, you can do so by sending me a donation on 
 
