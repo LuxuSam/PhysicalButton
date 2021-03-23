@@ -109,10 +109,34 @@ compatibility:
 The PhysicalButton Plugin (hence the name) lets you add physical buttons to your Raspberry Pi.
 The buttons are then able to send GCODE or actions to your printer.
 
-# Screenshots
+## Screenshots
 <p align="middle">
   <img src="/assets/img/NewGcodeButton.png" width="49%"/>
   <img src="/assets/img/NewActionButton.png" width="49%"/>
   <img src="/assets/img/ListButtons.png" width="49%"/>
   <img src="/assets/img/ButtonList2.png" width="49%"/>
 </p>
+
+## Settings
+* Button Name
+  * This is where you put the name of your button to differntiate them in the list of buttons
+* GPIO
+  * This is the gpio you connect your button to, the other cable has to be connected to a ground pin (Buttons are pulled up)
+* Mode
+  * Depending on your button setup you have to choose between the two modes  
+  * Normally Open (NO)
+    * Use this mode if your button is normally not pressed (open)
+  * Normally Closed (NC)
+    * Use this mode if your button is normally pressed (closed)
+* Debounce Time / Time until active
+  * This is where you set the debounce time for your button if you want the button to react immedieatly on press
+  * or when you the button to activate after having pressed the button for the inputed amount of time
+* Choose an activity for your button
+  * Action:
+    * You can choose between the standard actions of octoprint (cancel, connect, disconnect, home ( x,y,z are homed), pause, resume and start)
+  * Gcode:
+    * You can input any GCODE
+
+## Get Help
+
+If you encounter problems using the plugin please use the issue tracker on https://github.com/LuxuSam/PhysicalButton
