@@ -139,7 +139,7 @@ The buttons are then able to send GCODE or actions to your printer.
 
 ## Get Help / Feature request
 
-If you encounter problems using the plugin or if you have an idea for a new feature please use the issue tracker https://github.com/LuxuSam/PhysicalButton/issues
+If you encounter problems using the plugin or if you have an idea for a new feature please use the [issue tracker](https://github.com/LuxuSam/PhysicalButton/issues)
 
 ### ❤️ Support me❤️
 
