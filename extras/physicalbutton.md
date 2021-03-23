@@ -118,20 +118,20 @@ The buttons are then able to send GCODE or actions to your printer.
 </p>
 
 ## Settings
-* Button Name
-  * This is where you put the name of your button to differntiate them in the list of buttons
-* GPIO
-  * This is the gpio you connect your button to, the other cable has to be connected to a ground pin (Buttons are pulled up)
-* Mode
+* **Button Name**
+  * This is where you put the name of your button to differentiate them in the list of buttons
+* **GPIO**
+  * This is the gpio you connect your button to, the other cable has to be connected to a ground pin (Buttons are configured to use internal pulled-up resistors)
+* **Mode**
   * Depending on your button setup you have to choose between the two modes  
   * Normally Open (NO)
     * Use this mode if your button is normally not pressed (open)
   * Normally Closed (NC)
     * Use this mode if your button is normally pressed (closed)
-* Debounce Time / Time until active
+* **Debounce Time / Time until active**
   * This is where you set the debounce time for your button if you want the button to react immedieatly on press
   * or when you the button to activate after having pressed the button for the inputed amount of time
-* Choose an activity for your button
+* **Choose an activity for your button**
   * Action:
     * You can choose between the standard actions of octoprint (cancel, connect, disconnect, home ( x,y,z are homed), pause, resume and start)
   * Gcode:
