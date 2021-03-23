@@ -137,6 +137,11 @@ The buttons are then able to send GCODE or actions to your printer.
   * Gcode:
     * You can input any GCODE
 
-## Get Help
+## Get Help / Feature request
 
-If you encounter problems using the plugin please use the issue tracker on https://github.com/LuxuSam/PhysicalButton
+If you encounter problems using the plugin or if you have an idea for a new feature please use the issue tracker on https://github.com/LuxuSam/PhysicalButton
+
+### ❤️ Support me ❤️
+
+If you enjoy my plugin and want to support me and the development of the plugin, you can do so by sending me a donation on [![paypal](https://www.paypalobjects.com/webstatic/de_DE/i/de-pp-logo-150px.png)](https://www.paypal.com/paypalme/luxusam3d)
+
