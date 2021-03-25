@@ -2,8 +2,11 @@
 <div class="form-hotizontal">
     <div class="control-group">
         <h4 style="display: inline-block">Buttons:</h4>
-        <a href="#addNewButton" data-toggle="collapse"><button><i class="fa fa-plus"></i></button></a>
+        <a href="#addNewButton" data-toggle="collapse">
+            <button><i class="fa fa-plus"></i></button>
+        </a>
     </div>
+
     <form class="collapse" id="addNewButton">
         <div class="control-group">
             <label for="newButtonnameTF">Button Name:</label>
@@ -36,8 +39,10 @@
             <label style="float:left; margin-left: 1px" for="gcode_activity">GCODE:</label>
             <textarea rows="5" data-bind="value: newButtonGcode, visible: $root.checkedButton() == 'checkedGcode'""></textarea>
         </div>
-        <div>
-            <a href="#addNewButton" data-bind="click: addButton" data-toggle="collapse"><button>Save new button</button></a>
+        <div class="control-group">
+            <a href="#addNewButton" data-bind="click: addButton" data-toggle="collapse">
+                <button>Save new button</button>
+            </a>
         </div>
     </form>
 
