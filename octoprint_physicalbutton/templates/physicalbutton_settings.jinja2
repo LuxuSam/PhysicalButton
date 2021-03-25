@@ -2,8 +2,8 @@
 <div class="form-hotizontal">
     <div class="control-group">
         <h4 style="display: inline-block">Buttons:</h4>
-        <a href="#addNewButton" data-toggle="collapse">
-            <button><i class="fa fa-plus"></i></button>
+        <a href="#addNewButton" data-toggle="collapse" class="btn btn-primary">
+            <i class="fa fa-plus"></i>
         </a>
     </div>
 
@@ -13,19 +13,19 @@
             <input type="text" id="newButtonnameTF" data-bind="value:newButtonName" required>
         </div>
         <div class="control-group">
-            <label>GPIO:</label>
-            <select data-bind="value: newButtonGPIO, options:gpios, optionsText: function(item){return 'GPIO'+item}, event: {change: changeEnabled}"></select>
+            <label for="newButtonGPIOSelect">GPIO:</label>
+            <select id="newButtonGPIOSelect" data-bind="value: newButtonGPIO, options:gpios, optionsText: function(item){return 'GPIO'+item}, event: {change: changeEnabled}"></select>
         </div>
         <div class="control-group">
-            <label>Mode:</label>
-            <select data-bind="value: newButtonMode">
+            <label for="newButtonModeSelect">Mode:</label>
+            <select id="newButtonModeSelect" data-bind="value: newButtonMode">
                 <option value="Normally Open (NO)"   data-bind="enable: noEnabled">Normally Open (NO)</option>
                 <option value="Normally Closed (NC)" data-bind="enable: ncEnabled">Normally Closed (NC)</option>
             </select>
         </div>
         <div class="control-group">
-            <label>Debounce Time/<br>Time until active</label>
-            <input type="number" name="debounce" min="0" value="500" data-bind="value: newButtonTime">
+            <label for="newButtonDebounce">Debounce Time/<br>Time until active</label>
+            <input id="newButtonDebounce" type="number" name="debounce" min="0" value="500" data-bind="value: newButtonTime">
             ms
         </div>
         <h6>Choose the activity for the button:</h6>
@@ -40,21 +40,21 @@
             <textarea rows="5" data-bind="value: newButtonGcode, visible: $root.checkedButton() == 'checkedGcode'""></textarea>
         </div>
         <div class="control-group">
-            <a href="#addNewButton" data-bind="click: addButton" data-toggle="collapse">
-                <button>Save new button</button>
+            <a href="#addNewButton" data-bind="click: addButton" data-toggle="collapse" class="btn btn-primary">
+                <label type="button">Save new button</label>
             </a>
         </div>
     </form>
 
     <div data-bind="foreach: buttons">
         <div>
-            <a data-bind="attr:{href: '#'+ id()}" class="btn" data-toggle="collapse">
+            <a data-bind="attr:{href: '#'+ id()}" class="btn btn-primary" data-toggle="collapse">
                 <label data-bind="text: buttonname"></label>
             </a>
         </div>
         <div class="collapse" data-bind="attr:{id: id()}">
-            <div class="control-group">
-                <button class="btn btn-outline-danger" data-bind="click: $parent.removeButton">
+            <div class="control-group" >
+                <button class="btn btn-danger" data-bind="click: $parent.removeButton">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
