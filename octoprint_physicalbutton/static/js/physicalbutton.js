@@ -33,6 +33,9 @@ $(function() {
         self.buttons = ko.observableArray();
         self.show = ko.observable();
 
+        //Debug
+        self.debug = ko.observable();
+
         self.resetAddView = function() {
             self.newButtonName(null);
             self.newButtonGPIO(' None');
@@ -80,14 +83,28 @@ $(function() {
 
         self.onBeforeBinding = function() {
 			self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
+            self.debug(self.settingsViewModel.settings.plugins.physicalbutton.debug());
+            if (self.debug() == true){
+                self.actions = ko.observable(['none','cancel','connect','disconnect','home','pause','resume','start','debug']);
+            }else{
+                self.actions = ko.observable(['none','cancel','connect','disconnect','home','pause','resume','start']);
+            }
+
 		};
 
         self.onSettingsBeforeSave = function() {
             self.settingsViewModel.settings.plugins.physicalbutton.buttons(self.buttons());
+            self.settingsViewModel.settings.plugins.physicalbutton.debug(self.debug());
         }
 
         self.onSettingsShown = function() {
             self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
+            self.debug(self.settingsViewModel.settings.plugins.physicalbutton.debug());
+            if (self.debug() == true){
+                self.actions = ko.observable(['none','cancel','connect','disconnect','home','pause','resume','start','debug']);
+            }else{
+                self.actions = ko.observable(['none','cancel','connect','disconnect','home','pause','resume','start']);
+            }
             self.resetAddView();
         }
 
