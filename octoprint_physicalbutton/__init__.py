@@ -93,7 +93,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
     def get_settings_defaults(self):
         return dict(
-            buttons = []
+            buttons = [],
+            debug = False
         )
 
 
