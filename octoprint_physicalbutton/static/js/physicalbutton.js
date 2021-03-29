@@ -95,17 +95,17 @@ $(function() {
 
         self.addButton = function(){
             if (self.newButtonName() == null){
-                alert("You haven't chosen a name for your new button!");
+                //alert("You haven't chosen a name for your new button!");
                 return;
             }
 
             if (self.newButtonGPIO() == ' None') {
-                alert("You haven't chosen a GPIO for your new button!");
+                //alert("You haven't chosen a GPIO for your new button!");
                 return;
             }
 
             if (self.checkedButton() == null) {
-                alert("You haven't chosen an activity for your new button!");
+                //alert("You haven't chosen an activity for your new button!");
                 return;
             }
 
