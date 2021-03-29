@@ -1,63 +1,62 @@
-<h3>Physical Button</h3>
-<div class="form-hotizontal">
+<div class="form-horizontal" id="physicalbutton_settings">
     <div class="control-group">
-        <h4 style="display: inline-block">Buttons:</h4>
+        <h3>Physical Button</h3>
         <a href="#addNewButton" data-toggle="collapse" class="btn btn-primary">
             <i class="fa fa-plus"></i>
         </a>
     </div>
-
     <form class="collapse" id="addNewButton">
-        <div class="control-group">
-            <label for="newButtonnameTF">Button Name:</label>
-            <input type="text" id="newButtonnameTF" data-bind="value:newButtonName" required>
-        </div>
-        <div class="control-group">
-            <label for="newButtonGPIOSelect">GPIO:</label>
-            <select id="newButtonGPIOSelect" data-bind="value: newButtonGPIO, options:gpios, optionsText: function(item){return 'GPIO'+item}, event: {change: changeEnabled}"></select>
-        </div>
-        <div class="control-group">
-            <label for="newButtonModeSelect">Mode:</label>
-            <select id="newButtonModeSelect" data-bind="value: newButtonMode">
-                <option value="Normally Open (NO)"   data-bind="enable: noEnabled">Normally Open (NO)</option>
-                <option value="Normally Closed (NC)" data-bind="enable: ncEnabled">Normally Closed (NC)</option>
-            </select>
-        </div>
-        <div class="control-group">
-            <label for="newButtonDebounce">Debounce Time/<br>Time until active</label>
-            <input id="newButtonDebounce" type="number" name="debounce" min="0" value="500" data-bind="value: newButtonTime">
-            ms
-        </div>
-        <h6>Choose the activity for the button:</h6>
-        <div class="control-group">
-            <input type="radio" name="activity" value="checkedAction" id="action_activity" data-bind="checked: checkedButton" required>
-            <label for="action_activity">Action:</label>
-            <select data-bind="value: newButtonAction, options: actions, visible: $root.checkedButton() == 'checkedAction'""></select>
-        </div>
-        <div class="control-group">
-            <input style="float:left" type="radio" name="activity" value="checkedGcode" id="gcode_activity" data-bind="checked: checkedButton">
-            <label style="float:left; margin-left: 1px" for="gcode_activity">GCODE:</label>
-            <textarea rows="5" data-bind="value: newButtonGcode, visible: $root.checkedButton() == 'checkedGcode'""></textarea>
-        </div>
-        <div class="control-group">
-            <a href="#addNewButton" data-bind="click: addButton" data-toggle="collapse" class="btn btn-primary">
-                <label type="button">Save new button</label>
-            </a>
+        <div class="addButton">
+            <div class="control-group">
+                <label for="newButtonnameTF">Button Name:</label>
+                <input type="text" id="newButtonnameTF" data-bind="value:newButtonName" required>
+            </div>
+            <div class="control-group">
+                <label for="newButtonGPIOSelect">GPIO:</label>
+                <select id="newButtonGPIOSelect" data-bind="value: newButtonGPIO, options:gpios, optionsText: function(item){return 'GPIO'+item}, event: {change: changeEnabled}"></select>
+            </div>
+            <div class="control-group">
+                <label for="newButtonModeSelect">Mode:</label>
+                <select id="newButtonModeSelect" data-bind="value: newButtonMode">
+                    <option value="Normally Open (NO)"   data-bind="enable: noEnabled">Normally Open (NO)</option>
+                    <option value="Normally Closed (NC)" data-bind="enable: ncEnabled">Normally Closed (NC)</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="newButtonDebounce">Debounce Time/<br>Time until active</label>
+                <input id="newButtonDebounce" type="number" name="debounce" min="0" value="500" data-bind="value: newButtonTime">
+                ms
+            </div>
+            <h6>Choose the activity for the button:</h6>
+            <div class="control-group">
+                <input type="radio" name="activity" value="checkedAction" id="action_activity" data-bind="checked: checkedButton" required>
+                <label for="action_activity">Action:</label>
+                <select data-bind="value: newButtonAction, options: actions, visible: $root.checkedButton() == 'checkedAction'""></select>
+            </div>
+            <div class="control-group">
+                <input style="float:left" type="radio" name="activity" value="checkedGcode" id="gcode_activity" data-bind="checked: checkedButton">
+                <label style="float:left; margin-left: 1px" for="gcode_activity">GCODE:</label>
+                <textarea rows="5" data-bind="value: newButtonGcode, visible: $root.checkedButton() == 'checkedGcode'""></textarea>
+            </div>
+            <div class="control-group">
+                <a href="#addNewButton" data-bind="click: addButton" data-toggle="collapse" class="btn btn-primary">
+                    <label type="button">Save new button</label>
+                </a>
+            </div>
         </div>
     </form>
 
     <div data-bind="foreach: buttons">
-        <div>
+      <div class="buttonlist" >
+        <span>
             <a data-bind="attr:{href: '#'+ id()}" class="btn btn-primary" data-toggle="collapse">
                 <label data-bind="text: buttonname"></label>
             </a>
-        </div>
+            <button class="btn btn-danger" data-bind="click: $parent.removeButton">
+                <i class="fas fa-trash"></i>
+            </button>
+        </span>
         <div class="collapse" data-bind="attr:{id: id()}">
-            <div class="control-group" >
-                <button class="btn btn-danger" data-bind="click: $parent.removeButton">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
             <div class="control-group">
                 <label for="">Button Name:</label>
                 <input type="text" class="form-control" data-bind="value: buttonname">
@@ -85,18 +84,6 @@
                 <textarea rows="5" data-bind="value: gcode""></textarea>
             </div>
         </div>
+      </div>
     </div>
 </div>
-
-<style type="text/css">
-    .control-group {
-        padding: 5px 0;
-    }
-    .control-group > label {
-        min-width: 136px;
-        display: inline-block;
-    }
-    .control-group > input[type="radio"] + label {
-        min-width: 113px;
-    }
-</style>
