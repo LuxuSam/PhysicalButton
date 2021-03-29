@@ -131,7 +131,11 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
 
     def get_assets(self):
-        return dict(js=["js/physicalbutton.js"])
+        return dict(
+            js=["js/physicalbutton.js"],
+            css=["css/physicalbutton.css"],
+            less=["less/physicalbutton.less"]
+        )
 
 
     def reactToInput(self, channel):
