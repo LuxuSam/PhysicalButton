@@ -152,10 +152,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         #Filter which buttons have to react
         if GPIO.input(channel) == 1:
             rising = True
-            reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Closed (NC)", self._settings.get(["buttons"])))
+            reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Closed (NC)" and int(button.get("gpio")) == channel, self._settings.get(["buttons"])))
         else:
             rising = False
-            reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Open (NO)", self._settings.get(["buttons"])))
+            reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Open (NO)" and int(button.get("gpio")) == channel, self._settings.get(["buttons"])))
 
         #if false alert, leave callback, and allow reentering callback function
         if not reactButtons:
