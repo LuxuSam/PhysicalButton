@@ -140,9 +140,16 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
 
     def reactToInput(self, channel):
-        #remove event detect so callback is not called more than once at a time
-        GPIO.remove_event_detect(channel)
+        global callbackIsRunning
 
+        #check if callback is already running
+        if callbackIsRunning:
+            return
+
+        #Callback is now running
+        callbackIsRunning = True
+
+        #Filter which buttons have to react
         if GPIO.input(channel) == 1:
             rising = True
             reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Closed (NC)", self._settings.get(["buttons"])))
@@ -150,23 +157,19 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             rising = False
             reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Open (NO)", self._settings.get(["buttons"])))
 
-        #debounce button / wait until active
+        #if false alert, leave callback, and allow reentering callback function
         if not reactButtons:
-            if rising:
-                GPIO.add_event_detect(channel, GPIO.RISING, callback=self.reactToInput, bouncetime=100)
-            else:
-                GPIO.add_event_detect(channel, GPIO.FALLING, callback=self.reactToInput, bouncetime=100)
+            callbackIsRunning = False
             return
 
+        #debounce button / wait until active
         button = reactButtons[0]
         bounceTime = int(button.get("buttonTime"))
 
         if button.get("buttonMode") == "Normally Open (NO)":
             buttonState = 0
-            eventDetectMode = GPIO.FALLING
         else:
             buttonState = 1
-            eventDetectMode = GPIO.RISING
         react = False
 
         #Wait time specified by user until recheck the button state
@@ -193,8 +196,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 #Give user time to release button again
                 time.sleep(0.75)
 
-        #re-add event detect so callback can be called again
-        GPIO.add_event_detect(channel, eventDetectMode, callback=self.reactToInput, bouncetime=100)
+        #make callback reenterable before leaving
+        callbackIsRunning = False
 
 
     def sendGcode(self, gcodeCommand):
@@ -241,3 +244,6 @@ def __plugin_load__():
 	__plugin_hooks__ = {
 		"octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information
 	}
+
+    global callbackIsRunning
+    callbackIsRunning = False
