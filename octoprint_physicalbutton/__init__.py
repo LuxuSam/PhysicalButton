@@ -2,8 +2,10 @@
 from __future__ import absolute_import
 
 import octoprint.plugin
-import RPi.GPIO as GPIO
+from gpiozero import Button
 import time
+
+buttonList = []
 
 class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            octoprint.plugin.SettingsPlugin,
@@ -13,7 +15,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            ):
 
     def on_after_startup(self):
-        GPIO.setmode(GPIO.BCM)
+        global buttonList
+
         alreadyAdded = []
         if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
             self._logger.info("No buttons to initialize!")
@@ -25,13 +28,17 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 continue
             buttonMode = button.get("buttonMode")
             buttonTime = int(button.get("buttonTime"))
-            GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+            #GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+            newButton = Button(buttonGPIO, pull_up=True, bounce_time=0.05,hold_repeat=False)
             if buttonMode == "Normally Open (NO)":
-                GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime=100)
+                #GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime=100)
+                newButton.when_pressed = reactToInput(newButton.pin.number)
                 alreadyAdded.append(buttonGPIO)
             if buttonMode == "Normally Closed (NC)":
-                GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime=100)
+                #GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime=100)
+                newButton.when_released = reactToInput(newButton.pin.number)
                 alreadyAdded.append(buttonGPIO)
+            buttonList.append(newButton)
         alreadyAdded.clear()
         self._logger.info("Buttons have been set up!")
 
