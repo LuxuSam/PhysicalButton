@@ -14,6 +14,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            octoprint.plugin.ShutdownPlugin
                            ):
 
+    #################### Helper functions ####################
     def setupButtons(self):
         global buttonList
         for button in for button in self._settings.get(["buttons"]):
@@ -36,6 +37,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             if not button.closed():
                 button.close()
         buttonList.clear()
+    ##########################################################
 
 
     def on_after_startup(self):
