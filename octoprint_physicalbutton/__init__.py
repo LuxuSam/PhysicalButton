@@ -17,7 +17,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     ######################################## Helper functions ########################################
     def setupButtons(self):
         global buttonList
-        for button in for button in self._settings.get(["buttons"]):
+        for button in self._settings.get(["buttons"]):
             buttonGPIO = int(button.get("gpio"))
             existsAlready = bool(filter(lambda button: button.pin.number() == buttonGPIO, buttonList))
             if existsAlready:
