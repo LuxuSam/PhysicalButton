@@ -41,20 +41,16 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
 
     def on_shutdown(self):
+        global buttonList
+
         if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
             self._logger.info("No buttons to clean up ...")
             return
-
         self._logger.info("Cleaning up used GPIOs before shutting down ...")
-        GPIO.setmode(GPIO.BCM)
-        alreadyRemoved = []
-        for button in self._settings.get(["buttons"]):
-            buttonGPIO = int(button.get("gpio"))
-            if buttonGPIO not in alreadyRemoved:
-                GPIO.remove_event_detect(buttonGPIO)
-                alreadyRemoved.append(buttonGPIO)
-        alreadyRemoved.clear()
-        GPIO.cleanup()
+        for button in buttonList:
+            if not button.closed():
+                button.close()
+        buttonList.clear()
         self._logger.info("Done!")
 
 
