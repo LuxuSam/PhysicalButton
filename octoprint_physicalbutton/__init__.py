@@ -14,7 +14,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            octoprint.plugin.ShutdownPlugin
                            ):
 
-    #################### Helper functions ####################
+    ######################################## Helper functions ########################################
     def setupButtons(self):
         global buttonList
         for button in for button in self._settings.get(["buttons"]):
@@ -30,14 +30,13 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             if buttonMode == "Normally Closed (NC)":
                 newButton.when_released = reactToInput(newButton.pin.number())
             buttonList.append(newButton)
-
     def removeButtons(self):
         global buttonList
         for button in buttonList:
             if not button.closed():
                 button.close()
         buttonList.clear()
-    ##########################################################
+    ##################################################################################################
 
 
     def on_after_startup(self):
@@ -116,42 +115,24 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         )
 
 
-    def reactToInput(self, channel):
-        global callbackIsRunning
-
-        #check if callback is already running
-        if callbackIsRunning:
-            return
-
-        #Callback is now running
-        callbackIsRunning = True
-
+    def reactToInput(self, pressedButton):
         #Filter which buttons have to react
-        if GPIO.input(channel) == 1:
-            rising = True
-            reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Closed (NC)" and int(button.get("gpio")) == channel, self._settings.get(["buttons"])))
+        if pressedButton.is_pressed():
+            reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Closed (NC)" and int(button.get("gpio")) == pressedButton.pin.number(), self._settings.get(["buttons"])))
         else:
-            rising = False
-            reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Open (NO)" and int(button.get("gpio")) == channel, self._settings.get(["buttons"])))
-
-        #if false alert, leave callback, and allow reentering callback function
-        if not reactButtons:
-            callbackIsRunning = False
-            return
-
-        #debounce button / wait until active
+            reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Open (NO)" and int(button.get("gpio")) == pressedButton.pin.number(), self._settings.get(["buttons"])))
         button = reactButtons[0]
-        bounceTime = int(button.get("buttonTime"))
+        waitTime = int(button.get("buttonTime"))
 
         if button.get("buttonMode") == "Normally Open (NO)":
-            buttonState = 0
-        else:
             buttonState = 1
-        react = False
+        else:
+            buttonState = 0
+            react = False
 
         #Wait time specified by user until recheck the button state
-        time.sleep(bounceTime/1000)
-        if GPIO.input(channel) == buttonState:
+        time.sleep(waitTime/1000)
+        if pressedButton.value() == buttonState:
             react = True
 
         #execute activity specified by triggered buttons
@@ -161,20 +142,15 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 if button.get("show") == "action" :
                     #send specified action
                     self.sendAction(button.get("action"))
-
-                if button.get("show") == "gcode" :
-                    #split gcode lines in single commands without comment and add to list
-                    commandList = []
-                    for temp in button.get("gcode").splitlines():
-                        commandList.append(temp.split(";")[0].strip())
-                    #send commandList to printer
-                    self.sendGcode(commandList)
-
-                #Give user time to release button again
-                time.sleep(0.75)
-
-        #make callback reenterable before leaving
-        callbackIsRunning = False
+                    if button.get("show") == "gcode" :
+                        #split gcode lines in single commands without comment and add to list
+                        commandList = []
+                        for temp in button.get("gcode").splitlines():
+                            commandList.append(temp.split(";")[0].strip())
+                            #send commandList to printer
+                            self.sendGcode(commandList)
+        #Give user time to release button again
+        time.sleep(0.75)
 
 
     def sendGcode(self, gcodeCommand):
