@@ -17,29 +17,26 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     def on_after_startup(self):
         global buttonList
 
-        alreadyAdded = []
         if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
             self._logger.info("No buttons to initialize!")
             return
 
-        for button in self._settings.get(["buttons"]):
+        self._logger.info("Setting up buttons ...")
+        for button in for button in self._settings.get(["buttons"]):
             buttonGPIO = int(button.get("gpio"))
-            if buttonGPIO in alreadyAdded:
+
+            existsAlready = bool(filter(lambda button: button.pin.number == buttonGPIO, buttonList))
+            if existsAlready:
                 continue
+
             buttonMode = button.get("buttonMode")
             buttonTime = int(button.get("buttonTime"))
-            #GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
-            newButton = Button(buttonGPIO, pull_up=True, bounce_time=0.05,hold_repeat=False)
+            newButton = Button(buttonGPIO, pull_up=True, bounce_time=0.05,hold_repeat=False,hold_time=0)
             if buttonMode == "Normally Open (NO)":
-                #GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime=100)
                 newButton.when_pressed = reactToInput(newButton.pin.number)
-                alreadyAdded.append(buttonGPIO)
             if buttonMode == "Normally Closed (NC)":
-                #GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime=100)
                 newButton.when_released = reactToInput(newButton.pin.number)
-                alreadyAdded.append(buttonGPIO)
             buttonList.append(newButton)
-        alreadyAdded.clear()
         self._logger.info("Buttons have been set up!")
 
 
