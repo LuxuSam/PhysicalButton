@@ -14,43 +14,44 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            octoprint.plugin.ShutdownPlugin
                            ):
 
-    def on_after_startup(self):
+    def setupButtons(self):
         global buttonList
-
-        if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
-            self._logger.info("No buttons to initialize!")
-            return
-
-        self._logger.info("Setting up buttons ...")
         for button in for button in self._settings.get(["buttons"]):
             buttonGPIO = int(button.get("gpio"))
-
-            existsAlready = bool(filter(lambda button: button.pin.number == buttonGPIO, buttonList))
+            existsAlready = bool(filter(lambda button: button.pin.number() == buttonGPIO, buttonList))
             if existsAlready:
                 continue
-
             buttonMode = button.get("buttonMode")
             buttonTime = int(button.get("buttonTime"))
             newButton = Button(buttonGPIO, pull_up=True, bounce_time=0.05,hold_repeat=False,hold_time=0)
             if buttonMode == "Normally Open (NO)":
-                newButton.when_pressed = reactToInput(newButton.pin.number)
+                newButton.when_pressed = reactToInput(newButton.pin.number())
             if buttonMode == "Normally Closed (NC)":
-                newButton.when_released = reactToInput(newButton.pin.number)
+                newButton.when_released = reactToInput(newButton.pin.number())
             buttonList.append(newButton)
-        self._logger.info("Buttons have been set up!")
 
-
-    def on_shutdown(self):
+    def removeButtons(self):
         global buttonList
-
-        if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
-            self._logger.info("No buttons to clean up ...")
-            return
-        self._logger.info("Cleaning up used GPIOs before shutting down ...")
         for button in buttonList:
             if not button.closed():
                 button.close()
         buttonList.clear()
+
+
+    def on_after_startup(self):
+        if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
+            self._logger.info("No buttons to initialize!")
+            return
+        self._logger.info("Setting up buttons ...")
+        self.setupButtons()
+        self._logger.info("Buttons have been set up!")
+
+    def on_shutdown(self):
+        if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
+            self._logger.info("No buttons to clean up ...")
+            return
+        self._logger.info("Cleaning up used GPIOs before shutting down ...")
+        self.removeButtons()
         self._logger.info("Done!")
 
 
