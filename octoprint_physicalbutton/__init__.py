@@ -56,41 +56,16 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         self.removeButtons()
         self._logger.info("Done!")
 
-
     def on_settings_save(self, data):
-        GPIO.setmode(GPIO.BCM)
-
+        #Handle old configuration:
         if self._settings.get(["buttons"]) != None and self._settings.get(["buttons"]) != []:
-            ##Handle old configuration (remove old interrupts)
-            alreadyRemoved = []
-            for button in self._settings.get(["buttons"]):
-                buttonGPIO = int(button.get("gpio"))
-                if buttonGPIO not in alreadyRemoved:
-                    GPIO.remove_event_detect(buttonGPIO)
-                    GPIO.cleanup(buttonGPIO)
-                    alreadyRemoved.append(buttonGPIO)
+            self.removeButtons()
             self._logger.info("Removed old button configuration")
-            alreadyRemoved.clear()
-                ##Save new settings
+        #Save new Settings
         octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
-
+        #Handle new configuration
         if self._settings.get(["buttons"]) != None and self._settings.get(["buttons"]) != []:
-            ##Handle new configuration
-            alreadyAdded = []
-            for button in self._settings.get(["buttons"]):
-                buttonGPIO = int(button.get("gpio"))
-                if buttonGPIO in alreadyAdded:
-                    continue
-                buttonMode = button.get("buttonMode")
-                buttonTime = int(button.get("buttonTime"))
-                GPIO.setup(buttonGPIO, GPIO.IN, pull_up_down = GPIO.PUD_UP)
-                if buttonMode == "Normally Open (NO)" and buttonGPIO not in alreadyAdded:
-                    GPIO.add_event_detect(buttonGPIO, GPIO.FALLING, callback=self.reactToInput, bouncetime=100)
-                    alreadyAdded.append(buttonGPIO)
-                if buttonMode == "Normally Closed (NC)" and buttonGPIO not in alreadyAdded :
-                    GPIO.add_event_detect(buttonGPIO, GPIO.RISING, callback=self.reactToInput, bouncetime=100)
-                    alreadyAdded.append(buttonGPIO)
-            alreadyAdded.clear()
+            self.setupButtons()
             self._logger.info("Added new button configuration")
 
 
@@ -99,7 +74,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             buttons = [],
             debug = False
         )
-
 
 	##~~ Softwareupdate hook
     def get_update_information(self):
