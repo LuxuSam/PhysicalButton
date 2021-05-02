@@ -33,8 +33,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     def removeButtons(self):
         global buttonList
         for button in buttonList:
-            if not button.closed:
-                button.close()
+            button.close()
         buttonList.clear()
 
     def reactToInput(self, pressedButton):
@@ -56,7 +55,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         waitTime = int(button.get("buttonTime"))
 
         #wait time specified by user until check if button still has same value
-        time.sleep(waitTime/1000)
+        #time.sleep(waitTime/1000)
         if pressedButton.value == buttonValue:
             #execute actions for button in order
             for button in reactButtons:
