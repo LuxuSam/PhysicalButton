@@ -30,12 +30,79 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             if buttonMode == "Normally Closed (NC)":
                 newButton.when_released = self.reactToInput
             buttonList.append(newButton)
+
     def removeButtons(self):
         global buttonList
         for button in buttonList:
             if not button.closed():
                 button.close()
         buttonList.clear()
+
+    def reactToInput(self, pressedButton):
+        self._logger.info("I entered reactToInput")
+        #Filter which buttons have to react
+        if pressedButton.is_pressed:
+            reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Closed (NC)" and int(button.get("gpio")) == pressedButton.pin.number, self._settings.get(["buttons"])))
+        else:
+            reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Open (NO)" and int(button.get("gpio")) == pressedButton.pin.number, self._settings.get(["buttons"])))
+        button = reactButtons[0]
+        waitTime = int(button.get("buttonTime"))
+        #determine which value the pressed button should have
+        if button.get("buttonMode") == "Normally Open (NO)":
+            buttonState = 1
+        else:
+            buttonState = 0
+        react = False
+        #Wait time specified by user until recheck the button state
+        time.sleep(waitTime/1000)
+        if pressedButton.value == buttonState:
+            react = True
+        #execute activity specified by triggered buttons
+        if react:
+            for button in reactButtons:
+                self._logger.info("Reacting to button: %s ..." %button.get("buttonname"))
+                if button.get("show") == "action" :
+                    #send specified action
+                    self.sendAction(button.get("action"))
+                    if button.get("show") == "gcode" :
+                        #split gcode lines in single commands without comment and add to list
+                        commandList = []
+                        for temp in button.get("gcode").splitlines():
+                            commandList.append(temp.split(";")[0].strip())
+                            #send commandList to printer
+                            self.sendGcode(commandList)
+        #Give user time to release button again
+        time.sleep(0.75)
+
+    def sendGcode(self, gcodeCommand):
+        self._printer.commands(gcodeCommand, force = False)
+
+    def sendAction(self, action):
+        if action == "cancel":
+            self._printer.cancel_print()
+            return
+        if action == "connect":
+            self._printer.connect()
+            return
+        if action == "disconnect":
+            self._printer.disconnect()
+            return
+        if action == "home":
+            self._printer.home(["x","y","z"])
+            return
+        if action == "pause":
+            self._printer.pause_print()
+            return
+        if action == "resume":
+            self._printer.resume_print()
+            return
+        if action == "start":
+            self._printer.start_print()
+            return
+        if action == "debug":
+            self._logger.info("This is a debug message for testing purposes!")
+            return
+        self._logger.info("No action selected or action (yet) unknown")
     ##################################################################################################
 
 
@@ -114,78 +181,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             css=["css/physicalbutton.css"],
             less=["less/physicalbutton.less"]
         )
-
-
-    def reactToInput(self, pressedButton):
-        self._logger.info("I entered reactToInput")
-        #Filter which buttons have to react
-        if pressedButton.is_pressed:
-            reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Closed (NC)" and int(button.get("gpio")) == pressedButton.pin.number, self._settings.get(["buttons"])))
-        else:
-            reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Open (NO)" and int(button.get("gpio")) == pressedButton.pin.number, self._settings.get(["buttons"])))
-        button = reactButtons[0]
-        waitTime = int(button.get("buttonTime"))
-
-        if button.get("buttonMode") == "Normally Open (NO)":
-            buttonState = 1
-        else:
-            buttonState = 0
-        react = False
-
-        #Wait time specified by user until recheck the button state
-        time.sleep(waitTime/1000)
-        if pressedButton.value == buttonState:
-            react = True
-
-        #execute activity specified by triggered buttons
-        if react:
-            for button in reactButtons:
-                self._logger.info("Reacting to button: %s ..." %button.get("buttonname"))
-                if button.get("show") == "action" :
-                    #send specified action
-                    self.sendAction(button.get("action"))
-                    if button.get("show") == "gcode" :
-                        #split gcode lines in single commands without comment and add to list
-                        commandList = []
-                        for temp in button.get("gcode").splitlines():
-                            commandList.append(temp.split(";")[0].strip())
-                            #send commandList to printer
-                            self.sendGcode(commandList)
-        #Give user time to release button again
-        time.sleep(0.75)
-
-
-    def sendGcode(self, gcodeCommand):
-        self._printer.commands(gcodeCommand, force = False)
-
-
-    def sendAction(self, action):
-        if action == "cancel":
-            self._printer.cancel_print()
-            return
-        if action == "connect":
-            self._printer.connect()
-            return
-        if action == "disconnect":
-            self._printer.disconnect()
-            return
-        if action == "home":
-            self._printer.home(["x","y","z"])
-            return
-        if action == "pause":
-            self._printer.pause_print()
-            return
-        if action == "resume":
-            self._printer.resume_print()
-            return
-        if action == "start":
-            self._printer.start_print()
-            return
-        if action == "debug":
-            self._logger.info("This is a debug message for testing purposes!")
-            return
-        self._logger.info("No action selected or action (yet) unknown")
-
 
 __plugin_name__ = "Physical Button"
 __plugin_pythoncompat__ = ">=2.7,<4" # python 2 and 3
