@@ -19,16 +19,16 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         global buttonList
         for button in self._settings.get(["buttons"]):
             buttonGPIO = int(button.get("gpio"))
-            existsAlready = bool(filter(lambda button: button.pin.number() == buttonGPIO, buttonList))
+            existsAlready = list(filter(lambda existingButton: existingButton.pin.number == buttonGPIO, buttonList))
             if existsAlready:
                 continue
             buttonMode = button.get("buttonMode")
             buttonTime = int(button.get("buttonTime"))
-            newButton = Button(buttonGPIO, pull_up=True, bounce_time=0.05,hold_repeat=False,hold_time=0)
+            newButton = Button(buttonGPIO, pull_up=True, bounce_time=0.05,hold_repeat=False,hold_time=0.05)
             if buttonMode == "Normally Open (NO)":
-                newButton.when_pressed = reactToInput(newButton.pin.number())
+                newButton.when_pressed = self.reactToInput
             if buttonMode == "Normally Closed (NC)":
-                newButton.when_released = reactToInput(newButton.pin.number())
+                newButton.when_released = self.reactToInput
             buttonList.append(newButton)
     def removeButtons(self):
         global buttonList
@@ -46,6 +46,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         self._logger.info("Setting up buttons ...")
         self.setupButtons()
         self._logger.info("Buttons have been set up!")
+
 
     def on_shutdown(self):
         if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
@@ -116,11 +117,12 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
 
     def reactToInput(self, pressedButton):
+        self._logger.info("I entered reactToInput")
         #Filter which buttons have to react
-        if pressedButton.is_pressed():
-            reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Closed (NC)" and int(button.get("gpio")) == pressedButton.pin.number(), self._settings.get(["buttons"])))
+        if pressedButton.is_pressed:
+            reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Closed (NC)" and int(button.get("gpio")) == pressedButton.pin.number, self._settings.get(["buttons"])))
         else:
-            reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Open (NO)" and int(button.get("gpio")) == pressedButton.pin.number(), self._settings.get(["buttons"])))
+            reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Open (NO)" and int(button.get("gpio")) == pressedButton.pin.number, self._settings.get(["buttons"])))
         button = reactButtons[0]
         waitTime = int(button.get("buttonTime"))
 
@@ -128,11 +130,11 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             buttonState = 1
         else:
             buttonState = 0
-            react = False
+        react = False
 
         #Wait time specified by user until recheck the button state
         time.sleep(waitTime/1000)
-        if pressedButton.value() == buttonState:
+        if pressedButton.value == buttonState:
             react = True
 
         #execute activity specified by triggered buttons
