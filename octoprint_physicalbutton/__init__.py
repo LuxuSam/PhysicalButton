@@ -42,9 +42,13 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         self._logger.info("I entered reactToInput")
         #Filter which buttons have to react
         if pressedButton.is_pressed:
-            reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Closed (NC)" and int(button.get("gpio")) == pressedButton.pin.number, self._settings.get(["buttons"])))
+            reactButtons = list(filter(lambda button: int(button.get("gpio")) == pressedButton.pin.number
+                                                    and button.get("buttonMode") == "Normally Closed (NC)",
+                                                    self._settings.get(["buttons"])))
         else:
-            reactButtons = list(filter(lambda button: button.get("buttonMode") == "Normally Open (NO)" and int(button.get("gpio")) == pressedButton.pin.number, self._settings.get(["buttons"])))
+            reactButtons = list(filter(lambda button: int(button.get("gpio")) == pressedButton.pin.number
+                                                    and button.get("buttonMode") == "Normally Open (NO)",
+                                                    self._settings.get(["buttons"])))
         button = reactButtons[0]
         waitTime = int(button.get("buttonTime"))
         #determine which value the pressed button should have
