@@ -65,15 +65,13 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 if button.get("show") == "action" :
                     #send specified action
                     self.sendAction(button.get("action"))
-                    if button.get("show") == "gcode" :
-                        #split gcode lines in single commands without comment and add to list
-                        commandList = []
-                        for temp in button.get("gcode").splitlines():
-                            commandList.append(temp.split(";")[0].strip())
-                            #send commandList to printer
-                            self.sendGcode(commandList)
-        #Give user time to release button again
-        time.sleep(0.75)
+                if button.get("show") == "gcode" :
+                    #split gcode lines in single commands without comment and add to list
+                    commandList = []
+                    for temp in button.get("gcode").splitlines():
+                        commandList.append(temp.split(";")[0].strip())
+                        #send commandList to printer
+                        self.sendGcode(commandList)
 
     def sendGcode(self, gcodeCommand):
         self._printer.commands(gcodeCommand, force = False)
