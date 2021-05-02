@@ -33,7 +33,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     def removeButtons(self):
         global buttonList
         for button in buttonList:
-            if not button.closed():
+            if not button.closed:
                 button.close()
         buttonList.clear()
 
