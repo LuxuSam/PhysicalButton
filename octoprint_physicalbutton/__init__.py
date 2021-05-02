@@ -48,6 +48,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             reactButtons = list(filter(lambda button: int(button.get("gpio")) == pressedButton.pin.number
                                                     and button.get("buttonMode") == "Normally Closed (NC)",
                                                     self._settings.get(["buttons"])))
+        #test for worng alarm
+        if not reactButtons:
+            return
         button = reactButtons[0]
         waitTime = int(button.get("buttonTime"))
         #determine which value the pressed button should have
