@@ -39,6 +39,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         buttonList.clear()
 
     def reactToInput(self, pressedButton):
+        #save value of button (pushed or released)
+        buttonValue = pressedButton.value
         #Filter which buttons have to react
         if pressedButton.is_pressed:
             reactButtons = list(filter(lambda button: int(button.get("gpio")) == pressedButton.pin.number
@@ -53,18 +55,11 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             return
         button = reactButtons[0]
         waitTime = int(button.get("buttonTime"))
-        #determine which value the pressed button should have
-        if button.get("buttonMode") == "Normally Open (NO)":
-            buttonState = 1
-        else:
-            buttonState = 0
-        react = False
-        #Wait time specified by user until recheck the button state
+
+        #wait time specified by user until check if button still has same value
         time.sleep(waitTime/1000)
-        if pressedButton.value == buttonState:
-            react = True
-        #execute activity specified by triggered buttons
-        if react:
+        if pressedButton.value == buttonValue:
+            #execute actions for button in order
             for button in reactButtons:
                 self._logger.info("Reacting to button: %s ..." %button.get("buttonname"))
                 if button.get("show") == "action" :
