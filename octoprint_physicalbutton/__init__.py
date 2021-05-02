@@ -142,6 +142,19 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             debug = False
         )
 
+    def get_template_configs(self):
+        return [
+            dict(type = "settings", custom_bindings = True)
+        ]
+
+
+    def get_assets(self):
+        return dict(
+            js=["js/physicalbutton.js"],
+            css=["css/physicalbutton.css"],
+            less=["less/physicalbutton.less"]
+        )
+
 	##~~ Softwareupdate hook
     def get_update_information(self):
         return {
@@ -168,20 +181,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             }
         }
 
-
-    def get_template_configs(self):
-        return [
-            dict(type = "settings", custom_bindings = True)
-        ]
-
-
-    def get_assets(self):
-        return dict(
-            js=["js/physicalbutton.js"],
-            css=["css/physicalbutton.css"],
-            less=["less/physicalbutton.less"]
-        )
-
 __plugin_name__ = "Physical Button"
 __plugin_pythoncompat__ = ">=2.7,<4" # python 2 and 3
 
@@ -194,6 +193,3 @@ def __plugin_load__():
     __plugin_hooks__ = {
 	   "octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information
     }
-
-    global callbackIsRunning
-    callbackIsRunning = False
