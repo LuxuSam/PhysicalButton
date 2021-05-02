@@ -23,8 +23,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             if existsAlready:
                 continue
             buttonMode = button.get("buttonMode")
-            buttonTime = int(button.get("buttonTime"))
-            newButton = Button(buttonGPIO, pull_up=True, bounce_time=0.05,hold_repeat=False,hold_time=0.05)
+            newButton = Button(buttonGPIO, pull_up=True, bounce_time=0.05,hold_repeat=False,hold_time=0)
             if buttonMode == "Normally Open (NO)":
                 newButton.when_pressed = self.reactToInput
             if buttonMode == "Normally Closed (NC)":
