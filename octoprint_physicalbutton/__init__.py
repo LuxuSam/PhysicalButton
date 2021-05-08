@@ -136,6 +136,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             if self._settings.get(["debug"]):
                 self._logger.info("Added new button configuration")
 
+    def on_settings_cleanup(self):
+        self.removeButtons()
+        octoprint.plugin.SettingsPlugin.on_settings_cleanup()
+
     def get_settings_defaults(self):
         return dict(
             buttons = [],
