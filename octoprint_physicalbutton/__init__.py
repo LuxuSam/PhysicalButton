@@ -4,6 +4,7 @@ from __future__ import absolute_import
 import octoprint.plugin
 from gpiozero import Button
 import time
+import threading
 
 buttonList = []
 
@@ -23,7 +24,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             if existsAlready:
                 continue
             buttonMode = button.get("buttonMode")
-            newButton = Button(buttonGPIO, pull_up=True, bounce_time=0.05,hold_repeat=False,hold_time=0)
+            newButton = Button(buttonGPIO, pull_up=True, bounce_time=None)
             if buttonMode == "Normally Open (NO)":
                 newButton.when_pressed = self.reactToInput
             if buttonMode == "Normally Closed (NC)":
@@ -36,7 +37,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             button.close()
         buttonList.clear()
 
-    def reactToInput(self, pressedButton):
+    def thread_react(self, pressedButton):
         #save value of button (pushed or released)
         buttonValue = pressedButton.value
         #Filter which buttons have to react
@@ -48,14 +49,11 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             reactButtons = list(filter(lambda button: int(button.get("gpio")) == pressedButton.pin.number
                                                     and button.get("buttonMode") == "Normally Closed (NC)",
                                                     self._settings.get(["buttons"])))
-        #test for worng alarm
-        if not reactButtons:
-            return
+        #wait time specified by user until check if button still has same value
         button = reactButtons[0]
         waitTime = int(button.get("buttonTime"))
+        time.sleep(waitTime/1000)
 
-        #wait time specified by user until check if button still has same value
-        #time.sleep(waitTime/1000)
         if pressedButton.value == buttonValue:
             #execute actions for button in order
             for button in reactButtons:
@@ -70,6 +68,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                         commandList.append(temp.split(";")[0].strip())
                         #send commandList to printer
                         self.sendGcode(commandList)
+
+    def reactToInput(self, pressedButton):
+        t = threading.Thread(target=self.thread_react, args=(pressedButton,))
+        t.start()
 
     def sendGcode(self, gcodeCommand):
         self._printer.commands(gcodeCommand, force = False)
