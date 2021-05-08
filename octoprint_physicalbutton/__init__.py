@@ -136,7 +136,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             if self._settings.get(["debug"])=="true":
                 self._logger.info("Added new button configuration")
 
-
     def get_settings_defaults(self):
         return dict(
             buttons = [],
@@ -147,7 +146,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         return [
             dict(type = "settings", custom_bindings = True)
         ]
-
 
     def get_assets(self):
         return dict(
