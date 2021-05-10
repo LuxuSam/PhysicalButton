@@ -59,23 +59,24 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             for button in reactButtons:
                 if self._settings.get(["debug"]):
                     self._logger.debug("Reacting to button: %s ..." %button.get("buttonname"))
-                if button.get("show") == "action" :
+                if button.get("show") == "action":
                     #send specified action
                     self.sendAction(button.get("action"))
-                if button.get("show") == "gcode" :
-                    #split gcode lines in single commands without comment and add to list
-                    commandList = []
-                    for temp in button.get("gcode").splitlines():
-                        commandList.append(temp.split(";")[0].strip())
-                        #send commandList to printer
-                        self.sendGcode(commandList)
+                if button.get("show") == "gcode":
+                    #send specified gcode
+                    self.sendGcode(button.get("gcode"))
 
     def reactToInput(self, pressedButton):
         t = threading.Thread(target=self.thread_react, args=(pressedButton,))
         t.start()
 
-    def sendGcode(self, gcodeCommand):
-        self._printer.commands(gcodeCommand, force = False)
+    def sendGcode(self, gcodetxt):
+        #split gcode lines in single commands without comment and add to list
+        commandList = []
+        for temp in gcodetxt.splitlines():
+            commandList.append(temp.split(";")[0].strip())
+        #send commandList to printer
+        self._printer.commands(commandList, force = False)
 
     def sendAction(self, action):
         if action == "cancel":
