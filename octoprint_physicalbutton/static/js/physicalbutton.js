@@ -33,8 +33,6 @@ $(function() {
         self.buttons = ko.observableArray();
         self.show = ko.observable();
 
-        //Debug
-        self.debug = ko.observable();
 
         self.resetAddView = function() {
             self.newButtonName(null);
@@ -72,17 +70,6 @@ $(function() {
             }
         }
 
-        self.switchDebug = function () {
-            if (self.debug()){
-                alert("Disabled debug mode!")
-                self.actions(['none','cancel','connect','disconnect','home','pause','resume','start']);
-            }else{
-                alert("Enabled debug mode!")
-                self.actions(['none','cancel','connect','disconnect','home','pause','resume','start','debug']);
-            }
-            self.debug(!self.debug());
-        }
-
         self.no_nc_Enabled = function(option, item) {
             if (item == 'Normally Open (NO)') {
                 ko.applyBindingsToNode(option, {disable: !self.noEnabled()}, item);
@@ -93,29 +80,16 @@ $(function() {
 
 
         self.onBeforeBinding = function() {
-			self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
-            self.debug(self.settingsViewModel.settings.plugins.physicalbutton.debug());
-            if (self.debug() == true){
-                self.actions(['none','cancel','connect','disconnect','home','pause','resume','start','debug']);
-            }else{
-                self.actions(['none','cancel','connect','disconnect','home','pause','resume','start']);
-            }
-
-		};
+			       self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
+		    };
 
         self.onSettingsBeforeSave = function() {
             self.settingsViewModel.settings.plugins.physicalbutton.buttons(self.buttons());
-            self.settingsViewModel.settings.plugins.physicalbutton.debug(self.debug());
         }
 
         self.onSettingsShown = function() {
             self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
-            self.debug(self.settingsViewModel.settings.plugins.physicalbutton.debug());
-            if (self.debug() == true){
-                self.actions(['none','cancel','connect','disconnect','home','pause','resume','start','debug']);
-            }else{
-                self.actions(['none','cancel','connect','disconnect','home','pause','resume','start']);
-            }
+
             self.resetAddView();
         }
 
