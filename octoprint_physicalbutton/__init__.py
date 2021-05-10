@@ -57,8 +57,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         if pressedButton.value == buttonValue:
             #execute actions for button in order
             for button in reactButtons:
-                if self._settings.get(["debug"]):
-                    self._logger.debug("Reacting to button: %s ..." %button.get("buttonname"))
+                self._logger.debug("Reacting to button: %s ..." %button.get("buttonname"))
                 if button.get("show") == "action":
                     #send specified action
                     self.sendAction(button.get("action"))
@@ -100,24 +99,20 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         if action == "start":
             self._printer.start_print()
             return
-        if self._settings.get(["debug"]):
-            self._logger.debug("No action selected or action (yet) unknown")
+        self._logger.debug("No action selected or action (yet) unknown")
     ##################################################################################################
 
     def on_after_startup(self):
         if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
-            if self._settings.get(["debug"]):
-                self._logger.debug("No buttons to initialize!")
+            self._logger.debug("No buttons to initialize!")
             return
-        if self._settings.get(["debug"]):
-            self._logger.debug("Setting up buttons ...")
+        self._logger.debug("Setting up buttons ...")
         self.setupButtons()
         self._logger.info("Buttons have been set up!")
 
     def on_shutdown(self):
         if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
-            if self._settings.get(["debug"]):
-                self._logger.debug("No buttons to clean up ...")
+            self._logger.debug("No buttons to clean up ...")
             return
         self._logger.info("Cleaning up used GPIOs before shutting down ...")
         self.removeButtons()
@@ -127,15 +122,13 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         #Handle old configuration:
         if self._settings.get(["buttons"]) != None and self._settings.get(["buttons"]) != []:
             self.removeButtons()
-            if self._settings.get(["debug"]):
-                self._logger.debug("Removed old button configuration")
+            self._logger.debug("Removed old button configuration")
         #Save new Settings
         octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
         #Handle new configuration
         if self._settings.get(["buttons"]) != None and self._settings.get(["buttons"]) != []:
             self.setupButtons()
-            if self._settings.get(["debug"]):
-                self._logger.debug("Added new button configuration")
+            self._logger.debug("Added new button configuration")
 
     def on_settings_cleanup(self):
         self.removeButtons()
