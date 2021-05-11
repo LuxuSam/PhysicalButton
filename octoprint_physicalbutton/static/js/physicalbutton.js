@@ -5,184 +5,165 @@
  * License: AGPLv3
  */
 $(function() {
-    function PhysicalbuttonViewModel(parameters) {
-        var self = this;
+  function PhysicalbuttonViewModel(parameters) {
+    var self = this;
 
-        //settings
-        self.settingsViewModel = parameters[0];
+    //settings
+    self.settingsViewModel = parameters[0];
 
-        //GPIOs:
-        self.gpios = ko.observable([' None','4','5','6','7','8','9','10','11','12',
-                                    '13','16','17','18','20','21','22','23',
-                                    '24','25','26','27']);
-        //actions:
-        self.actions = ko.observable(['none','cancel','connect','disconnect','home','pause','resume','start','debug']);
-        //button modes:
-        self.buttonModes = ko.observable(['Normally Open (NO)', 'Normally Closed (NC)']);
+    //GPIOs:
+    self.gpios = ko.observable([' None', '4', '5', '6', '7', '8', '9', '10', '11', '12',
+      '13', '16', '17', '18', '20', '21', '22', '23',
+      '24', '25', '26', '27'
+    ]);
+    //actions:
+    self.actions = ko.observable(['none', 'cancel', 'connect', 'disconnect', 'home', 'pause', 'resume', 'start']);
+    //button modes:
+    self.buttonModes = ko.observable(['Normally Open (NO)', 'Normally Closed (NC)']);
 
-        //New Button
-        self.newButtonName   = ko.observable();
-        self.newButtonGPIO   = ko.observable();
-        self.newButtonMode   = ko.observable();
-        self.newButtonTime   = ko.observable();
-        self.checkedButton   = ko.observable();
-        self.newButtonAction = ko.observable();
-        self.newButtonGcode  = ko.observable();
+    //New Button
+    self.newButtonName = ko.observable();
+    self.newButtonGPIO = ko.observable();
+    self.newButtonMode = ko.observable();
+    self.newButtonTime = ko.observable();
+    self.checkedButton = ko.observable();
+    self.newButtonAction = ko.observable();
+    self.newButtonGcode = ko.observable();
 
-        //Saved Buttons
-        self.buttons = ko.observableArray();
-        self.show = ko.observable();
+    //Saved Buttons
+    self.buttons = ko.observableArray();
+    self.show = ko.observable();
+    
 
-        //Debug
-        self.debug = ko.observable();
-
-        self.resetAddView = function() {
-            self.newButtonName(null);
-            self.newButtonGPIO(' None');
-            self.newButtonMode('Normally Open (NO)');
-            self.newButtonTime(500);
-            self.checkedButton(null);
-            self.newButtonAction('none');
-            self.newButtonGcode(null);
-        }
-
-        //Necessary observables to diasble NO or NC for a button and change selection respectively
-        self.noEnabled = ko.observable(true);
-        self.ncEnabled = ko.observable(true);
-
-        self.changeEnabled = function() {
-            if (!self.buttons()){
-                return
-            }
-            const buttons = self.buttons();
-            const button = buttons.find(b => b.gpio == self.newButtonGPIO() || (typeof(b.gpio) === 'function' && b.gpio() == self.newButtonGPIO() ));
-            if (!button){
-                self.noEnabled(true);
-                self.ncEnabled(true);
-                return
-            }
-            if (button.buttonMode == 'Normally Open (NO)' || (typeof(button.buttonMode) === 'function' && button.buttonMode() == 'Normally Open (NO)')) {
-                self.noEnabled(true);
-                self.ncEnabled(false);
-                self.newButtonMode('Normally Open (NO)');
-            } else {
-                self.noEnabled(false);
-                self.ncEnabled(true);
-                self.newButtonMode('Normally Closed (NC)');
-            }
-        }
-
-        self.switchDebug = function () {
-            if (self.debug()){
-                alert("Disabled debug mode!")
-                self.actions(['none','cancel','connect','disconnect','home','pause','resume','start']);
-            }else{
-                alert("Enabled debug mode!")
-                self.actions(['none','cancel','connect','disconnect','home','pause','resume','start','debug']);
-            }
-            self.debug(!self.debug());
-        }
-
-        self.no_nc_Enabled = function(option, item) {
-            if (item == 'Normally Open (NO)') {
-                ko.applyBindingsToNode(option, {disable: !self.noEnabled()}, item);
-            } else {
-                ko.applyBindingsToNode(option, {disable: !self.ncEnabled()}, item);
-            }
-        }
-
-
-        self.onBeforeBinding = function() {
-			self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
-            self.debug(self.settingsViewModel.settings.plugins.physicalbutton.debug());
-            if (self.debug() == true){
-                self.actions(['none','cancel','connect','disconnect','home','pause','resume','start','debug']);
-            }else{
-                self.actions(['none','cancel','connect','disconnect','home','pause','resume','start']);
-            }
-
-		};
-
-        self.onSettingsBeforeSave = function() {
-            self.settingsViewModel.settings.plugins.physicalbutton.buttons(self.buttons());
-            self.settingsViewModel.settings.plugins.physicalbutton.debug(self.debug());
-        }
-
-        self.onSettingsShown = function() {
-            self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
-            self.debug(self.settingsViewModel.settings.plugins.physicalbutton.debug());
-            if (self.debug() == true){
-                self.actions(['none','cancel','connect','disconnect','home','pause','resume','start','debug']);
-            }else{
-                self.actions(['none','cancel','connect','disconnect','home','pause','resume','start']);
-            }
-            self.resetAddView();
-        }
-
-
-
-        self.addButton = function(){
-            if (self.newButtonName() == null){
-                //alert("You haven't chosen a name for your new button!");
-                return;
-            }
-
-            if (self.newButtonGPIO() == ' None') {
-                //alert("You haven't chosen a GPIO for your new button!");
-                return;
-            }
-
-            if (self.checkedButton() == null) {
-                //alert("You haven't chosen an activity for your new button!");
-                return;
-            }
-
-            if (!self.buttons()){
-                self.buttons(new Array());
-            }
-
-            if (self.checkedButton() == "checkedGcode"){
-                self.buttons.push(
-                    {buttonname: self.newButtonName(),
-                        gpio: self.newButtonGPIO(),
-                        buttonMode: self.newButtonMode(),
-                        buttonTime: self.newButtonTime(),
-                        action: ko.observable('none'),
-                        gcode: self.newButtonGcode(),
-                        id: ko.observable(Date.now()),
-                        show: ko.observable('gcode')});
-                log.info("Added new GCODE button");
-            }
-
-            if (self.checkedButton() == "checkedAction"){
-                self.buttons.push(
-                    {buttonname: self.newButtonName(),
-                         gpio: self.newButtonGPIO(),
-                         buttonMode: self.newButtonMode(),
-                         buttonTime: self.newButtonTime(),
-                         action: self.newButtonAction(),
-                         gcode: ko.observable(null),
-                         id: ko.observable(Date.now()),
-                         show: ko.observable('action')});
-                log.info("Added new Action button");
-            }
-            self.resetAddView();
-        }
-
-        self.removeButton = function(){
-            self.buttons.remove(this)
-        };
+    self.resetAddView = function() {
+      self.newButtonName(null);
+      self.newButtonGPIO(' None');
+      self.newButtonMode('Normally Open (NO)');
+      self.newButtonTime(500);
+      self.checkedButton(null);
+      self.newButtonAction('none');
+      self.newButtonGcode(null);
     }
 
-    /* view model class, parameters for constructor, container to bind to
-     * Please see http://docs.octoprint.org/en/master/plugins/viewmodels.html#registering-custom-viewmodels for more details
-     * and a full list of the available options.
-     */
-    OCTOPRINT_VIEWMODELS.push({
-        construct: PhysicalbuttonViewModel,
-        // ViewModels your plugin depends on, e.g. loginStateViewModel, settingsViewModel, ...
-        dependencies: ["settingsViewModel"],
-        // Elements to bind to, e.g. #settings_plugin_physicalbutton, #tab_plugin_physicalbutton, ...
-        elements: ["#settings_plugin_physicalbutton"]
-    });
+    //Necessary observables to diasble NO or NC for a button and change selection respectively
+    self.noEnabled = ko.observable(true);
+    self.ncEnabled = ko.observable(true);
+
+    self.changeEnabled = function() {
+      if (!self.buttons()) {
+        return
+      }
+      const buttons = self.buttons();
+      const button = buttons.find(b => b.gpio == self.newButtonGPIO() || (typeof(b.gpio) === 'function' && b.gpio() == self.newButtonGPIO()));
+      if (!button) {
+        self.noEnabled(true);
+        self.ncEnabled(true);
+        return
+      }
+      if (button.buttonMode == 'Normally Open (NO)' || (typeof(button.buttonMode) === 'function' && button.buttonMode() == 'Normally Open (NO)')) {
+        self.noEnabled(true);
+        self.ncEnabled(false);
+        self.newButtonMode('Normally Open (NO)');
+      } else {
+        self.noEnabled(false);
+        self.ncEnabled(true);
+        self.newButtonMode('Normally Closed (NC)');
+      }
+    }
+
+    self.no_nc_Enabled = function(option, item) {
+      if (item == 'Normally Open (NO)') {
+        ko.applyBindingsToNode(option, {
+          disable: !self.noEnabled()
+        }, item);
+      } else {
+        ko.applyBindingsToNode(option, {
+          disable: !self.ncEnabled()
+        }, item);
+      }
+    }
+
+
+    self.onBeforeBinding = function() {
+      self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
+    };
+
+    self.onSettingsBeforeSave = function() {
+      self.settingsViewModel.settings.plugins.physicalbutton.buttons(self.buttons());
+    }
+
+    self.onSettingsShown = function() {
+      self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
+
+      self.resetAddView();
+    }
+
+
+
+    self.addButton = function() {
+      if (self.newButtonName() == null) {
+        //alert("You haven't chosen a name for your new button!");
+        return;
+      }
+
+      if (self.newButtonGPIO() == ' None') {
+        //alert("You haven't chosen a GPIO for your new button!");
+        return;
+      }
+
+      if (self.checkedButton() == null) {
+        //alert("You haven't chosen an activity for your new button!");
+        return;
+      }
+
+      if (!self.buttons()) {
+        self.buttons(new Array());
+      }
+
+      if (self.checkedButton() == "checkedGcode") {
+        self.buttons.push({
+          buttonname: self.newButtonName(),
+          gpio: self.newButtonGPIO(),
+          buttonMode: self.newButtonMode(),
+          buttonTime: self.newButtonTime(),
+          action: ko.observable('none'),
+          gcode: self.newButtonGcode(),
+          id: ko.observable(Date.now()),
+          show: ko.observable('gcode')
+        });
+        log.info("Added new GCODE button");
+      }
+
+      if (self.checkedButton() == "checkedAction") {
+        self.buttons.push({
+          buttonname: self.newButtonName(),
+          gpio: self.newButtonGPIO(),
+          buttonMode: self.newButtonMode(),
+          buttonTime: self.newButtonTime(),
+          action: self.newButtonAction(),
+          gcode: ko.observable(null),
+          id: ko.observable(Date.now()),
+          show: ko.observable('action')
+        });
+        log.info("Added new Action button");
+      }
+      self.resetAddView();
+    }
+
+    self.removeButton = function() {
+      self.buttons.remove(this)
+    };
+  }
+
+  /* view model class, parameters for constructor, container to bind to
+   * Please see http://docs.octoprint.org/en/master/plugins/viewmodels.html#registering-custom-viewmodels for more details
+   * and a full list of the available options.
+   */
+  OCTOPRINT_VIEWMODELS.push({
+    construct: PhysicalbuttonViewModel,
+    // ViewModels your plugin depends on, e.g. loginStateViewModel, settingsViewModel, ...
+    dependencies: ["settingsViewModel"],
+    // Elements to bind to, e.g. #settings_plugin_physicalbutton, #tab_plugin_physicalbutton, ...
+    elements: ["#settings_plugin_physicalbutton"]
+  });
 });
