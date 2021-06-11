@@ -1,89 +1,79 @@
-<div class="form-horizontal" id="physicalbutton_settings">
-    <div class="control-group">
-        <h3>Physical Button</h3>
-        <a href="#addNewButton" data-toggle="collapse" class="btn btn-primary">
-            <i class="fa fa-plus"></i>
-        </a>
-    </div>
-    <form class="collapse" id="addNewButton">
-        <div class="addButton">
-            <div class="control-group">
-                <label for="newButtonnameTF">Button Name:</label>
-                <input type="text" id="newButtonnameTF" data-bind="value:newButtonName" required>
-            </div>
-            <div class="control-group">
-                <label for="newButtonGPIOSelect">GPIO:</label>
-                <select id="newButtonGPIOSelect" data-bind="value: newButtonGPIO, options:gpios, optionsText: function(item){return 'GPIO'+item}, event: {change: changeEnabled}"></select>
-            </div>
-            <div class="control-group">
-                <label for="newButtonModeSelect">Mode:</label>
-                <select id="newButtonModeSelect" data-bind="value: newButtonMode">
-                    <option value="Normally Open (NO)"   data-bind="enable: noEnabled">Normally Open (NO)</option>
-                    <option value="Normally Closed (NC)" data-bind="enable: ncEnabled">Normally Closed (NC)</option>
-                </select>
-            </div>
-            <div class="control-group">
-                <label for="newButtonDebounce">Hold Time</label>
-                <input id="newButtonDebounce" type="number" name="debounce" min="0" value="500" data-bind="value: newButtonTime">
-                ms
-            </div>
-            <h6>Choose the activity for the button:</h6>
-            <div class="control-group">
-                <input type="radio" name="activity" value="checkedAction" id="action_activity" data-bind="checked: checkedButton" required>
-                <label for="action_activity">Action:</label>
-                <select data-bind="value: newButtonAction, options: actions, visible: $root.checkedButton() == 'checkedAction'""></select>
-            </div>
-            <div class="control-group">
-                <input style="float:left" type="radio" name="activity" value="checkedGcode" id="gcode_activity" data-bind="checked: checkedButton">
-                <label style="float:left; margin-left: 1px" for="gcode_activity">GCODE:</label>
-                <textarea rows="5" data-bind="value: newButtonGcode, visible: $root.checkedButton() == 'checkedGcode'""></textarea>
-            </div>
-            <div class="control-group">
-                <a href="#addNewButton" data-bind="click: addButton" data-toggle="collapse" class="btn btn-primary">
-                    <label type="button">Add button</label>
-                </a>
-            </div>
-        </div>
-    </form>
+<div class="physicalbutton_settings">
+    <h3>Physical Button</h3>
+    <button class="btn btn-primary add-new-button" data-bind="click: addButton">
+        <i class="fa fa-plus"></i>
+    </button>
 
-    <div data-bind="foreach: buttons">
-      <div class="buttonlist" >
-        <span>
-            <a data-bind="attr:{href: '#'+ id()}" class="btn btn-primary" data-toggle="collapse">
-                <label data-bind="text: buttonname"></label>
-            </a>
-            <button class="btn btn-danger" data-bind="click: $parent.removeButton">
-                <i class="fas fa-trash"></i>
-            </button>
-        </span>
-        <div class="collapse" data-bind="attr:{id: id()}">
-            <div class="control-group">
-                <label for="">Button Name:</label>
-                <input type="text" class="form-control" data-bind="value: buttonname">
+    <div id="accordionID" class="accordion button-list" data-bind="foreach: { data:buttons, as: 'button' }">
+        <div class="accordion-group">
+            <!-- Accordion Header-->
+            <div class="accordion-heading" button-header>
+                <a class="accordion-toggle open-button" data-toggle="collapse" data-parent="#accordionID" data-bind="attr:{href: '#'+ id()}, click: $parent.changeSelection">
+                    <label data-bind="text: buttonName"></label>
+                </a>
+                <button class="btn btn-danger delete-button" data-bind="click: $parent.removeButton">
+                    <i class="fas fa-trash"></i>
+                </button>
             </div>
-            <div class="control-group">
-                <label for="">GPIO:</label>
-                <select data-bind="value: gpio, options:$root.gpios, optionsText: function(item){return 'GPIO'+item}"></select>
-            </div>
-            <div class="control-group">
-                <label for="">Mode:</label>
-                <!--<select data-bind="value: buttonMode, options:$root.buttonModes"></select>-->
-                <label data-bind="text: buttonMode"></label>
-            </div>
-            <div class="control-group">
-                <label>Hold Time</label>
-                <input type="number" data-bind="value: buttonTime">
-                ms
-            </div>
-            <div class="control-group" data-bind="visible: show() == 'action'">
-                <label for="">Action:</label>
-                <select data-bind="value: action, options:$root.actions"></select>
-            </div>
-            <div class="control-group" data-bind="visible: show() == 'gcode' ">
-                <label for="">GCODE:</label>
-                <textarea rows="5" data-bind="value: gcode""></textarea>
+            <!-- Accordion Body-->
+            <div class="accordion-body collapse" data-bind="attr:{id: button.id()}">
+                <div class="accordion-inner">
+                    <div class="row-fluid">
+                        <div class="span7 left-side">
+                            <div class="control-group choose-name">
+                                <label for="">Button Name:</label>
+                                <input type="text" data-bind="value: button.buttonName">
+                            </div>
+                            <div class="control-group choose-gpio">
+                                <label for="">GPIO:</label>
+                                <select data-bind="foreach: {data:$root.gpios, as: 'gpioListItem'}, value:button.gpio">
+                                    <option data-bind="value:$data, text: gpioListItem == 'none' ? gpioListItem : 'GPIO'+gpioListItem ,disable: $root.disableGpioOption(gpioListItem,button.gpio)"></option>
+                                </select>
+                            </div>
+                            <div class="control-group choose-mode">
+                                <label for="">Mode:</label>
+                                <select data-bind="value: button.buttonMode, options:$root.buttonModes"></select>
+                            </div>
+                            <div class="control-group choose-time">
+                                <label for="">Hold Time (ms):</label>
+                                <input type="number" data-bind="value: button.buttonTime">
+                            </div>
+                            <div class="btn-group control-group add-new-activity">
+                                <button class="btn" data-bind="click: $parent.addAction">Add Action</button>
+                                <button class="btn" data-bind="click: $parent.addGCODE">Add GCODE</button>
+                            </div>
+                            <div class="control-group activity-list">
+                                <label for="">Activities:</label>
+                                <select
+                                    data-bind="options:button.activities, valueAllowUnset: true,value:$parent.selectedActivity, attr:{size:Math.max(button.activities().length,2)},optionsText:function(item){return item.type()+': '+item.identifier();}">
+                                    <option value="">If you see this,</option>
+                                    <option value="">then there must</option>
+                                    <option value="">be a bug!</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="span5 right-side" data-bind="if:$parent.selectedActivity()">
+                            <button class="btn btn-danger remove-activity" data-bind="click: $parent.removeActivity">Remove Activity</button>
+                            <div class="control-group choose-identifier">
+                                <label for="">Identifier:</label>
+                                <input type="text" data-bind="value:$parent.selectedActivity().identifier">
+                            </div>
+                            <div class="control-group activity-gcode" data-bind="if:$parent.selectedActivity().type() == 'gcode'">
+                                <label for="">GCODE:</label>
+                                <textarea data-bind="attr:{rows: 5}, value:$parent.selectedActivity().execute"></textarea>
+                            </div>
+                            <div class="control-group activity-action" data-bind="if:$parent.selectedActivity().type() == 'action'">
+                                <label for="">Action:</label>
+                                <select data-bind="options:$root.actions, value:$parent.selectedActivity().execute"></select>
+                            </div>
+                            <div class="control-group insert-at-index">
+                                <a type="btn" data-bind="click: $parent.updatePosition">Insert at position:</a>
+                                <input type="number" min="1" data-bind="value:$parent.index, attr:{max:activities().length}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-      </div>
     </div>
 </div>
