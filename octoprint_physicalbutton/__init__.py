@@ -72,6 +72,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         self._printer.commands(commandList, force = False)
 
     def sendAction(self, action):
+        self._logger.debug("The received action is:" %action)
         if action == "cancel":
             self._printer.cancel_print()
             return
