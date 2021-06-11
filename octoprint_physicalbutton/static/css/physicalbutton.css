@@ -1,77 +1,41 @@
-#physicalbutton_settings h3 {
+.physicalbutton_settings h3 {
   display: inline-block;
-  margin-left: 0px;
-  margin-top: 0px;
-  margin-bottom: 0px;
+  vertical-align: middle;
 }
-#physicalbutton_settings {
-  max-width: 500px;
+.physicalbutton_settings .add-new-button {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: right;
 }
-#physicalbutton_settings > .control-group > a {
+.physicalbutton_settings .button-list a {
+  vertical-align: middle;
+}
+.physicalbutton_settings .button-list label {
+  min-width: 105px;
   vertical-align: top;
-  border-radius: 50%;
-  padding: 5px 10px;
-  margin-right: 10px;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  float: right;
-}
-#physicalbutton_settings #addNewButton {
-  margin-top: 0px;
-  padding-bottom: 0px;
-}
-#physicalbutton_settings #addNewButton > .addButton {
-  border-style: solid;
-  border-radius: 4px;
-  border-color: LightGrey;
-  padding: 10px 10px 0px;
-  border-width: thin;
-}
-#physicalbutton_settings #addNewButton > .addButton > a {
-  padding: 0px;
-}
-#physicalbutton_settings .collapse > .control-group > a {
-  height: 20px;
-  margin-top: 0px;
-  margin-left: 0px;
-  margin-bottom: 0px;
-}
-#physicalbutton_settings .control-group {
-  padding: 5px 0;
-}
-#physicalbutton_settings .control-group > label {
-  min-width: 136px;
   display: inline-block;
 }
-#physicalbutton_settings .control-group > input[type="radio"] + label {
-  min-width: 113px;
+.physicalbutton_settings .button-list input {
+  display: inline-block;
 }
-#physicalbutton_settings .buttonlist > span {
-  text-align: center;
+.physicalbutton_settings .button-list select {
+  display: inline-block;
 }
-#physicalbutton_settings .buttonlist > span > a {
-  height: 20px;
-  min-width: 40%;
-  margin-top: 0px;
-  margin-left: 0px;
-  margin-bottom: 10px;
+.physicalbutton_settings .button-list .accordion-heading .open-button {
+  display: inline-block;
+  vertical-align: middle;
 }
-#physicalbutton_settings .buttonlist > span > button {
-  border-radius: 50%;
-  padding: 5px 10px;
-  margin-top: 0px;
-  margin-right: 0px;
-  margin-bottom: 0px;
+.physicalbutton_settings .button-list .accordion-heading .delete-button {
+  margin: 6px 5px;
   float: right;
 }
-#physicalbutton_settings .buttonlist {
-  border-style: solid;
-  border-radius: 4px;
-  border-color: LightGrey;
-  padding: 10px 10px 0px;
-  border-width: thin;
-  margin-bottom: 5px;
+.physicalbutton_settings .button-list .left-side {
+  border-right: 1px solid LightGrey;
 }
-#physicalbutton_settings .form-horizontal {
-  overflow: hidden;
+.physicalbutton_settings .button-list .right-side .insert-at-index {
+  display: flex;
+  align-items: center;
+}
+.physicalbutton_settings .button-list .right-side .insert-at-index input {
+  width: 30px;
 }

@@ -1,91 +1,61 @@
-#physicalbutton_settings h3 {
-  display: inline-block;
-  margin-left: 0;
-  margin-top: 0;
-  margin-bottom: 0;
-}
+.physicalbutton_settings {
+  h3 {
+    display: inline-block;
+    vertical-align: middle;
+  }
 
-#physicalbutton_settings {
-  max-width: 500px;
-}
+  .add-new-button {
+    display: inline-block;
+    vertical-align: middle;
+    text-align: right;
+  }
 
-#physicalbutton_settings > .control-group > a {
-  vertical-align: top;
-  border-radius: 50%;
-  padding: 5px 10px;
-  margin-right: 10px;
-  margin-top: 0;
-  margin-bottom: 0;
-  float: right;
-}
+  .button-list {
+    a{
+        vertical-align: middle;
+    }
+    label {
+      min-width: 105px;
+      vertical-align: top;
+      display: inline-block;
+    }
 
-#physicalbutton_settings #addNewButton {
-  margin-top: 0;
-  padding-bottom: 0;
-}
+    input {
+      display: inline-block;
+    }
 
-#physicalbutton_settings #addNewButton > .addButton {
-  border-style: solid;
-  border-radius: 4px;
-  border-color: LightGrey;
-  padding: 10px 10px 0;
-  border-width: thin;
-}
+    select {
+      display: inline-block;
+    }
 
-#physicalbutton_settings #addNewButton > .addButton > a {
-  padding: 0;
-}
+    .accordion-heading {
+      .open-button {
+        display: inline-block;
+        vertical-align: middle;
+      }
 
-#physicalbutton_settings .collapse > .control-group > a {
-  height: 20px;
-  margin-top: 0;
-  margin-left: 0;
-  margin-bottom: 0;
-}
+      .delete-button {
+        margin: 6px 5px;
+        float: right;
+      }
+    }
 
-#physicalbutton_settings .control-group {
-  padding: 5px 0;
-}
+    .left-side {
+        border-right: 1px solid LightGrey;
 
-#physicalbutton_settings .control-group > label {
-  min-width: 136px;
-  display: inline-block;
-}
+      .add-new-activity {
 
-#physicalbutton_settings .control-group > input[type="radio"] + label {
-  min-width: 113px;
-}
+      }
+    }
+    .right-side{
+        .insert-at-index {
+            display: flex;
+            align-items: center;
 
-#physicalbutton_settings .buttonlist > span {
-  text-align: center;
-}
-
-#physicalbutton_settings .buttonlist > span > a {
-  height: 20px;
-  min-width: 40%;
-  margin-top: 0;
-  margin-left: 0;
-  margin-bottom: 10px;
-}
-
-#physicalbutton_settings .buttonlist > span > button {
-  border-radius: 50%;
-  padding: 5px 10px;
-  margin-top: 0;
-  margin-right: 0;
-  margin-bottom: 0;
-  float: right;
-}
-
-#physicalbutton_settings .buttonlist {
-  border-style: solid;
-  border-radius: 4px;
-  border-color: LightGrey;
-  padding: 10px 10px 0;
-  border-width: thin;
-  margin-bottom: 5px;
-}
-
-#physicalbutton_settings .form-horizontal {
-  overflow: hidden;
+            input{
+                width: 30px;
+            }
+        }
+    }
+  }
 }
