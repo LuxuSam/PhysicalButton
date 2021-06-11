@@ -52,10 +52,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
             #execute actions for button in order
             for activity in button.get("activities"):
-                if button.get("type") == "action":
+                if activity.get("type") == "action":
                     #send specified action
                     self.sendAction(button.get("execute"))
-                if button.get("type") == "gcode":
+                if activity.get("type") == "gcode":
                     #send specified gcode
                     self.sendGcode(button.get("execute"))
 
