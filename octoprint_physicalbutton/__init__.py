@@ -37,30 +37,27 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     def thread_react(self, pressedButton):
         #save value of button (pushed or released)
         buttonValue = pressedButton.value
-        #Filter which buttons have to react
-        if pressedButton.is_pressed:
-            reactButtons = list(filter(lambda button: int(button.get("gpio")) == pressedButton.pin.number
-                                                    and button.get("buttonMode") == "Normally Open (NO)",
-                                                    self._settings.get(["buttons"])))
-        else:
-            reactButtons = list(filter(lambda button: int(button.get("gpio")) == pressedButton.pin.number
-                                                    and button.get("buttonMode") == "Normally Closed (NC)",
-                                                    self._settings.get(["buttons"])))
-        #wait time specified by user until check if button still has same value
-        button = reactButtons[0]
+
+        #search for pressed button
+        for x in self._settings.get(["buttons"]):
+            if int(x.get("gpio")) == pressedButton.pin.number:
+                button = x
+                break
+
         waitTime = int(button.get("buttonTime"))
         time.sleep(waitTime/1000)
 
         if pressedButton.value == buttonValue:
+            self._logger.debug("Reacting to button: %s ..." %button.get("buttonname"))
+
             #execute actions for button in order
-            for button in reactButtons:
-                self._logger.debug("Reacting to button: %s ..." %button.get("buttonname"))
-                if button.get("show") == "action":
+            for activity in button.get("activities"):
+                if button.get("type") == "action":
                     #send specified action
-                    self.sendAction(button.get("action"))
-                if button.get("show") == "gcode":
+                    self.sendAction(button.get("execute"))
+                if button.get("type") == "gcode":
                     #send specified gcode
-                    self.sendGcode(button.get("gcode"))
+                    self.sendGcode(button.get("execute"))
 
     def reactToInput(self, pressedButton):
         t = threading.Thread(target=self.thread_react, args=(pressedButton,))
