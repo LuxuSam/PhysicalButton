@@ -4,166 +4,144 @@
  * Author: Sam
  * License: AGPLv3
  */
-$(function() {
-  function PhysicalbuttonViewModel(parameters) {
-    var self = this;
+ $(function() {
+     function TestsettingsViewModel(parameters) {
+         var self = this;
 
-    //settings
-    self.settingsViewModel = parameters[0];
+         //settings
+         self.settingsViewModel = parameters[0];
 
-    //GPIOs:
-    self.gpios = ko.observable([' None', '4', '5', '6', '7', '8', '9', '10', '11', '12',
-      '13', '16', '17', '18', '20', '21', '22', '23',
-      '24', '25', '26', '27'
-    ]);
-    //actions:
-    self.actions = ko.observable(['none', 'cancel', 'connect', 'disconnect', 'home', 'pause', 'resume', 'start']);
-    //button modes:
-    self.buttonModes = ko.observable(['Normally Open (NO)', 'Normally Closed (NC)']);
+         //GPIOs:
+         self.gpios = ko.observableArray(['none', '4', '5', '6',
+             '7', '8', '9', '10', '11', '12', '13', '16', '17',
+             '18', '20', '21', '22', '23', '24', '25', '26', '27'
+         ]);
+         //actions:
+         self.actions = ko.observableArray(['none', 'cancel', 'connect', 'disconnect', 'home', 'pause', 'resume', 'start', 'debug']);
 
-    //New Button
-    self.newButtonName = ko.observable();
-    self.newButtonGPIO = ko.observable();
-    self.newButtonMode = ko.observable();
-    self.newButtonTime = ko.observable();
-    self.checkedButton = ko.observable();
-    self.newButtonAction = ko.observable();
-    self.newButtonGcode = ko.observable();
+         //button modes:
+         self.buttonModes = ko.observableArray(['Normally Open (NO)', 'Normally Closed (NC)']);
 
-    //Saved Buttons
-    self.buttons = ko.observableArray();
-    self.show = ko.observable();
-    
+         //Saved Buttons
+         self.buttons = ko.observableArray();
 
-    self.resetAddView = function() {
-      self.newButtonName(null);
-      self.newButtonGPIO(' None');
-      self.newButtonMode('Normally Open (NO)');
-      self.newButtonTime(500);
-      self.checkedButton(null);
-      self.newButtonAction('none');
-      self.newButtonGcode(null);
-    }
+         self.selectedGPIO = ko.observable();
 
-    //Necessary observables to diasble NO or NC for a button and change selection respectively
-    self.noEnabled = ko.observable(true);
-    self.ncEnabled = ko.observable(true);
-
-    self.changeEnabled = function() {
-      if (!self.buttons()) {
-        return
-      }
-      const buttons = self.buttons();
-      const button = buttons.find(b => b.gpio == self.newButtonGPIO() || (typeof(b.gpio) === 'function' && b.gpio() == self.newButtonGPIO()));
-      if (!button) {
-        self.noEnabled(true);
-        self.ncEnabled(true);
-        return
-      }
-      if (button.buttonMode == 'Normally Open (NO)' || (typeof(button.buttonMode) === 'function' && button.buttonMode() == 'Normally Open (NO)')) {
-        self.noEnabled(true);
-        self.ncEnabled(false);
-        self.newButtonMode('Normally Open (NO)');
-      } else {
-        self.noEnabled(false);
-        self.ncEnabled(true);
-        self.newButtonMode('Normally Closed (NC)');
-      }
-    }
-
-    self.no_nc_Enabled = function(option, item) {
-      if (item == 'Normally Open (NO)') {
-        ko.applyBindingsToNode(option, {
-          disable: !self.noEnabled()
-        }, item);
-      } else {
-        ko.applyBindingsToNode(option, {
-          disable: !self.ncEnabled()
-        }, item);
-      }
-    }
+         self.selectedActivity = ko.observable();
+         self.index = ko.observable(1);
 
 
-    self.onBeforeBinding = function() {
-      self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
-    };
+         self.onBeforeBinding = function() {
+             self.buttons(self.settingsViewModel.settings.plugins.testSettings.buttons());
+         };
 
-    self.onSettingsBeforeSave = function() {
-      self.settingsViewModel.settings.plugins.physicalbutton.buttons(self.buttons());
-    }
+         self.onSettingsBeforeSave = function() {
+             self.settingsViewModel.settings.plugins.testSettings.buttons(self.buttons());
+         };
 
-    self.onSettingsShown = function() {
-      self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
+         self.onSettingsShown = function() {
+             self.buttons(self.settingsViewModel.settings.plugins.testSettings.buttons());
+         };
 
-      self.resetAddView();
-    }
+         self.disableGpioOption = function(item, currentGPIO) {
+             if (item == 'none') {
+                 return false;
+             }
+             if (self.buttons().find(b => b.gpio() == item)) {
+                 if (item != currentGPIO()) {
+                     return true;
+                 }
+             }
+             return false;
+         };
 
+         self.addButton = function() {
+             if (!self.buttons()) {
+                 self.buttons(new Array());
+             }
+             self.buttons.push({
+                 activities: ko.observableArray(new Array()),
+                 buttonMode: ko.observable('Normally Open (NO)'),
+                 buttonName: ko.observable('New Button Name'),
+                 gpio: ko.observable('none'),
+                 buttonTime: ko.observable('500'),
+                 id: ko.observable(Date.now())
+             });
+         };
 
+         self.removeButton = function() {
+             self.buttons.remove(this)
+         };
 
-    self.addButton = function() {
-      if (self.newButtonName() == null) {
-        //alert("You haven't chosen a name for your new button!");
-        return;
-      }
+         self.addAction = function() {
+             var updatedItem = this;
+             if (!updatedItem.activities()) {
+                 updatedItem.activities(new Array);
+             }
+             updatedItem.activities.push({
+                 type: ko.observable('action'),
+                 identifier: ko.observable('New Action'),
+                 execute: ko.observable('none')
+             });
+             self.selectedActivity(this.activities()[this.activities().length - 1]);
+         };
 
-      if (self.newButtonGPIO() == ' None') {
-        //alert("You haven't chosen a GPIO for your new button!");
-        return;
-      }
+         self.addGCODE = function() {
+             var updatedItem = this;
+             if (!updatedItem.activities()) {
+                 updatedItem.activities(new Array);
+             }
+             updatedItem.activities.push({
+                 type: ko.observable('gcode'),
+                 identifier: ko.observable('New GCODE'),
+                 execute: ko.observable('')
+             });
+             self.selectedActivity(this.activities()[this.activities().length - 1]);
+         };
 
-      if (self.checkedButton() == null) {
-        //alert("You haven't chosen an activity for your new button!");
-        return;
-      }
+         self.removeActivity = function() {
+             if (!self.selectedActivity()) {
+                 return;
+             }
+             this.activities.remove(self.selectedActivity());
+             self.selectedActivity(this.activities()[this.activities().length - 1]);
+         };
 
-      if (!self.buttons()) {
-        self.buttons(new Array());
-      }
+         self.changeSelection = function() {
+             self.selectedActivity(this.activities()[0]);
+         };
 
-      if (self.checkedButton() == "checkedGcode") {
-        self.buttons.push({
-          buttonname: self.newButtonName(),
-          gpio: self.newButtonGPIO(),
-          buttonMode: self.newButtonMode(),
-          buttonTime: self.newButtonTime(),
-          action: ko.observable('none'),
-          gcode: self.newButtonGcode(),
-          id: ko.observable(Date.now()),
-          show: ko.observable('gcode')
-        });
-        log.info("Added new GCODE button");
-      }
+         self.updatePosition = function() {
+             const length = this.activities().length
+             if (length < 2)
+                 return;
+             if (self.index() < 1) {
+                 self.index(1)
+             }
+             if (self.index() > length) {
+                 self.index(length)
+             }
+             const current = self.selectedActivity();
+             const amount = length - self.index();
+             this.activities.remove(current);
+             const spliced = this.activities.splice(self.index() - 1, amount);
+             this.activities.push(current);
+             for (var i = 0; i < spliced.length; i++) {
+                 this.activities.push(spliced[i]);
+             }
+             self.index(1)
+         };
+     }
 
-      if (self.checkedButton() == "checkedAction") {
-        self.buttons.push({
-          buttonname: self.newButtonName(),
-          gpio: self.newButtonGPIO(),
-          buttonMode: self.newButtonMode(),
-          buttonTime: self.newButtonTime(),
-          action: self.newButtonAction(),
-          gcode: ko.observable(null),
-          id: ko.observable(Date.now()),
-          show: ko.observable('action')
-        });
-        log.info("Added new Action button");
-      }
-      self.resetAddView();
-    }
-
-    self.removeButton = function() {
-      self.buttons.remove(this)
-    };
-  }
-
-  /* view model class, parameters for constructor, container to bind to
-   * Please see http://docs.octoprint.org/en/master/plugins/viewmodels.html#registering-custom-viewmodels for more details
-   * and a full list of the available options.
-   */
-  OCTOPRINT_VIEWMODELS.push({
-    construct: PhysicalbuttonViewModel,
-    // ViewModels your plugin depends on, e.g. loginStateViewModel, settingsViewModel, ...
-    dependencies: ["settingsViewModel"],
-    // Elements to bind to, e.g. #settings_plugin_physicalbutton, #tab_plugin_physicalbutton, ...
-    elements: ["#settings_plugin_physicalbutton"]
-  });
-});
+     /* view model class, parameters for constructor, container to bind to
+      * Please see http://docs.octoprint.org/en/master/plugins/viewmodels.html#registering-custom-viewmodels for more details
+      * and a full list of the available options.
+      */
+     OCTOPRINT_VIEWMODELS.push({
+         construct: TestsettingsViewModel,
+         // ViewModels your plugin depends on, e.g. loginStateViewModel, settingsViewModel, ...
+         dependencies: ["settingsViewModel"],
+         // Elements to bind to, e.g. #settings_plugin_testSettings, #tab_plugin_testSettings, ...
+         elements: ["#settings_plugin_testSettings"]
+     });
+ });
