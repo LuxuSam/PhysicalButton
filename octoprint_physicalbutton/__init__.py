@@ -20,9 +20,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         global buttonList
         for button in self._settings.get(["buttons"]):
             buttonGPIO = int(button.get("gpio"))
-            existsAlready = list(filter(lambda existingButton: existingButton.pin.number == buttonGPIO, buttonList))
-            if existsAlready:
-                continue
             buttonMode = button.get("buttonMode")
             newButton = Button(buttonGPIO, pull_up=True, bounce_time=None)
             if buttonMode == "Normally Open (NO)":
