@@ -30,6 +30,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
     def removeButtons(self):
         global buttonList
+        self._logger.debug('Buttons to remove:' %buttonList)
         for button in buttonList:
             button.close()
         buttonList.clear()
