@@ -51,7 +51,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
         if pressedButton.value == buttonValue:
             self._logger.debug("Reacting to button: %s ..." %button.get("buttonName"))
-
+            self._logger.debug("The activities of the button are:\n %s" %button.get("activities"))
             #execute actions for button in order
             for activity in button.get("activities"):
                 if activity.get("type") == "action":
