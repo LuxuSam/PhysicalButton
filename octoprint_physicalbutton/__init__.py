@@ -27,6 +27,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             if buttonMode == "Normally Closed (NC)":
                 newButton.when_released = self.reactToInput
             buttonList.append(newButton)
+        self._logger.debug('Added Buttons:' %buttonList)
 
     def removeButtons(self):
         global buttonList
