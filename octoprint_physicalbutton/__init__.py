@@ -27,11 +27,11 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             if buttonMode == "Normally Closed (NC)":
                 newButton.when_released = self.reactToInput
             buttonList.append(newButton)
-        self._logger.debug('Added Buttons:' %buttonList)
+        self._logger.debug('Added Buttons: %s' %buttonList)
 
     def removeButtons(self):
         global buttonList
-        self._logger.debug('Buttons to remove:' %buttonList)
+        self._logger.debug('Buttons to remove: %s' %buttonList)
         for button in buttonList:
             button.close()
         buttonList.clear()
@@ -50,7 +50,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         time.sleep(waitTime/1000)
 
         if pressedButton.value == buttonValue:
-            self._logger.debug("Reacting to button: %s ..." %button.get("buttonname"))
+            self._logger.debug("Reacting to button: %s ..." %button.get("buttonName"))
 
             #execute actions for button in order
             for activity in button.get("activities"):
@@ -74,7 +74,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         self._printer.commands(commandList, force = False)
 
     def sendAction(self, action):
-        self._logger.debug("The received action is:" %action)
+        self._logger.debug("Sending action: %s" %action)
         if action == "cancel":
             self._printer.cancel_print()
             return
