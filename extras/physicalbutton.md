@@ -85,11 +85,11 @@ compatibility:
   # You can also remove the whole "os" block. Removing it will default to all
   # operating systems being supported.
 
-  os:
-  - linux
-  - windows
-  - macos
-  - freebsd
+  #os:
+  #- linux
+  #- windows
+  #- macos
+  #- freebsd
 
   # Compatible Python version
   #
@@ -101,14 +101,14 @@ compatibility:
   # is EOL), leave at ">=2.7,<3" - be aware that your plugin will not be allowed to register on the
   # plugin repository if it only support Python 2.
 
-  python: ">=2.7,<4"
+  python: ">=3,<4"
 
 ---
 
 # 🎛 Physical Button 🎛
 
 The PhysicalButton Plugin (hence the name) lets you add physical buttons to your Raspberry Pi.
-The buttons are then able to send GCODE or actions to your printer.
+The buttons are then able to send GCODE and actions to your printer.
 
 - - - -
 ## Screenshots
@@ -124,20 +124,21 @@ The buttons are then able to send GCODE or actions to your printer.
 * **Button Name**
   * This is where you put the name of your button to differentiate them in the list of buttons
 * **GPIO**
-  * This is the GPIO you connect your button to, the other cable has to be connected to a ground pin (Buttons are configured to use internal pulled-up resistors)
+  * This is the GPIO you connect your button to, the other cable has to be connected to a ground pin (Buttons are configured to use internal pulled-up resistors). You can only create one button per GPIO.
 * **Mode**
   * Depending on your button setup you have to choose between the two modes
   * Normally Open (NO)
-    * Use this mode if your button is normally not pressed (open)
+    * Use this mode if your button is usually not pressed (open)
   * Normally Closed (NC)
-    * Use this mode if your button is normally pressed (closed)
+    * Use this mode if your button is usually pressed (closed)
 * **Hold Time**
   * This is where you set the hold time for your button, so how long the button has to be held until the reaction is triggered
-* **Choose an activity for your button**
+* **Choose activities for your button**
   * Action:
-    * You can choose between the standard actions of octoprint (cancel, connect, disconnect, home ( x,y,z are homed), pause, resume and start)
-  * Gcode:
+    * You can choose between the standard actions of octoprint (cancel, connect, disconnect, home (x, y and z are homed), pause, resume and start)
+  * GCODE:
     * You can input any GCODE
+  * These activities will be executed in order of your list. You can also rearrange them by inserting them at your desired position.
 
 - - - -
 ### ⚠️ Use at your own risk ⚠️
