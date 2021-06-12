@@ -51,15 +51,14 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
         if pressedButton.value == buttonValue:
             self._logger.debug("Reacting to button: %s ..." %button.get("buttonName"))
-            self._logger.debug("The activities of the button are:\n %s" %button.get("activities"))
             #execute actions for button in order
             for activity in button.get("activities"):
                 if activity.get("type") == "action":
                     #send specified action
-                    self.sendAction(button.get("execute"))
+                    self.sendAction(activity.get("execute"))
                 if activity.get("type") == "gcode":
                     #send specified gcode
-                    self.sendGcode(button.get("execute"))
+                    self.sendGcode(activity.get("execute"))
 
     def reactToInput(self, pressedButton):
         t = threading.Thread(target=self.thread_react, args=(pressedButton,))
@@ -74,7 +73,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         self._printer.commands(commandList, force = False)
 
     def sendAction(self, action):
-        self._logger.debug("Sending action: %s" %action)
         if action == "cancel":
             self._printer.cancel_print()
             return
