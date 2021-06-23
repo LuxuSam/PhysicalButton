@@ -1,61 +1,79 @@
 .physicalbutton_settings {
-  h3 {
-    display: inline-block;
-    vertical-align: middle;
-  }
-
-  .add-new-button {
-    display: inline-block;
-    vertical-align: middle;
-    text-align: right;
-  }
-
-  .button-list {
-    a{
-        vertical-align: middle;
-    }
-    label {
-      min-width: 105px;
-      vertical-align: top;
-      display: inline-block;
+    .control-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-direction: row;
     }
 
     input {
-      display: inline-block;
+        min-width: 50px;
+    }
+
+    label {
+        min-width: 50px;
     }
 
     select {
-      display: inline-block;
+        min-width: 50px;
     }
 
-    .accordion-heading {
-      .open-button {
-        display: inline-block;
-        vertical-align: middle;
-      }
 
-      .delete-button {
-        margin: 6px 5px;
-        float: right;
-      }
+    .header-and-button {
+        padding-right: 5px;
     }
 
-    .left-side {
-        border-right: 1px solid LightGrey;
-
-      .add-new-activity {
-
-      }
-    }
-    .right-side{
-        .insert-at-index {
-            display: flex;
+    .button-list {
+        .accordion-heading {
+            margin: 0;
+            padding-right: 5px;
             align-items: center;
 
-            input{
-                width: 30px;
+            .accordion-toggle {
+                padding: 8px 5px;
+
+                label {
+                    margin: 0;
+                }
+            }
+
+            .open-button {}
+
+            .delete-button {}
+        }
+        .accordion-inner{
+            padding: 5px 10px;
+        }
+
+        .left-side {
+            border-right: 1px solid LightGrey;
+            padding: 5px;
+
+            label {
+                min-width: 105px;
+            }
+
+            .add-new-activity {
+                justify-content: flex-end;
+            }
+        }
+
+        .right-side {
+            label {
+                min-width: 50px;
+            }
+
+            .remove-activity {
+                display: flex;
+                justify-content: flex-end;
+                align-self: flex-end;
+            }
+
+            .insert-at-index {
+                input {
+                    width: 30px;
+                }
             }
         }
     }
-  }
 }
