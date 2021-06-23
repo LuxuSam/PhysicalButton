@@ -1,40 +1,52 @@
-.physicalbutton_settings h3 {
-  display: inline-block;
-  vertical-align: middle;
+.physicalbutton_settings .control-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-direction: row;
 }
-.physicalbutton_settings .add-new-button {
-  display: inline-block;
-  vertical-align: middle;
-  text-align: right;
+.physicalbutton_settings input {
+  min-width: 50px;
 }
-.physicalbutton_settings .button-list a {
-  vertical-align: middle;
+.physicalbutton_settings label {
+  min-width: 50px;
 }
-.physicalbutton_settings .button-list label {
-  min-width: 105px;
-  vertical-align: top;
-  display: inline-block;
+.physicalbutton_settings select {
+  min-width: 50px;
 }
-.physicalbutton_settings .button-list input {
-  display: inline-block;
+.physicalbutton_settings .header-and-button {
+  padding-right: 5px;
 }
-.physicalbutton_settings .button-list select {
-  display: inline-block;
+.physicalbutton_settings .button-list .accordion-heading {
+  margin: 0;
+  padding-right: 5px;
+  align-items: center;
 }
-.physicalbutton_settings .button-list .accordion-heading .open-button {
-  display: inline-block;
-  vertical-align: middle;
+.physicalbutton_settings .button-list .accordion-heading .accordion-toggle {
+  padding: 8px 5px;
 }
-.physicalbutton_settings .button-list .accordion-heading .delete-button {
-  margin: 6px 5px;
-  float: right;
+.physicalbutton_settings .button-list .accordion-heading .accordion-toggle label {
+  margin: 0;
+}
+.physicalbutton_settings .button-list .accordion-inner {
+  padding: 5px 10px;
 }
 .physicalbutton_settings .button-list .left-side {
   border-right: 1px solid LightGrey;
+  padding: 5px;
 }
-.physicalbutton_settings .button-list .right-side .insert-at-index {
+.physicalbutton_settings .button-list .left-side label {
+  min-width: 105px;
+}
+.physicalbutton_settings .button-list .left-side .add-new-activity {
+  justify-content: flex-end;
+}
+.physicalbutton_settings .button-list .right-side label {
+  min-width: 50px;
+}
+.physicalbutton_settings .button-list .right-side .remove-activity {
   display: flex;
-  align-items: center;
+  justify-content: flex-end;
+  align-self: flex-end;
 }
 .physicalbutton_settings .button-list .right-side .insert-at-index input {
   width: 30px;
