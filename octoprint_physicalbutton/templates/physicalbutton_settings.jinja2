@@ -1,41 +1,43 @@
-<div class="physicalbutton_settings">
-    <h3>Physical Button</h3>
-    <button class="btn btn-primary add-new-button" data-bind="click: addButton">
-        <i class="fa fa-plus"></i>
-    </button>
-
+<div class="physicalbutton_settings" data-bind="event:{change: $root.viewChanged}">
+    <div class="control-group header-and-button">
+        <h3>Physical Button</h3>
+        <button class="btn btn-primary add-new-button" data-bind="click: addButton" title="Add a new button">
+            <i class="fa fa-plus"></i>
+        </button>
+    </div>
+    <small data-bind="style: { visibility: $root.changeDetected()  ? 'visible' : 'hidden'}">Don't forget to save the settings to apply your changes</small>
     <div id="accordionID" class="accordion button-list" data-bind="foreach: { data:buttons, as: 'button' }">
         <div class="accordion-group">
             <!-- Accordion Header-->
-            <div class="accordion-heading" button-header>
+            <div class="control-group accordion-heading" button-header>
                 <a class="accordion-toggle open-button" data-toggle="collapse" data-parent="#accordionID" data-bind="attr:{href: '#'+ id()}, click: $parent.changeSelection">
                     <label data-bind="text: buttonName"></label>
                 </a>
-                <button class="btn btn-danger delete-button" data-bind="click: $parent.removeButton">
-                    <i class="fas fa-trash"></i>
+                <button class="btn btn-danger delete-button" data-toggle="modal" data-bind="attr:{href: '#delete'+button.id()}" title="Delete this button">
+                    <i class="far fa-trash-alt"></i>
                 </button>
             </div>
             <!-- Accordion Body-->
-            <div class="accordion-body collapse" data-bind="attr:{id: button.id()}">
+            <div class="accordion-body fade collapse" data-bind="attr:{id: button.id()}">
                 <div class="accordion-inner">
                     <div class="row-fluid">
-                        <div class="span7 left-side">
+                        <div class="span6 left-side">
                             <div class="control-group choose-name">
-                                <label for="">Button Name:</label>
+                                <label for="" title="Choose a  name for your button">Button Name:</label>
                                 <input type="text" data-bind="value: button.buttonName">
                             </div>
                             <div class="control-group choose-gpio">
-                                <label for="">GPIO:</label>
+                                <label for="" title="Choose a  pin for your button (Chosen in BCM-mode)">GPIO:</label>
                                 <select data-bind="foreach: {data:$root.gpios, as: 'gpioListItem'}, value:button.gpio">
                                     <option data-bind="value:$data, text: gpioListItem == 'none' ? gpioListItem : 'GPIO'+gpioListItem ,disable: $root.disableGpioOption(gpioListItem,button.gpio)"></option>
                                 </select>
                             </div>
                             <div class="control-group choose-mode">
-                                <label for="">Mode:</label>
+                                <label for="" title="Choose a mode for your button">Mode:</label>
                                 <select data-bind="value: button.buttonMode, options:$root.buttonModes"></select>
                             </div>
                             <div class="control-group choose-time">
-                                <label for="">Hold Time (ms):</label>
+                                <label for="" title="Choose how long the button has to be activated until an activity triggers">Hold Time (ms):</label>
                                 <input type="number" data-bind="value: button.buttonTime">
                             </div>
                             <div class="btn-group control-group add-new-activity">
@@ -43,7 +45,7 @@
                                 <button class="btn" data-bind="click: $parent.addGCODE">Add GCODE</button>
                             </div>
                             <div class="control-group activity-list">
-                                <label for="">Activities:</label>
+                                <label for="" title="List of your added activities">Activities:</label>
                                 <select
                                     data-bind="options:button.activities, valueAllowUnset: true,value:$parent.selectedActivity, attr:{size:Math.max(button.activities().length,2)},optionsText:function(item){return item.type()+': '+item.identifier();}">
                                     <option value="">If you see this,</option>
@@ -52,27 +54,47 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="span5 right-side" data-bind="if:$parent.selectedActivity()">
-                            <button class="btn btn-danger remove-activity" data-bind="click: $parent.removeActivity">Remove Activity</button>
+                        <div class="span6 right-side" data-bind="if:$parent.selectedActivity()">
+                            <div class="control-group remove-activity">
+                                <button class="btn btn-danger" data-bind="click: $parent.removeActivity" title="Delete the currently selected activity">
+                                    <i class="far fa-trash-alt"></i> Activity
+                                </button>
+                            </div>
                             <div class="control-group choose-identifier">
-                                <label for="">Identifier:</label>
+                                <label for="" title="Choose an identifier for your activity">Identifier:</label>
                                 <input type="text" data-bind="value:$parent.selectedActivity().identifier">
                             </div>
+                            <div class="control-group insert-at-index">
+                                <a type="btn" data-bind="click: $parent.updatePosition" title="Place the activity at your chosen position">Insert at position:</a>
+                                <input type="number" min="1" data-bind="value:$parent.index, attr:{max:activities().length}">
+                            </div>
                             <div class="control-group activity-gcode" data-bind="if:$parent.selectedActivity().type() == 'gcode'">
-                                <label for="">GCODE:</label>
+                                <label for="" title="Choose  GCODE that should be executed on trigger">GCODE:</label>
                                 <textarea data-bind="attr:{rows: 5}, value:$parent.selectedActivity().execute"></textarea>
                             </div>
                             <div class="control-group activity-action" data-bind="if:$parent.selectedActivity().type() == 'action'">
-                                <label for="">Action:</label>
+                                <label for="" title="Choose an action that should be executed on trigger">Action:</label>
                                 <select data-bind="options:$root.actions, value:$parent.selectedActivity().execute"></select>
-                            </div>
-                            <div class="control-group insert-at-index">
-                                <a type="btn" data-bind="click: $parent.updatePosition">Insert at position:</a>
-                                <input type="number" min="1" data-bind="value:$parent.index, attr:{max:activities().length}">
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Modal to confirm deletion of button-->
+        <div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalHeader" aria-hidden="true" data-bind="attr:{id:'delete'+button.id()}">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="modalHeader">Are you sure?</h3>
+            </div>
+            <div class="modal-body">
+                You are about to delete the button <strong data-bind="text: button.buttonName()"></strong> which uses <strong data-bind="text: 'GPIO'+button.gpio()"></strong><br><br>
+                <small>The deletion will not be finalized until you save your settings</small>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true" data-bind="click: $parent.removeButton">Yes, delete it now</button>
             </div>
         </div>
     </div>
