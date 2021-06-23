@@ -17,7 +17,7 @@
              '18', '20', '21', '22', '23', '24', '25', '26', '27'
          ]);
          //actions:
-         self.actions = ko.observableArray(['none', 'cancel', 'connect', 'disconnect', 'home', 'pause', 'resume', 'start', 'debug']);
+         self.actions = ko.observableArray(['none', 'cancel', 'connect', 'disconnect', 'home', 'pause', 'resume', 'start']);
 
          //button modes:
          self.buttonModes = ko.observableArray(['Normally Open (NO)', 'Normally Closed (NC)']);
@@ -30,6 +30,7 @@
          self.selectedActivity = ko.observable();
          self.index = ko.observable(1);
 
+         self.changeDetected = ko.observable(false);
 
          self.onBeforeBinding = function() {
              self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
@@ -37,11 +38,18 @@
 
          self.onSettingsBeforeSave = function() {
              self.settingsViewModel.settings.plugins.physicalbutton.buttons(self.buttons());
+             self.changeDetected(false);
          };
 
          self.onSettingsShown = function() {
              self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
          };
+
+         self.viewChanged = function(obj, event) {
+            if (event.originalEvent) { //user changed
+                self.changeDetected(true);
+            }
+        }
 
          self.disableGpioOption = function(item, currentGPIO) {
              if (item == 'none') {
