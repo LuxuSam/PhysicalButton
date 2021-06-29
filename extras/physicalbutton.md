@@ -113,10 +113,9 @@ The buttons are then able to send GCODE and actions to your printer.
 - - - -
 ## Screenshots
 <p align="middle">
-  <img src="/assets/img/NewGcodeButton.png" width="49%"/>
-  <img src="/assets/img/NewActionButton.png" width="49%"/>
-  <img src="/assets/img/ListButtons.png" width="49%"/>
-  <img src="/assets/img/ButtonList2.png" width="49%"/>
+  <img src="/assets/img/PhysicalButton_action.png" width="49%"/>
+  <img src="/assets/img/PhysicalButton_gcode.png" width="49%"/>
+  <img src="/assets/img/PhysicalButton_delete.png" width="49%"/>
 </p>
 
 - - - -
