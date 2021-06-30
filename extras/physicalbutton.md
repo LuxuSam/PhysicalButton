@@ -110,15 +110,7 @@ compatibility:
 The PhysicalButton Plugin (hence the name) lets you add physical buttons to your Raspberry Pi.
 The buttons are then able to send GCODE and actions to your printer.
 
-- - - -
-## Screenshots
-<p align="middle">
-  <img src="/assets/img/PhysicalButton_action.png" width="49%"/>
-  <img src="/assets/img/PhysicalButton_gcode.png" width="49%"/>
-  <img src="/assets/img/PhysicalButton_delete.png" width="49%"/>
-</p>
-
-- - - -
+----
 ## Configuring a new button
 * **Button Name**
   * This is where you put the name of your button to differentiate them in the list of buttons
@@ -139,17 +131,23 @@ The buttons are then able to send GCODE and actions to your printer.
     * You can input any GCODE
   * These activities will be executed in order of your list. You can also rearrange them by inserting them at your desired position.
 
-- - - -
+----
+## Screenshots
+![Action activity](/assets/img/PhysicalButton_action.png)</br></br>
+![GCODE activity](/assets/img/PhysicalButton_gcode.png) </br></br>
+![Delete Button](/assets/img/PhysicalButton_delete.png)
+
+----
 ### ⚠️ Use at your own risk ⚠️
   I am not accountable for any damages made to your printer/raspberry pi when using this plugin (e.g. wrong wiring
   of buttons, GCODE commands that you send with the buttons to your printer, ...).
 
-- - - -
+----
 ## Get Help / Feature request
 
 If you encounter problems using the plugin or if you have an idea for a new feature please use the [issue tracker](https://github.com/LuxuSam/PhysicalButton/issues) and if applicable add the corresponding label.
 
-- - - -
+----
 # ❤️ Support me❤️
 
 If you enjoy my plugin and want to support me and the development, you can do so by sending me a donation on
