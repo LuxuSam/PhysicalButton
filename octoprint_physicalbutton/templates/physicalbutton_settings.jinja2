@@ -27,7 +27,10 @@
                                 <input type="text" data-bind="value: button.buttonName">
                             </div>
                             <div class="control-group choose-gpio">
-                                <label for="" title="Choose a  pin for your button (Chosen in BCM-mode)">GPIO:</label>
+                                <div class="control-group gpio-help">
+                                    <label for="" title="Choose a  pin for your button (Chosen in BCM-mode)">GPIO: </label>
+                                    <a data-toggle="modal" href="#gpioHelp"><i class="far fa-question-circle"></i></a>
+                                </div>
                                 <select data-bind="foreach: {data:$root.gpios, as: 'gpioListItem'}, value:button.gpio">
                                     <option data-bind="value:$data, text: gpioListItem == 'none' ? gpioListItem : 'GPIO'+gpioListItem ,disable: $root.disableGpioOption(gpioListItem,button.gpio)"></option>
                                 </select>
@@ -95,6 +98,13 @@
             <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
                 <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true" data-bind="click: $parent.removeButton">Yes, delete it now</button>
+            </div>
+        </div>
+        <!-- Modal for GPIO Help-->
+        <div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalHeader" aria-hidden="true" id="gpioHelp">
+            <div class="modal-body">
+                <a href="https://pinout.xyz/" target="_blank"><img src="plugin/physicalbutton/static/img/pinout.xyz.png"/></a>
+                <a href="https://pinout.xyz/">https://pinout.xyz/</a>
             </div>
         </div>
     </div>
