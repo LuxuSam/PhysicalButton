@@ -1,91 +1,86 @@
-#physicalbutton_settings h3 {
-  display: inline-block;
-  margin-left: 0;
-  margin-top: 0;
-  margin-bottom: 0;
-}
+.physicalbutton_settings {
+    .control-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        flex-direction: row;
+    }
 
-#physicalbutton_settings {
-  max-width: 500px;
-}
+    input {
+        min-width: 50px;
+    }
 
-#physicalbutton_settings > .control-group > a {
-  vertical-align: top;
-  border-radius: 50%;
-  padding: 5px 10px;
-  margin-right: 10px;
-  margin-top: 0;
-  margin-bottom: 0;
-  float: right;
-}
+    label {
+        min-width: 50px;
+    }
 
-#physicalbutton_settings #addNewButton {
-  margin-top: 0;
-  padding-bottom: 0;
-}
+    select {
+        min-width: 50px;
+    }
 
-#physicalbutton_settings #addNewButton > .addButton {
-  border-style: solid;
-  border-radius: 4px;
-  border-color: LightGrey;
-  padding: 10px 10px 0;
-  border-width: thin;
-}
 
-#physicalbutton_settings #addNewButton > .addButton > a {
-  padding: 0;
-}
+    .header-and-button {
+        padding-right: 5px;
+    }
 
-#physicalbutton_settings .collapse > .control-group > a {
-  height: 20px;
-  margin-top: 0;
-  margin-left: 0;
-  margin-bottom: 0;
-}
+    .button-list {
+        .accordion-heading {
+            margin: 0;
+            padding-right: 5px;
+            align-items: center;
 
-#physicalbutton_settings .control-group {
-  padding: 5px 0;
-}
+            .accordion-toggle {
+                padding: 8px 5px;
 
-#physicalbutton_settings .control-group > label {
-  min-width: 136px;
-  display: inline-block;
-}
+                label {
+                    margin: 0;
+                }
+            }
 
-#physicalbutton_settings .control-group > input[type="radio"] + label {
-  min-width: 113px;
-}
+            .open-button {}
 
-#physicalbutton_settings .buttonlist > span {
-  text-align: center;
-}
+            .delete-button {}
+        }
+        .accordion-inner{
+            padding: 5px 10px;
+        }
 
-#physicalbutton_settings .buttonlist > span > a {
-  height: 20px;
-  min-width: 40%;
-  margin-top: 0;
-  margin-left: 0;
-  margin-bottom: 10px;
-}
+        .left-side {
+            border-right: 1px solid LightGrey;
+            padding: 5px;
 
-#physicalbutton_settings .buttonlist > span > button {
-  border-radius: 50%;
-  padding: 5px 10px;
-  margin-top: 0;
-  margin-right: 0;
-  margin-bottom: 0;
-  float: right;
-}
+            label {
+                min-width: 105px;
+            }
+            .choose-gpio {
+                label {
+                    min-width: unset;
+                }
+                .gpio-help{
+                    display: flex;
+                    justify-content: flex-start;
+                }
+            }
+            .add-new-activity {
+                justify-content: flex-end;
+            }
+        }
 
-#physicalbutton_settings .buttonlist {
-  border-style: solid;
-  border-radius: 4px;
-  border-color: LightGrey;
-  padding: 10px 10px 0;
-  border-width: thin;
-  margin-bottom: 5px;
-}
+        .right-side {
+            label {
+                min-width: 50px;
+            }
 
-#physicalbutton_settings .form-horizontal {
-  overflow: hidden;
+            .remove-activity {
+                display: flex;
+                justify-content: flex-end;
+                align-self: flex-end;
+            }
+            .insert-at-index {
+                input {
+                    width: 30px;
+                }
+            }
+        }
+    }
 }

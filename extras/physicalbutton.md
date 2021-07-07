@@ -25,6 +25,7 @@ tags:
 - physical
 - button
 - buttons
+- input
 - gpio
 - pins
 - external
@@ -84,11 +85,11 @@ compatibility:
   # You can also remove the whole "os" block. Removing it will default to all
   # operating systems being supported.
 
-  os:
-  - linux
-  - windows
-  - macos
-  - freebsd
+  #os:
+  #- linux
+  #- windows
+  #- macos
+  #- freebsd
 
   # Compatible Python version
   #
@@ -100,56 +101,53 @@ compatibility:
   # is EOL), leave at ">=2.7,<3" - be aware that your plugin will not be allowed to register on the
   # plugin repository if it only support Python 2.
 
-  python: ">=2.7,<4"
+  python: ">=3,<4"
 
 ---
 
 # 🎛 Physical Button 🎛
 
 The PhysicalButton Plugin (hence the name) lets you add physical buttons to your Raspberry Pi.
-The buttons are then able to send GCODE or actions to your printer.
+The buttons are then able to send GCODE and actions to your printer.
 
-- - - -
-## Screenshots
-<p align="middle">
-  <img src="/assets/img/NewGcodeButton.png" width="49%"/>
-  <img src="/assets/img/NewActionButton.png" width="49%"/>
-  <img src="/assets/img/ListButtons.png" width="49%"/>
-  <img src="/assets/img/ButtonList2.png" width="49%"/>
-</p>
-
-- - - -
-## Settings
+----
+## Configuring a new button
 * **Button Name**
   * This is where you put the name of your button to differentiate them in the list of buttons
 * **GPIO**
-  * This is the gpio you connect your button to, the other cable has to be connected to a ground pin (Buttons are configured to use internal pulled-up resistors)
+  * This is the GPIO you connect your button to, the other cable has to be connected to a ground pin (Buttons are configured to use internal pulled-up resistors). You can only create one button per GPIO.
 * **Mode**
-  * Depending on your button setup you have to choose between the two modes  
+  * Depending on your button setup you have to choose between the two modes
   * Normally Open (NO)
-    * Use this mode if your button is normally not pressed (open)
+    * Use this mode if your button is usually not pressed (open)
   * Normally Closed (NC)
-    * Use this mode if your button is normally pressed (closed)
-* **Debounce Time / Time until active**
-  * This is where you set the debounce time for your button if you want the button to react immedieatly on press
-  * or when you the button to activate after having pressed the button for the inputed amount of time
-* **Choose an activity for your button**
+    * Use this mode if your button is usually pressed (closed)
+* **Hold Time**
+  * This is where you set the hold time for your button, so how long the button has to be held until the reaction is triggered
+* **Choose activities for your button**
   * Action:
-    * You can choose between the standard actions of octoprint (cancel, connect, disconnect, home ( x,y,z are homed), pause, resume and start)
-  * Gcode:
+    * You can choose between the standard actions of octoprint (cancel, connect, disconnect, home (x, y and z are homed), pause, resume and start)
+  * GCODE:
     * You can input any GCODE
+  * These activities will be executed in order of your list. You can also rearrange them by inserting them at your desired position.
 
-- - - -
+----
+## Screenshots
+![Action activity](/assets/img/PhysicalButton_action.png)</br></br>
+![GCODE activity](/assets/img/PhysicalButton_gcode.png) </br></br>
+![Delete Button](/assets/img/PhysicalButton_delete.png)
+
+----
 ### ⚠️ Use at your own risk ⚠️
   I am not accountable for any damages made to your printer/raspberry pi when using this plugin (e.g. wrong wiring
   of buttons, GCODE commands that you send with the buttons to your printer, ...).
 
-- - - -
+----
 ## Get Help / Feature request
 
-If you encounter problems using the plugin or if you have an idea for a new feature please use the [issue tracker](https://github.com/LuxuSam/PhysicalButton/issues)
+If you encounter problems using the plugin or if you have an idea for a new feature please use the [issue tracker](https://github.com/LuxuSam/PhysicalButton/issues) and if applicable add the corresponding label.
 
-- - - -
+----
 # ❤️ Support me❤️
 
 If you enjoy my plugin and want to support me and the development, you can do so by sending me a donation on

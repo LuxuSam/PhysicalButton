@@ -1,89 +1,114 @@
-<div class="form-horizontal" id="physicalbutton_settings">
-    <div class="control-group">
+<div class="physicalbutton_settings" data-bind="event:{change: $root.viewChanged}">
+    <div class="control-group header-and-button">
         <h3>Physical Button</h3>
-        <a href="#addNewButton" data-toggle="collapse" class="btn btn-primary">
+        <button class="btn btn-primary add-new-button" data-bind="click: addButton" title="Add a new button">
             <i class="fa fa-plus"></i>
-        </a>
+        </button>
     </div>
-    <form class="collapse" id="addNewButton">
-        <div class="addButton">
-            <div class="control-group">
-                <label for="newButtonnameTF">Button Name:</label>
-                <input type="text" id="newButtonnameTF" data-bind="value:newButtonName" required>
-            </div>
-            <div class="control-group">
-                <label for="newButtonGPIOSelect">GPIO:</label>
-                <select id="newButtonGPIOSelect" data-bind="value: newButtonGPIO, options:gpios, optionsText: function(item){return 'GPIO'+item}, event: {change: changeEnabled}"></select>
-            </div>
-            <div class="control-group">
-                <label for="newButtonModeSelect">Mode:</label>
-                <select id="newButtonModeSelect" data-bind="value: newButtonMode">
-                    <option value="Normally Open (NO)"   data-bind="enable: noEnabled">Normally Open (NO)</option>
-                    <option value="Normally Closed (NC)" data-bind="enable: ncEnabled">Normally Closed (NC)</option>
-                </select>
-            </div>
-            <div class="control-group">
-                <label for="newButtonDebounce">Hold Time</label>
-                <input id="newButtonDebounce" type="number" name="debounce" min="0" value="500" data-bind="value: newButtonTime">
-                ms
-            </div>
-            <h6>Choose the activity for the button:</h6>
-            <div class="control-group">
-                <input type="radio" name="activity" value="checkedAction" id="action_activity" data-bind="checked: checkedButton" required>
-                <label for="action_activity">Action:</label>
-                <select data-bind="value: newButtonAction, options: actions, visible: $root.checkedButton() == 'checkedAction'""></select>
-            </div>
-            <div class="control-group">
-                <input style="float:left" type="radio" name="activity" value="checkedGcode" id="gcode_activity" data-bind="checked: checkedButton">
-                <label style="float:left; margin-left: 1px" for="gcode_activity">GCODE:</label>
-                <textarea rows="5" data-bind="value: newButtonGcode, visible: $root.checkedButton() == 'checkedGcode'""></textarea>
-            </div>
-            <div class="control-group">
-                <a href="#addNewButton" data-bind="click: addButton" data-toggle="collapse" class="btn btn-primary">
-                    <label type="button">Save new button</label>
+    <small data-bind="style: { visibility: $root.changeDetected()  ? 'visible' : 'hidden'}">Don't forget to save the settings to apply your changes</small>
+    <div id="accordionID" class="accordion button-list" data-bind="foreach: { data:buttons, as: 'button' }">
+        <div class="accordion-group">
+            <!-- Accordion Header-->
+            <div class="control-group accordion-heading" button-header>
+                <a class="accordion-toggle open-button" data-toggle="collapse" data-parent="#accordionID" data-bind="attr:{href: '#'+ id()}, click: $parent.changeSelection">
+                    <label data-bind="text: buttonName"></label>
                 </a>
+                <button class="btn btn-danger delete-button" data-toggle="modal" data-bind="attr:{href: '#delete'+button.id()}" title="Delete this button">
+                    <i class="far fa-trash-alt"></i>
+                </button>
+            </div>
+            <!-- Accordion Body-->
+            <div class="accordion-body fade collapse" data-bind="attr:{id: button.id()}">
+                <div class="accordion-inner">
+                    <div class="row-fluid">
+                        <div class="span6 left-side">
+                            <div class="control-group choose-name">
+                                <label for="" title="Choose a  name for your button">Button Name:</label>
+                                <input type="text" data-bind="value: button.buttonName">
+                            </div>
+                            <div class="control-group choose-gpio">
+                                <div class="control-group gpio-help">
+                                    <label for="" title="Choose a  pin for your button (Chosen in BCM-mode)">GPIO: </label>
+                                    <a data-toggle="modal" href="#gpioHelp"><i class="far fa-question-circle"></i></a>
+                                </div>
+                                <select data-bind="foreach: {data:$root.gpios, as: 'gpioListItem'}, value:button.gpio">
+                                    <option data-bind="value:$data, text: gpioListItem == 'none' ? gpioListItem : 'GPIO'+gpioListItem ,disable: $root.disableGpioOption(gpioListItem,button.gpio)"></option>
+                                </select>
+                            </div>
+                            <div class="control-group choose-mode">
+                                <label for="" title="Choose a mode for your button">Mode:</label>
+                                <select data-bind="value: button.buttonMode, options:$root.buttonModes"></select>
+                            </div>
+                            <div class="control-group choose-time">
+                                <label for="" title="Choose how long the button has to be activated until an activity triggers">Hold Time (ms):</label>
+                                <input type="number" data-bind="value: button.buttonTime">
+                            </div>
+                            <div class="btn-group control-group add-new-activity">
+                                <button class="btn" data-bind="click: $parent.addAction">Add Action</button>
+                                <button class="btn" data-bind="click: $parent.addGCODE">Add GCODE</button>
+                            </div>
+                            <div class="control-group activity-list">
+                                <label for="" title="List of your added activities">Activities:</label>
+                                <select
+                                    data-bind="options:button.activities, valueAllowUnset: true,value:$parent.selectedActivity, attr:{size:Math.max(button.activities().length,2)},optionsText:function(item){return item.type()+': '+item.identifier();}">
+                                    <option value="">If you see this,</option>
+                                    <option value="">then there must</option>
+                                    <option value="">be a bug!</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="span6 right-side" data-bind="if:$parent.selectedActivity()">
+                            <div class="control-group remove-activity">
+                                <button class="btn btn-danger" data-bind="click: $parent.removeActivity" title="Delete the currently selected activity">
+                                    <i class="far fa-trash-alt"></i> Activity
+                                </button>
+                            </div>
+                            <div class="control-group choose-identifier">
+                                <label for="" title="Choose an identifier for your activity">Identifier:</label>
+                                <input type="text" data-bind="value:$parent.selectedActivity().identifier">
+                            </div>
+                            <div class="control-group insert-at-index">
+                                <a type="btn" data-bind="click: $parent.updatePosition" title="Place the activity at your chosen position">Insert at position:</a>
+                                <input type="number" min="1" data-bind="value:$parent.index, attr:{max:activities().length}">
+                            </div>
+                            <div class="control-group activity-gcode" data-bind="if:$parent.selectedActivity().type() == 'gcode'">
+                                <label for="" title="Choose  GCODE that should be executed on trigger">GCODE:</label>
+                                <textarea data-bind="attr:{rows: 5}, value:$parent.selectedActivity().execute"></textarea>
+                            </div>
+                            <div class="control-group activity-action" data-bind="if:$parent.selectedActivity().type() == 'action'">
+                                <label for="" title="Choose an action that should be executed on trigger">Action:</label>
+                                <select data-bind="options:$root.actions, value:$parent.selectedActivity().execute"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </form>
 
-    <div data-bind="foreach: buttons">
-      <div class="buttonlist" >
-        <span>
-            <a data-bind="attr:{href: '#'+ id()}" class="btn btn-primary" data-toggle="collapse">
-                <label data-bind="text: buttonname"></label>
-            </a>
-            <button class="btn btn-danger" data-bind="click: $parent.removeButton">
-                <i class="fas fa-trash"></i>
-            </button>
-        </span>
-        <div class="collapse" data-bind="attr:{id: id()}">
-            <div class="control-group">
-                <label for="">Button Name:</label>
-                <input type="text" class="form-control" data-bind="value: buttonname">
+        <!-- Modal to confirm deletion of button-->
+        <div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalHeader" aria-hidden="true" data-bind="attr:{id:'delete'+button.id()}">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="modalHeader">Are you sure?</h3>
             </div>
-            <div class="control-group">
-                <label for="">GPIO:</label>
-                <select data-bind="value: gpio, options:$root.gpios, optionsText: function(item){return 'GPIO'+item}"></select>
+            <div class="modal-body">
+                You are about to delete the button <strong data-bind="text: button.buttonName()"></strong> which uses <strong data-bind="text: 'GPIO'+button.gpio()"></strong><br><br>
+                <small>The deletion will not be finalized until you save your settings</small>
             </div>
-            <div class="control-group">
-                <label for="">Mode:</label>
-                <!--<select data-bind="value: buttonMode, options:$root.buttonModes"></select>-->
-                <label data-bind="text: buttonMode"></label>
-            </div>
-            <div class="control-group">
-                <label>Hold Time</label>
-                <input type="number" data-bind="value: buttonTime">
-                ms
-            </div>
-            <div class="control-group" data-bind="visible: show() == 'action'">
-                <label for="">Action:</label>
-                <select data-bind="value: action, options:$root.actions"></select>
-            </div>
-            <div class="control-group" data-bind="visible: show() == 'gcode' ">
-                <label for="">GCODE:</label>
-                <textarea rows="5" data-bind="value: gcode""></textarea>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true" data-bind="click: $parent.removeButton">Yes, delete it now</button>
             </div>
         </div>
-      </div>
+        <!-- Modal for GPIO Help-->
+        <div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalHeader" aria-hidden="true" id="gpioHelp">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            </div>
+            <div class="modal-body">
+                <a href="https://pinout.xyz/" target="_blank"><img src="plugin/physicalbutton/static/img/pinout.xyz.png"/></a>
+                <a href="https://pinout.xyz/">https://pinout.xyz/</a>
+            </div>
+        </div>
     </div>
 </div>
