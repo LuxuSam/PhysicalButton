@@ -154,4 +154,4 @@ If you enjoy my plugin and want to support me and the development, you can do so
 
 [![paypal](https://www.paypalobjects.com/webstatic/de_DE/i/de-pp-logo-150px.png)](https://www.paypal.com/paypalme/luxusam3d)&emsp;&emsp;&emsp;&emsp;[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/C0C14BZCR)
 
-[![paypal](https://www.paypal.com/paypalme/luxusam3d)
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/paypalme/luxusam3d)
