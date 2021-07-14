@@ -1,7 +1,7 @@
 # 🎛 Physical Button 🎛
 
-The PhysicalButton Plugin (hence the name) lets you add physical buttons to your Raspberry Pi.
-The buttons are then able to send GCODE or actions to your printer.
+The **PhysicalButton** plugin (hence the name) lets you add physical buttons to your Raspberry Pi.
+The buttons are then able to send GCODE and actions to your printer.
 
 ---
 ## Setup
