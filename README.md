@@ -24,7 +24,7 @@ In addition you have to specify for how long a button has to be held in order to
 The last step is to add activities to your button which are executed in order of the activities list.
 You can edit, move or remove activities in the right pane.
 
-### More details for the button configuration:
+### More details for the button setup:
 * **Button Name**
   * This is where you put the name of your button to differentiate them in the list of buttons.
 * **GPIO**
