@@ -39,8 +39,7 @@ screenshots:
   alt: Image that shows a modal to confirm the deletion of a configured button.
   caption: Before deleting a button you have to confirm the deletion.
 
-# TODO
-featuredimage: url of a featured image for your plugin, /assets/img/...
+featuredimage: assets/img/plugins/physicalbutton/PhysicalButton_Logo.png
 
 
 compatibility:
