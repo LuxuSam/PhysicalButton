@@ -24,6 +24,26 @@ In addition you have to specify for how long a button has to be held in order to
 The last step is to add activities to your button which are executed in order of the activities list.
 You can edit, move or remove activities in the right pane.
 
+### More details for the button configuration:
+* **Button Name**
+  * This is where you put the name of your button to differentiate them in the list of buttons.
+* **GPIO**
+  * This is the GPIO you connect your button to, the other cable has to be connected to a ground pin. Buttons are configured to use internal pulled-up resistors.
+* **Mode**
+  * Depending on your button setup or wiring you have to choose between the two modes.
+  * Normally Open (NO)
+    * Use this mode if your button is usually not pressed (open).
+  * Normally Closed (NC)
+    * Use this mode if your button is usually pressed (closed).
+* **Hold Time**
+  * This is where you set the hold time for your button, this means how long the button has to be held until the reaction is triggered.
+* **Choose activities for your button**
+  * Action:
+    * You can choose between the standard actions of OctoPrint (cancel, connect, disconnect, home (x, y and z are homed), pause, resume and start).
+  * GCODE:
+    * You can input any GCODE.
+  * These activities will be executed in order of your list. You can also rearrange them by inserting them at your desired position.
+
 ### Note:
 You can only configure one button per GPIO.
 If you want more activities to be activated upon button press (/release), add more activities to the button.
