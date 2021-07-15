@@ -69,7 +69,7 @@ The buttons are then able to send GCODE and actions to your printer.
   * Normally Closed (NC)
     * Use this mode if your button is usually pressed (closed).
 * **Hold Time**
-  * This is where you set the hold time for your button, this means how long the button has to be held until the reaction is triggered.
+  * This is where you set the hold time for your button, meaning how long the button has to be held until the reaction is triggered.
 * **Choose activities for your button**
   * Action:
     * You can choose between the standard actions of OctoPrint (cancel, connect, disconnect, home (x, y and z are homed), pause, resume and start).
@@ -90,6 +90,4 @@ If you encounter problems using the plugin or if you have an idea for a new feat
 ### ❤️ Support me❤️
 If you enjoy my plugin and want to support me and the development, you can do so by sending me a donation on
 
-[![paypal](https://www.paypalobjects.com/webstatic/de_DE/i/de-pp-logo-150px.png)](https://www.paypal.com/paypalme/luxusam3d)&emsp;&emsp;&emsp;&emsp;[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/C0C14BZCR)
-
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/paypalme/luxusam3d)
+[![paypal](https://www.paypalobjects.com/webstatic/de_DE/i/de-pp-logo-100px.png)](https://www.paypal.com/paypalme/luxusam3d)&emsp;&emsp;[![ko-fi](https://uploads-ssl.webflow.com/5c14e387dab576fe667689cf/5c91bddac6c3aa6b3718fd86_kofisvglofo.svg)](https://ko-fi.com/C0C14BZCR)
