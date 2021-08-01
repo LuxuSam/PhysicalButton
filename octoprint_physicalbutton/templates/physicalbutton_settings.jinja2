@@ -1,9 +1,16 @@
 <div class="physicalbutton_settings" data-bind="event:{change: $root.viewChanged}">
-    <div class="control-group header-and-button">
-        <h3>Physical Button</h3>
-        <button class="btn btn-primary add-new-button" data-bind="click: addButton" title="Add a new button">
-            <i class="fa fa-plus"></i>
-        </button>
+    <div class="span12">
+        <div class="control-group header-and-button">
+            <div class="logo">
+                <a href="https://github.com/LuxuSam/PhysicalButton/tree/master"><img src="plugin/physicalbutton/static/img/logo.png" width="200"></a>
+            </div>
+            <div class="information-add-button">
+                <!--<p>More information on how to set up the buttons can be found on <a href="https://github.com/LuxuSam/PhysicalButton/tree/master">GitHub</a>.</p>-->
+                <button class="btn btn-primary add-new-button" data-bind="click: addButton" title="Add a new button">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
     </div>
     <small data-bind="style: { visibility: $root.changeDetected()  ? 'visible' : 'hidden'}">Don't forget to save the settings to apply your changes</small>
     <div id="accordionID" class="accordion button-list" data-bind="foreach: { data:buttons, as: 'button' }">
