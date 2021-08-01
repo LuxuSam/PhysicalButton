@@ -1,9 +1,29 @@
 <div class="physicalbutton_settings" data-bind="event:{change: $root.viewChanged}">
-    <div class="control-group header-and-button">
-        <h3>Physical Button</h3>
-        <button class="btn btn-primary add-new-button" data-bind="click: addButton" title="Add a new button">
-            <i class="fa fa-plus"></i>
-        </button>
+    <div class="span12">
+        <div class="control-group header-and-button">
+            <div class="logo">
+                <img src="plugin/physicalbutton/static/img/physicalbutton_logo.png" width="200">
+            </div>
+            <div class="information-add-button">
+                <div class="link-buttons">
+                    <a class="btn btn-mini btn-inverse github" type="button" href="https://github.com/LuxuSam/PhysicalButton/tree/master" target="_blank">
+                        <i class="fab fa-github"></i>
+                        GitHub
+                    </a>
+                    <a class="btn btn-mini btn-inverse paypal" type="button" href="https://www.paypal.com/paypalme/luxusam3d" target="_blank">
+                        <i class="fab fa-paypal"></i>
+                        Paypal
+                    </a>
+                    <a class="btn btn-mini btn-inverse ko-fi" type="button" href="https://ko-fi.com/C0C14BZCR" target="_blank">
+                        <i class="fas fa-donate"></i>
+                        Ko-fi
+                    </a>
+                </div>
+                <button class="btn btn-primary add-new-button" data-bind="click: addButton" title="Add a new button">
+                    <i class="fa fa-plus"></i>
+                </button>
+            </div>
+        </div>
     </div>
     <small data-bind="style: { visibility: $root.changeDetected()  ? 'visible' : 'hidden'}">Don't forget to save the settings to apply your changes</small>
     <div id="accordionID" class="accordion button-list" data-bind="foreach: { data:buttons, as: 'button' }">
