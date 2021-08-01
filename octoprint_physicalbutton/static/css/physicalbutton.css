@@ -15,6 +15,23 @@
 }
 .physicalbutton_settings .header-and-button {
   padding-right: 5px;
+  align-items: flex-end;
+  align-items: stretch;
+  border: 1px solid LightGrey;
+  border-radius: 5px;
+  background-color: #E7E9EB;
+}
+.physicalbutton_settings .header-and-button .logo {
+  margin-top: 5px;
+  margin-left: 5px;
+  text-align: center;
+}
+.physicalbutton_settings .header-and-button .information-add-button {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  margin-bottom: 5px;
 }
 .physicalbutton_settings .button-list .accordion-heading {
   margin: 0;
