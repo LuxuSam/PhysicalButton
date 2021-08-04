@@ -5,6 +5,7 @@ import octoprint.plugin
 from gpiozero import Button
 import time
 import threading
+import subprocess
 
 buttonList = []
 
@@ -60,6 +61,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 if activity.get("type") == "gcode":
                     #send specified gcode
                     self.sendGcode(activity.get("execute"))
+                if activity.get("type") == "system":
+                    #send specified system
+                    self.runSystem(activity.get("execute"))
 
     def reactToInput(self, pressedButton):
         t = threading.Thread(target=self.thread_react, args=(pressedButton,))
@@ -96,6 +100,26 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             self._printer.start_print()
             return
         self._logger.debug("No action selected or action (yet) unknown")
+
+    def runSystem(self, commands):
+        # split commands lines and execute one by one, unless there is an error
+        for command in commands.splitlines():
+            self._logger.info("Executing system command '%s'" % (command))
+
+            try:
+                # send command to Pi
+                ret = subprocess.check_output(command,
+                    stderr=subprocess.STDOUT, shell=True)
+                # log output
+                self._logger.info("Command '%s' returned: %s" %
+                    (command, ret.decode("utf-8")))
+
+            except subprocess.CalledProcessError as e:
+                # return exception and stop further processing
+                self._logger.error("Error [%d] executing command '%s': %s" %
+                    (e.returncode, command, e.output.decode("utf-8")))
+                return
+
     ##################################################################################################
 
     def on_after_startup(self):

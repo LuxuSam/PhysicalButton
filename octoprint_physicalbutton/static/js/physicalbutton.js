@@ -12,7 +12,7 @@
          self.settingsViewModel = parameters[0];
 
          //GPIOs:
-         self.gpios = ko.observableArray(['none', '4', '5', '6',
+         self.gpios = ko.observableArray(['none', '2', '3', '4', '5', '6',
              '7', '8', '9', '10', '11', '12', '13', '16', '17',
              '18', '20', '21', '22', '23', '24', '25', '26', '27'
          ]);
@@ -102,6 +102,19 @@
              updatedItem.activities.push({
                  type: ko.observable('gcode'),
                  identifier: ko.observable('New GCODE'),
+                 execute: ko.observable('')
+             });
+             self.selectedActivity(this.activities()[this.activities().length - 1]);
+         };
+
+         self.addSystem = function() {
+             var updatedItem = this;
+             if (!updatedItem.activities()) {
+                 updatedItem.activities(new Array);
+             }
+             updatedItem.activities.push({
+                 type: ko.observable('system'),
+                 identifier: ko.observable('New System Command'),
                  execute: ko.observable('')
              });
              self.selectedActivity(this.activities()[this.activities().length - 1]);
