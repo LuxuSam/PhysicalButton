@@ -2,8 +2,8 @@
 layout: plugin
 
 id: physicalbutton
-title: 🎛 Physical Button 🎛
-description: Add physical buttons to your OctoPrint
+title: Physical Button
+description: Add physical buttons to OctoPrint
 authors:
 - LuxuSam
 license: AGPLv3
