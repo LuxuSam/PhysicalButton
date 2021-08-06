@@ -27,6 +27,7 @@ tags:
 - action
 - actions
 - gcode
+- system
 
 screenshots:
 - url: /assets/img/plugins/physicalbutton/PhysicalButton_action.png
@@ -75,12 +76,14 @@ The buttons are then able to send GCODE and actions to your printer.
     * You can choose between the standard actions of OctoPrint (cancel, connect, disconnect, home (x, y and z are homed), pause, resume and start).
   * GCODE:
     * You can input any GCODE.
+  * System:
+    * You can input any system command for your Octoprint host.
   * These activities will be executed in order of your list. You can also rearrange them by inserting them at your desired position.
 
 ----
 ### ⚠️ Use at your own risk ⚠️
   I am not accountable for any damages made to your printer/raspberry pi when using this plugin (e.g. wrong wiring
-  of buttons, GCODE commands that you send with the buttons to your printer, ...).
+  of buttons, GCODE or system commands that you send with the buttons to your printer, ...).
 
 ----
 ### Get Help / Feature request

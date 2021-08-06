@@ -64,8 +64,9 @@
                                 <input type="number" data-bind="value: button.buttonTime">
                             </div>
                             <div class="btn-group control-group add-new-activity">
-                                <button class="btn" data-bind="click: $parent.addAction">Add Action</button>
-                                <button class="btn" data-bind="click: $parent.addGCODE">Add GCODE</button>
+                                <button class="btn" data-bind="click: $parent.addAction">Action</button>
+                                <button class="btn" data-bind="click: $parent.addGCODE">GCODE</button>
+                                <button class="btn" data-bind="click: $parent.addSystem">System</button>
                             </div>
                             <div class="control-group activity-list">
                                 <label for="" title="List of your added activities">Activities:</label>
@@ -98,6 +99,10 @@
                             <div class="control-group activity-action" data-bind="if:$parent.selectedActivity().type() == 'action'">
                                 <label for="" title="Choose an action that should be executed on trigger">Action:</label>
                                 <select data-bind="options:$root.actions, value:$parent.selectedActivity().execute"></select>
+                            </div>
+                            <div class="control-group activity-system" data-bind="if:$parent.selectedActivity().type() == 'system'">
+                                <label for="" title="Type in commands for the Pi to run">System:</label>
+                                <textarea data-bind="attr:{rows: 5}, value:$parent.selectedActivity().execute"></textarea>
                             </div>
                         </div>
                     </div>
