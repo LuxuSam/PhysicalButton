@@ -8,8 +8,7 @@ authors:
 - LuxuSam
 license: AGPLv3
 
-# TODO
-date: 2021-07-14
+date: 2021-08-01
 
 homepage: https://github.com/LuxuSam/PhysicalButton/tree/master
 source: https://github.com/LuxuSam/PhysicalButton/tree/master
@@ -47,10 +46,8 @@ compatibility:
 
   #octoprint:
   #- 1.2.0
-
   os:
-  - 'OctoPi'
-
+  - linux
   python: ">=3,<4"
 
 ---
