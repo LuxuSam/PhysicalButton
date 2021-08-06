@@ -54,6 +54,7 @@ If you want more activities to be activated upon button press (/release), add mo
 ## Screenshots
 ![Action activity](/assets/img/plugins/physicalbutton/PhysicalButton_action.png)</br></br>
 ![GCODE activity](/assets/img/plugins/physicalbutton/PhysicalButton_gcode.png)</br></br>
+![System activity](/assets/img/plugins/physicalbutton/PhysicalButton_system.png)</br></br>
 ![Delete Button](/assets/img/plugins/physicalbutton/PhysicalButton_delete.png)
 
 ---
