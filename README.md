@@ -64,7 +64,7 @@ If you encounter problems using the plugin or if you have an idea for a new feat
 ---
 ## ⚠️ Use at your own risk ⚠️
 I am not accountable for any damages made to your printer/raspberry pi when using this plugin (e.g. wrong wiring
-of buttons, GCODE commands that you send with the buttons to your printer, ...).
+of buttons, GCODE or system commands that you send with the buttons to your printer, ...).
 
 When setting the plugin up corresponding to my instructions, nothing should happen.
 
