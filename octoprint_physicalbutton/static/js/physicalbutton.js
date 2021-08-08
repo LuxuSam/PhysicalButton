@@ -17,7 +17,7 @@
              '18', '20', '21', '22', '23', '24', '25', '26', '27'
          ]);
          //actions:
-         self.actions = ko.observableArray(['none', 'cancel', 'connect', 'disconnect', 'home', 'pause', 'resume', 'pause/resume', 'start']);
+         self.actions = ko.observableArray(['none', 'cancel', 'connect', 'disconnect', 'home', 'pause', 'resume', 'toggle pause', 'start']);
 
          //button modes:
          self.buttonModes = ko.observableArray(['Normally Open (NO)', 'Normally Closed (NC)']);

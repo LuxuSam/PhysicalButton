@@ -96,11 +96,11 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         if action == "resume":
             self._printer.resume_print()
             return
+        if action == 'toggle pause':
+            self._printer.toggle_pause_print()
+            return
         if action == "start":
             self._printer.start_print()
-            return
-        if action == 'pause/resume':
-            self.actionPauseResume()
             return
         self._logger.debug("No action selected or action (yet) unknown")
 
@@ -124,15 +124,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 return
 
     ####################################_Custom actions_##############################################
-
-    def actionPauseResume(self):
-        if self._printer.is_paused():
-            self._printer.resume_print()
-            return
-        if self._printer.is_printing():
-            self._printer.pause_print()
-            return
-
+    #None here yet
     ####################################_OctoPrint Functions_#########################################
 
     def on_after_startup(self):
