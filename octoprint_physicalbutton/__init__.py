@@ -99,7 +99,18 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         if action == "start":
             self._printer.start_print()
             return
+        if action == 'pause/resume':
+            self.actionPauseResume()
+            return
         self._logger.debug("No action selected or action (yet) unknown")
+
+    def actionPauseResume(self):
+        if self._printer.is_paused() or self._printer.is_pausing():
+            self._printer.resume_print()
+            return
+        if self._printer.is_printing():
+            self._printer.pause_print()
+            return
 
     def runSystem(self, commands):
         # split commands lines and execute one by one, unless there is an error
