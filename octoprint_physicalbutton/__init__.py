@@ -152,7 +152,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
     def on_settings_cleanup(self):
         self.removeButtons()
-        octoprint.plugin.SettingsPlugin.on_settings_cleanup()
+        octoprint.plugin.SettingsPlugin.on_settings_cleanup(self)
 
     def get_settings_defaults(self):
         return dict(
