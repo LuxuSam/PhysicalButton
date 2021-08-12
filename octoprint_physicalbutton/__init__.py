@@ -16,7 +16,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            octoprint.plugin.ShutdownPlugin
                            ):
 
-    ######################################## Helper functions ########################################
+    ########################################_Helper functions_########################################
     def setupButtons(self):
         global buttonList
         for button in self._settings.get(["buttons"]):
@@ -96,6 +96,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         if action == "resume":
             self._printer.resume_print()
             return
+        if action == 'toggle pause':
+            self._printer.toggle_pause_print()
+            return
         if action == "start":
             self._printer.start_print()
             return
@@ -120,7 +123,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                     (e.returncode, command, e.output.decode("utf-8")))
                 return
 
-    ##################################################################################################
+    ####################################_Custom actions_##############################################
+    #None here yet
+    ####################################_OctoPrint Functions_#########################################
 
     def on_after_startup(self):
         if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
