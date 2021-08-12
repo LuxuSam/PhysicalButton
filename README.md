@@ -43,7 +43,7 @@ You can edit, move or remove activities in the right pane.
   * GCODE:
     * You can input any GCODE.
   * System:
-    * You can input any system command for your Octoprint host.
+    * You can input any system command for your Octoprint host. Note that system commands will be run under the same user that owns your OctoPrint service (usually 'pi' for OctoPi) with the same rights and permissions, so you may need to use sudo facilities for certain tasks. Please refer to your OctoPrint host's documentation for details.
   * These activities will be executed in order of your list. You can also rearrange them by inserting them at your desired position.
 
 ### Note:
