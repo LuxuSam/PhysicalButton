@@ -20,6 +20,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     def setupButtons(self):
         global buttonList
         for button in self._settings.get(["buttons"]):
+            if button.get("gpio") == 'none':
+                break;
             buttonGPIO = int(button.get("gpio"))
             buttonMode = button.get("buttonMode")
             newButton = Button(buttonGPIO, pull_up=True, bounce_time=None)
