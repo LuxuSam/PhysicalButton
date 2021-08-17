@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest an idea for Physical Buttons
+about: Suggest an idea for Physical Button
 title: "[FEATURE] Short feature description"
 labels: enhancement
 assignees: LuxuSam

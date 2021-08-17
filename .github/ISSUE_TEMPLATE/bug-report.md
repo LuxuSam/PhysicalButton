@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Help remove bugs from Physical Buttons
+about: Help remove bugs from Physical Button
 title: " [BUG] Short bug description"
 labels: bug
 assignees: LuxuSam

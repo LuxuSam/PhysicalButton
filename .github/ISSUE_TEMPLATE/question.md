@@ -1,6 +1,6 @@
 ---
 name: Question
-about: Question about Physical Buttons
+about: Question about Physical Button
 title: "[QUESTION] A short question description"
 labels: question
 assignees: LuxuSam
