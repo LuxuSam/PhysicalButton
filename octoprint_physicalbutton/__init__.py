@@ -80,9 +80,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         self._printer.commands(commandList, force = False)
 
     def sendAction(self, action):
-        if action == "cancel":
-            self._printer.cancel_print()
-            return
         if action == "connect":
             self._printer.connect()
             return
@@ -103,6 +100,12 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             return
         if action == "start":
             self._printer.start_print()
+            return
+        if action == "cancel":
+            self._printer.cancel_print()
+            return
+        if action == 'toggle start-cancel':
+            self.toggle_cancel_print()
             return
         self._logger.debug("No action selected or action (yet) unknown")
 
@@ -126,7 +129,11 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 return
 
     ####################################_Custom actions_##############################################
-    #None here yet
+    def toggle_cancel_print():
+        if self._printer.is_ready():
+            self._printer.start_print()
+        else:
+            self._printer.cancel_print()
     ####################################_OctoPrint Functions_#########################################
 
     def on_after_startup(self):
