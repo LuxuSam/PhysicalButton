@@ -72,12 +72,21 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         t.start()
 
     def sendGcode(self, gcodetxt):
-        #split gcode lines in single commands without comment and add to list
-        commandList = []
-        for temp in gcodetxt.splitlines():
-            commandList.append(temp.split(";")[0].strip())
-        #send commandList to printer
-        self._printer.commands(commandList, force = False)
+        for line in gcodetxt.splitlines():
+            if '@file:' in line:
+            ## Either an absolute path or relative path
+            ## to a local file in the uploads folder
+                path = line.replace('@file:','').split(";")[0].strip()
+                self._printer.select_file(path, False, printAfterSelect = True)
+                continue
+            if '@file_sd:' in line:
+            ## An absolute path to a local file on the SD card
+                path = line.replace('@file_sd:','').split(";")[0].strip()
+                self._printer.select_file(path, True, printAfterSelect = True)
+                continue
+            ## Normal GCODE command
+            cmd = line.split(";")[0].strip()
+            self._printer.commands(cmd, force = False)
 
     def sendAction(self, action):
         if action == "cancel":
