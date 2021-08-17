@@ -95,7 +95,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         if action == "resume":
             self._printer.resume_print()
             return
-        if action == 'toggle pause':
+        if action == 'toggle pause-resume':
             self._printer.toggle_pause_print()
             return
         if action == "start":
