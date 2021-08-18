@@ -129,7 +129,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 return
 
     ####################################_Custom actions_##############################################
-    def toggle_cancel_print():
+    def toggle_cancel_print(self):
         if self._printer.is_ready():
             self._printer.start_print()
         else:
