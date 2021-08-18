@@ -65,6 +65,7 @@
                             </div>
                             <div class="btn-group control-group add-new-activity">
                                 <button class="btn" data-bind="click: $parent.addAction">Action</button>
+                                <button class="btn" data-bind="click: $parent.addFile">File</button>
                                 <button class="btn" data-bind="click: $parent.addGCODE">GCODE</button>
                                 <button class="btn" data-bind="click: $parent.addSystem">System</button>
                             </div>
@@ -102,6 +103,10 @@
                             </div>
                             <div class="control-group activity-system" data-bind="if:$parent.selectedActivity().type() == 'system'">
                                 <label for="" title="Type in commands for the Pi to run">System:</label>
+                                <textarea data-bind="attr:{rows: 5}, value:$parent.selectedActivity().execute"></textarea>
+                            </div>
+                            <div class="control-group activity-file" data-bind="if:$parent.selectedActivity().type() == 'file'">
+                                <label for="" title="Type in a relative path from the uploads folder or an absolute path to a file. Add @sd: if the file is on the SD of your printer">Path to file:</label>
                                 <textarea data-bind="attr:{rows: 5}, value:$parent.selectedActivity().execute"></textarea>
                             </div>
                         </div>
