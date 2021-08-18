@@ -66,6 +66,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 if activity.get("type") == "system":
                     #send specified system
                     self.runSystem(activity.get("execute"))
+                if activity.get("type") == "file":
+                    #select the file at the given location
+                    self.selectFile(activity.get("execute"))
 
     def reactToInput(self, pressedButton):
         t = threading.Thread(target=self.thread_react, args=(pressedButton,))
@@ -127,6 +130,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 self._logger.error("Error [%d] executing command '%s': %s" %
                     (e.returncode, command, e.output.decode("utf-8")))
                 return
+
+    def selectFile(self, path):
+        
+        return
 
     ####################################_Custom actions_##############################################
     def toggle_cancel_print(self):
