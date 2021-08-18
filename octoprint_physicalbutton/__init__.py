@@ -80,7 +80,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                     path = line.replace('@file:','').split(";")[0].strip()
                     try:
                         self._printer.select_file(path, False, printAfterSelect = True)
-                        self._logger.debug("Starting execution of file '%s'" %path )
+                        self._logger.debug("Executing file '%s'" %path )
                         continue
                     except (octoprint.printer.InvalidFileType, octoprint.printer.InvalidFileLocation) as e:
                         self._logger.error(e)
@@ -93,7 +93,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                     path = line.replace('@file_sd:','').split(";")[0].strip()
                     try:
                         self._printer.select_file(path, True, printAfterSelect = True)
-                        self._logger.debug("Starting execution of file '%s'" %path )
+                        self._logger.debug("Executing file '%s'" %path )
                         continue
                     except (octoprint.printer.InvalidFileType, octoprint.printer.InvalidFileLocation) as e:
                         self._logger.error(e)
