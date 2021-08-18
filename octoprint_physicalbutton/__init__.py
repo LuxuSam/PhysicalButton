@@ -136,11 +136,11 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             if '@sd:' in path:
                 path = path.replace('@sd:','').strip()
                 self._printer.select_file(path, True, printAfterSelect = False)
-                self._logger.debug("Executing SD-file '%s'" %path )
+                self._logger.debug("Selecting SD-file '%s'" %path )
             else:
                 path = path.strip()
                 self._printer.select_file(path, False, printAfterSelect = False)
-                self._logger.debug("Executing file '%s'" %path )
+                self._logger.debug("Selecting file '%s'" %path )
         except (octoprint.printer.InvalidFileType, octoprint.printer.InvalidFileLocation) as e:
             self._logger.error(e)
             return
