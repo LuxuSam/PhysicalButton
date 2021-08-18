@@ -78,14 +78,26 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             ## to a local file in the uploads folder
                 if self._printer.is_ready():
                     path = line.replace('@file:','').split(";")[0].strip()
-                    self._printer.select_file(path, False, printAfterSelect = True)
-                continue
+                    try:
+                        self._printer.select_file(path, False, printAfterSelect = True)
+                        continue
+                    except (octoprint.printer.InvalidFileType, octoprint.printer.InvalidFileLocation) as e:
+                        self._logger.error(e)
+                        break
+                else:
+                    self._logger.error('Could not execute file as printer is not ready')
             if '@file_sd:' in line:
             ## An absolute path to a local file on the SD card
                 if self._printer.is_ready():
                     path = line.replace('@file_sd:','').split(";")[0].strip()
-                    self._printer.select_file(path, True, printAfterSelect = True)
-                continue
+                    try:
+                        self._printer.select_file(path, True, printAfterSelect = True)
+                        continue
+                    except (octoprint.printer.InvalidFileType, octoprint.printer.InvalidFileLocation) as e:
+                        self._logger.error(e)
+                        break
+                else:
+                    self._logger.error('Could not execute file as printer is not ready')
             ## Normal GCODE command
             cmd = line.split(";")[0].strip()
             self._printer.commands(cmd, force = False)
