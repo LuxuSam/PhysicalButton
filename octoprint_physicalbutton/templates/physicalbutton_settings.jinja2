@@ -49,7 +49,7 @@
                             <div class="control-group choose-gpio">
                                 <div class="control-group gpio-help">
                                     <label for="" title="Choose a  pin for your button (Chosen in BCM-mode)">GPIO: </label>
-                                    <a data-toggle="modal" href="#gpioHelp"><i class="far fa-question-circle"></i></a>
+                                    <a data-toggle="modal" href="#gpioHelp"><i class="fas fa-question-circle"></i></a>
                                 </div>
                                 <select data-bind="foreach: {data:$root.gpios, as: 'gpioListItem'}, value:button.gpio">
                                     <option data-bind="value:$data, text: gpioListItem == 'none' ? gpioListItem : 'GPIO'+gpioListItem ,disable: $root.disableGpioOption(gpioListItem,button.gpio)"></option>
