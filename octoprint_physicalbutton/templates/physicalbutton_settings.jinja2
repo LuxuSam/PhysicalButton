@@ -143,5 +143,31 @@
                 <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
             </div>
         </div>
+        <!-- Modal for Attention note for file activity-->
+        <div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalHeader" aria-hidden="true" id="attentionFile">
+            <div class="modal-body">
+                <h3>Info:</h3>
+                There are three ways to specify a file:
+                <ul>
+                    <li>Absolute path to the file:<br>
+                        <code>/home/pi/Some/Folder/Test.gcode</code>
+                    </li>
+                    <li>Relative path inside the uploads folder:<br>
+                        <code>Some/Folder/Test.gcode</code>
+                    </li>
+                    <li>Absolute path to the file on the SD-card of the printer:<br>
+                        <code>@sd:Some/Folder/Test.gcode</code>
+                    </li>
+                </ul>
+
+                <h3>Attention!</h3>
+                This activity <strong>only selects the file</strong> at the given path.<br>
+                If you want to execute it, <strong>add a 'start action' behind</strong> the file activity. <br><br>
+                In addition, <strong>following activities</strong> will not be executed after the completion of the file, but <strong>run immediatly after the 'start action'</strong>.
+            </div>
+            <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+            </div>
+        </div>
     </div>
 </div>
