@@ -44,9 +44,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         buttonValue = pressedButton.value
 
         #search for pressed button
-        for x in self._settings.get(["buttons"]):
-            if int(x.get("gpio")) == pressedButton.pin.number:
-                button = x
+        for btn in self._settings.get(["buttons"]):
+            if int(btn.get("gpio")) == pressedButton.pin.number:
+                button = btn
                 break
 
         waitTime = int(button.get("buttonTime"))
@@ -56,8 +56,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             self._logger.debug("Reacting to button %s:" %button.get("buttonName"))
             #execute actions for button in order
             for activity in button.get("activities"):
-                self._logger.debug("Sending activity with identifier '%s' ..." %activity.get("identifier"))
                 exitCode = 0
+                self._logger.debug("Sending activity with identifier '%s' ..." %activity.get("identifier"))
                 if activity.get("type") == "action":
                     #send specified action
                     exitCode = self.sendAction(activity.get("execute"))
