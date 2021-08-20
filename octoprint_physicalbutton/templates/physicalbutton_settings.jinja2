@@ -106,7 +106,12 @@
                                 <textarea data-bind="attr:{rows: 5}, value:$parent.selectedActivity().execute"></textarea>
                             </div>
                             <div class="control-group activity-file" data-bind="if:$parent.selectedActivity().type() == 'file'">
-                                <label for="" title="Type in a relative path from the uploads folder or an absolute path to a file. Add @sd: if the file is on the SD of your printer">Path to file:</label>
+                                <div class="control-group path-file">
+                                    <label for="" title="Type in a relative path from the uploads folder or an absolute path to a file. Add @sd: if the file is on the SD of your printer">Path to file:&nbsp;&nbsp;</label>
+                                    <a data-toggle="modal" href="#attentionFile" data-bind="if:$parent.selectedActivity().type() == 'file'">
+                                        <i class="fas fa-info-circle"></i>
+                                    </a>
+                                </div>
                                 <textarea data-bind="attr:{rows: 5}, value:$parent.selectedActivity().execute"></textarea>
                             </div>
                         </div>
