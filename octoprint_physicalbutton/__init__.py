@@ -74,7 +74,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 if exitCode == 0:
                     self._logger.debug("The activity with identifier '%s' was executed successfully!" %activity.get("identifier"))
                 if exitCode == -1:
-                    self._logger.error("The activity with identifier '%s' failed! Aborting follwing executions!" %activity.get("identifier") )
+                    self._logger.error("The activity with identifier '%s' failed! Aborting follwing activities!" %activity.get("identifier") )
                     break
 
     def reactToInput(self, pressedButton):
