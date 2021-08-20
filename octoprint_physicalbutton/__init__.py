@@ -82,6 +82,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         t.start()
 
     def sendGcode(self, gcodetxt):
+        if not self._printer.is_operational():
+            self._logger.error("Your machine is not operational!")
+            return -1
         #split gcode lines in single commands without comment and add to list
         commandList = []
         for temp in gcodetxt.splitlines():
@@ -143,6 +146,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     def selectFile(self, path):
         try:
             if not self._printer.is_ready():
+                self._logger.error("Your machine is not connected!")
                 return -1
             if '@sd:' in path:
                 path = path.replace('@sd:','').strip()
