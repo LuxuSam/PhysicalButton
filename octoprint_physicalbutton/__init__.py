@@ -44,9 +44,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         buttonValue = pressedButton.value
 
         #search for pressed button
-        for x in self._settings.get(["buttons"]):
-            if int(x.get("gpio")) == pressedButton.pin.number:
-                button = x
+        for btn in self._settings.get(["buttons"]):
+            if int(btn.get("gpio")) == pressedButton.pin.number:
+                button = btn
                 break
 
         waitTime = int(button.get("buttonTime"))
@@ -56,61 +56,73 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             self._logger.debug("Reacting to button %s:" %button.get("buttonName"))
             #execute actions for button in order
             for activity in button.get("activities"):
-                self._logger.debug('Sending activity with identifier %s ...' %activity.get("identifier"))
+                exitCode = 0
+                self._logger.debug("Sending activity with identifier '%s' ..." %activity.get("identifier"))
                 if activity.get("type") == "action":
                     #send specified action
-                    self.sendAction(activity.get("execute"))
+                    exitCode = self.sendAction(activity.get("execute"))
                 if activity.get("type") == "gcode":
                     #send specified gcode
-                    self.sendGcode(activity.get("execute"))
+                    exitCode = self.sendGcode(activity.get("execute"))
                 if activity.get("type") == "system":
                     #send specified system
-                    self.runSystem(activity.get("execute"))
+                    exitCode = self.runSystem(activity.get("execute"))
                 if activity.get("type") == "file":
                     #select the file at the given location
-                    self.selectFile(activity.get("execute"))
+                    exitCode = self.selectFile(activity.get("execute"))
+                #Check if an executed activity failed
+                if exitCode == 0:
+                    self._logger.debug("The activity with identifier '%s' was executed successfully!" %activity.get("identifier"))
+                if exitCode == -1:
+                    self._logger.error("The activity with identifier '%s' failed! Aborting follwing activities!" %activity.get("identifier") )
+                    break
 
     def reactToInput(self, pressedButton):
         t = threading.Thread(target=self.thread_react, args=(pressedButton,))
         t.start()
 
     def sendGcode(self, gcodetxt):
+        if not self._printer.is_operational():
+            self._logger.error("Your machine is not operational!")
+            return -1
         #split gcode lines in single commands without comment and add to list
         commandList = []
         for temp in gcodetxt.splitlines():
             commandList.append(temp.split(";")[0].strip())
         #send commandList to printer
         self._printer.commands(commandList, force = False)
+        return 0
 
     def sendAction(self, action):
         if action == "connect":
             self._printer.connect()
-            return
+            return 0
         if action == "disconnect":
             self._printer.disconnect()
-            return
+            return 0
         if action == "home":
             self._printer.home(["x","y","z"])
-            return
+            return 0
         if action == "pause":
             self._printer.pause_print()
-            return
+            return 0
         if action == "resume":
             self._printer.resume_print()
-            return
+            return 0
         if action == 'toggle pause-resume':
             self._printer.toggle_pause_print()
-            return
+            return 0
         if action == "start":
             self._printer.start_print()
-            return
+            return 0
         if action == "cancel":
             self._printer.cancel_print()
-            return
+            return 0
         if action == 'toggle start-cancel':
             self.toggle_cancel_print()
-            return
+            return 0
         self._logger.debug("No action selected or action (yet) unknown")
+        return 0
 
     def runSystem(self, commands):
         # split commands lines and execute one by one, unless there is an error
@@ -124,15 +136,18 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 # log output
                 self._logger.info("Command '%s' returned: %s" %
                     (command, ret.decode("utf-8")))
-
+                return 0
             except subprocess.CalledProcessError as e:
                 # return exception and stop further processing
                 self._logger.error("Error [%d] executing command '%s': %s" %
                     (e.returncode, command, e.output.decode("utf-8")))
-                return
+                return -1
 
     def selectFile(self, path):
         try:
+            if not self._printer.is_ready():
+                self._logger.error("Your machine is not ready to select a file!")
+                return -1
             if '@sd:' in path:
                 path = path.replace('@sd:','').strip()
                 self._printer.select_file(path, True, printAfterSelect = False)
@@ -141,9 +156,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 path = path.strip()
                 self._printer.select_file(path, False, printAfterSelect = False)
                 self._logger.debug("Selecting file '%s'" %path )
+            return 0
         except (octoprint.printer.InvalidFileType, octoprint.printer.InvalidFileLocation) as e:
             self._logger.error(e)
-            return
+            return -1
 
     ####################################_Custom actions_##############################################
     def toggle_cancel_print(self):
