@@ -112,7 +112,7 @@
                                         <i class="fas fa-info-circle"></i>
                                     </a>
                                 </div>
-                                <textarea data-bind="attr:{rows: 5}, value:$parent.selectedActivity().execute"></textarea>
+                                <textarea data-bind="attr:{rows: 5}, value:$parent.selectedActivity().execute" placeholder="Path/To/File.gcode"></textarea>
                             </div>
                         </div>
                     </div>
@@ -151,24 +151,27 @@
         <!-- Modal for Attention note for file activity-->
         <div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalHeader" aria-hidden="true" id="attentionFile">
             <div class="modal-body">
-                <h3>Info:</h3>
-                There are three ways to specify a file:
-                <ul>
-                    <li>Absolute path to the file:<br>
-                        <code>/home/pi/Some/Folder/Test.gcode</code>
-                    </li>
-                    <li>Relative path inside the uploads folder:<br>
-                        <code>Some/Folder/Test.gcode</code>
-                    </li>
-                    <li>Absolute path to the file on the SD-card of the printer:<br>
-                        <code>@sd:Some/Folder/Test.gcode</code>
-                    </li>
-                </ul>
-
                 <h3>Attention!</h3>
                 This activity <strong>only selects the file</strong> at the given path.<br>
-                If you want to execute it, <strong>add a 'start action' behind</strong> the file activity. <br><br>
+                If you want to execute it, <strong>add a 'start action' after</strong> the file activity. <br><br>
                 In addition, <strong>following activities</strong> will not be executed after the completion of the file, but <strong>run immediatly after the 'start action'</strong>.
+
+                <h3>Info:</h3>
+                There are three ways to specify a file.
+
+                <h4>Relative path inside the uploads folder</h4>
+                You just uploaded a file to OctoPrint and put it in a folder:<br>
+                Path: <code>Folder/PhysicalButton.gcode</code><br>
+                Here 'PhysicalButton.gcode' is located in a folder named Folder in your uploads.
+                <h4>Absolute path to the file</h4>
+                You uploaded a file to your pi and put it in a custom location. <br>
+                Path: <code>/home/pi/Folder/PhysicalButton.gcode</code><br>
+                Here 'PhysicalButton.gcode' is located in a folder named Folder under user pi.
+
+                <h4>Absolute path to the file on the SD-card of the printer</h4>
+                You have the file on the sd of your printer <br>
+                Path: <code>@sd:Folder/PhysicalButton.gcode</code><br>
+                Here 'PhysicalButton.gcode' is located in a folder named Folder on the SD-card of your printer.
             </div>
             <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>

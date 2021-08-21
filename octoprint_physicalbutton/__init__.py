@@ -21,7 +21,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         global buttonList
         for button in self._settings.get(["buttons"]):
             if button.get("gpio") == "none":
-                break;
+                continue
             buttonGPIO = int(button.get("gpio"))
             buttonMode = button.get("buttonMode")
             newButton = Button(buttonGPIO, pull_up=True, bounce_time=None)
@@ -146,7 +146,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     def selectFile(self, path):
         try:
             if not self._printer.is_ready():
-                self._logger.error("Your machine is not connected!")
+                self._logger.error("Your machine is not ready to select a file!")
                 return -1
             if '@sd:' in path:
                 path = path.replace('@sd:','').strip()
