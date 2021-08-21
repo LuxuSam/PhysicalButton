@@ -128,7 +128,7 @@
              updatedItem.activities.push({
                  type: ko.observable('file'),
                  identifier: ko.observable('New File'),
-                 execute: ko.observable('Path/To/File.gcode')
+                 execute: ko.observable('')
              });
              self.selectedActivity(this.activities()[this.activities().length - 1]);
          };
