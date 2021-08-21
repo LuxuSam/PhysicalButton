@@ -74,6 +74,16 @@ The buttons are then able to send GCODE and actions to your printer.
 * **Choose activities for your button**
   * Action:
     * You can choose between the standard actions of OctoPrint (cancel, connect, disconnect, home (x, y and z are homed), pause, resume and start).
+  * File:
+    * You can specify the path to a file which will be selected.
+    * To start the execution of a file, a 'start action' has to be added behind the 'file activity'.
+    * There are three ways to specify a file:
+      * Absolute path to the file: </br>
+        `/home/pi/Some/Folder/Test.gcode`
+      * Relative path inside the uploads folder:</br>
+        `Some/Folder/Test.gcode`
+      * Absolute path to the file on the SD-card of the printer:</br>
+        `@sd:Some/Folder/Test.gcode`
   * GCODE:
     * You can input any GCODE.
   * System:

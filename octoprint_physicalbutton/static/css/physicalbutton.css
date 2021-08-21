@@ -76,3 +76,9 @@
 .physicalbutton_settings .button-list .right-side .insert-at-index input {
   width: 30px;
 }
+.physicalbutton_settings .button-list .right-side .activity-file .path-file {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-direction: row;
+}

@@ -120,6 +120,19 @@
              self.selectedActivity(this.activities()[this.activities().length - 1]);
          };
 
+         self.addFile = function() {
+             var updatedItem = this;
+             if (!updatedItem.activities()) {
+                 updatedItem.activities(new Array);
+             }
+             updatedItem.activities.push({
+                 type: ko.observable('file'),
+                 identifier: ko.observable('New File'),
+                 execute: ko.observable('')
+             });
+             self.selectedActivity(this.activities()[this.activities().length - 1]);
+         };
+
          self.removeActivity = function() {
              if (!self.selectedActivity()) {
                  return;
