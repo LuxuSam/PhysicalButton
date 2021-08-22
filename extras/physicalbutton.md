@@ -38,6 +38,9 @@ screenshots:
 - url: /assets/img/plugins/physicalbutton/PhysicalButton_system.png
   alt: Image that shows a system activity of a button.
   caption: An exemplary system activity of a button.
+- url: /assets/img/plugins/physicalbutton/PhysicalButton_file.png
+  alt: Image that shows a file activity of a button.
+  caption: An exemplary file activity of a button.
 - url: /assets/img/plugins/physicalbutton/PhysicalButton_delete.png
   alt: Image that shows a modal to confirm the deletion of a configured button.
   caption: Before deleting a button you have to confirm the deletion.
