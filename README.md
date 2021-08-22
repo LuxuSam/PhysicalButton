@@ -15,7 +15,7 @@ The GPIO must be chosen in BCM mode (see <https://pinout.xyz/>).
 If you have other plugins installed that use GPIOs, make sure those plugins are also set to BCM mode.
 
 ---
-## 🔧 Configuration 🔧
+## 🔧 Configuration - Overview 🔧
 To add a new button you have to click on the ➕. This adds a new button to the end of your list.
 
 From there you should enter a button name, the used GPIO and the mode (NO or NC) of the button.
@@ -24,36 +24,38 @@ In addition you have to specify for how long a button has to be held in order to
 The last step is to add activities to your button which are executed in order of the activities list.
 You can edit, move or remove activities in the right pane.
 
-### More details for the button setup:
+### 🔧 Configuration - Detail 🔧
 * **Button Name**
-  * This is where you put the name of your button to differentiate them in the list of buttons.
+  * This is where you put the name of your button to differentiate it in the list of buttons.
 * **GPIO**
-  * This is the GPIO you connect your button to, the other cable has to be connected to a ground pin. Buttons are configured to use internal pulled-up resistors.
+  * This is the GPIO you connect your button to. The other cable has to be connected to a ground pin (Buttons are configured to use internal pulled-up resistors).
 * **Mode**
-  * Depending on your button setup or wiring you have to choose between the two modes.
-  * Normally Open (NO)
-    * Use this mode if your button is usually not pressed (open).
-  * Normally Closed (NC)
-    * Use this mode if your button is usually pressed (closed).
+  * Depending on your button setup or wiring you have to choose between the following two modes:
+    * Normally Open (NO)
+      * Use this mode if your button is usually not pressed (open).
+    * Normally Closed (NC)
+      * Use this mode if your button is usually pressed (closed).
 * **Hold Time**
-  * This is where you set the hold time for your button, this means how long the button has to be held until the reaction is triggered.
+  * This is where you set the hold time for your button, meaning how long the button has to be held until the reaction is triggered.
 * **Choose activities for your button**
   * Action:
-    * You can choose between the different actions of OctoPrint (cancel, connect, disconnect, home (x, y and z are homed), pause, resume, start, toggle pause-resume and toggle start-cancel).
+    * You can choose between different actions:  
+    connect, disconnect, home (x, y and z are homed), pause, resume, start, cancel, toggle pause-resume and toggle start-cancel
   * File:
     * You can specify the path to a file which will be selected.
-    * To start the execution of a file, a 'start action' has to be added behind the 'file activity'.
+    * To start the execution of a file, add 'start action' behind the 'file activity'.
     * There are three ways to specify a file:
-      * Absolute path to the file: </br>
+      * Absolute path to a file:  
         `/home/pi/Some/Folder/Test.gcode`
-      * Relative path inside the uploads folder:</br>
+      * Relative path to a file inside the uploads folder:  
         `Some/Folder/Test.gcode`
-      * Absolute path to the file on the SD-card of the printer:</br>
+      * Path to a file on the SD-card of the printer:  
         `@sd:Some/Folder/Test.gcode`
   * GCODE:
-    * You can input any GCODE.
+    * You can input any GCODE commands.
   * System:
-    * You can input any system command for your Octoprint host. Note that system commands will be run under the same user that owns your OctoPrint service (usually 'pi' for OctoPi) with the same rights and permissions, so you may need to use sudo facilities for certain tasks. Please refer to your OctoPrint host's documentation for details.
+    * You can input any system command for your Octoprint host.  
+    Note that system commands will be run under the same user that owns your OctoPrint service (usually 'pi' for OctoPi) with the same rights and permissions, so you may need to use sudo facilities for certain tasks. Please refer to your OctoPrint host's documentation for details.
   * These activities will be executed in order of your list. You can also rearrange them by inserting them at your desired position.
 
 ### Note:
