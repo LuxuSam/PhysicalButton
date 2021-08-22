@@ -65,6 +65,10 @@
 .physicalbutton_settings .button-list .left-side .add-new-activity {
   justify-content: flex-end;
 }
+.physicalbutton_settings .button-list .left-side .add-new-activity .btn {
+  margin-left: 0;
+  width: 25%;
+}
 .physicalbutton_settings .button-list .right-side label {
   min-width: 50px;
 }
