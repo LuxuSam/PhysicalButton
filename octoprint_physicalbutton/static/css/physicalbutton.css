@@ -54,6 +54,13 @@
 }
 .physicalbutton_settings .button-list .left-side label {
   min-width: 105px;
+  margin-bottom: 0;
+}
+.physicalbutton_settings .button-list .left-side input {
+  margin-bottom: 0;
+}
+.physicalbutton_settings .button-list .left-side select {
+  margin-bottom: 0;
 }
 .physicalbutton_settings .button-list .left-side .choose-gpio label {
   min-width: unset;
@@ -61,6 +68,7 @@
 .physicalbutton_settings .button-list .left-side .choose-gpio .gpio-help {
   display: flex;
   justify-content: flex-start;
+  margin-bottom: 0;
 }
 .physicalbutton_settings .button-list .left-side .add-new-activity {
   justify-content: flex-end;
