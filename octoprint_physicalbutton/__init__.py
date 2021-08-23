@@ -45,6 +45,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
         #search for pressed button
         for btn in self._settings.get(["buttons"]):
+            if btn.get("gpio") == "none":
+                continue
             if int(btn.get("gpio")) == pressedButton.pin.number:
                 button = btn
                 break
