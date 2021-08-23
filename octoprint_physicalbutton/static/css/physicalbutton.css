@@ -75,10 +75,20 @@
 .physicalbutton_settings .button-list .right-side .remove-activity {
   display: flex;
   justify-content: flex-end;
-  align-self: flex-end;
+  align-self: baseline;
+}
+.physicalbutton_settings .button-list .right-side .choose-identifier {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.physicalbutton_settings .button-list .right-side .insert-at-index {
+  margin-bottom: 10px;
 }
 .physicalbutton_settings .button-list .right-side .insert-at-index input {
   width: 30px;
+}
+.physicalbutton_settings .button-list .right-side .control-group {
+  margin-bottom: 0;
 }
 .physicalbutton_settings .button-list .right-side .activity-file .path-file {
   display: flex;
