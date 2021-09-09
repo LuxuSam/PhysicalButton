@@ -7,20 +7,23 @@
     }
 
     input {
-        min-width: 50px;
+        margin-bottom: 0;
     }
 
     label {
-        min-width: 50px;
+        margin-bottom: 0;
     }
 
     select {
-        min-width: 50px;
+        margin-bottom: 0;
+    }
+
+    textarea {
+        margin-bottom: 0;
     }
 
     .header-and-button {
         padding-right: 5px;
-        align-items: flex-end;
         align-items: stretch;
         border: 1px solid LightGrey;
         border-radius: 5px;
@@ -54,14 +57,10 @@
         .accordion-heading {
             margin: 0;
             padding-right: 5px;
-            align-items: center;
+            align-items: baseline;
 
             .accordion-toggle {
                 padding: 8px 5px;
-
-                label {
-                    margin: 0;
-                }
             }
 
             .open-button {}
@@ -70,61 +69,66 @@
         }
 
         .accordion-inner {
-            padding: 5px 10px;
-        }
+            margin-left: 0;
+            padding: 0;
 
-        .left-side {
-            border-right: 1px solid LightGrey;
-            padding: 5px;
+            .left-side {
+                border-right: 1px solid LightGrey;
+                padding: 10px;
+                margin: 0;
 
-            label {
-                min-width: 105px;
-            }
-
-            .choose-gpio {
-                label {
-                    min-width: unset;
+                .choose-gpio {
+                    .gpio-help {
+                        display: flex;
+                        justify-content: flex-start;
+                        margin-bottom: 0;
+                    }
                 }
 
-                .gpio-help {
+                .add-new-activity {
+                    justify-content: flex-end;
+
+                    .btn {
+                        margin-left: 0;
+                        width: 25%;
+                    }
+                }
+
+                .activity-list {
+                    margin-bottom: 0;
+                }
+            }
+
+            .right-side {
+                padding: 5px;
+                margin: 5px;
+
+                .remove-activity {
                     display: flex;
-                    justify-content: flex-start;
+                    justify-content: flex-end;
+                    align-self: baseline;
                 }
-            }
 
-            .add-new-activity {
-                justify-content: flex-end;
-
-                .btn {
-                    margin-left: 0;
-                    width: 25%;
+                .choose-identifier {
+                    padding-top: 10px;
+                    padding-bottom: 10px;
                 }
-            }
-        }
 
-        .right-side {
-            label {
-                min-width: 50px;
-            }
-
-            .remove-activity {
-                display: flex;
-                justify-content: flex-end;
-                align-self: flex-end;
-            }
-
-            .insert-at-index {
-                input {
-                    width: 30px;
+                .insert-at-index {
+                    padding-bottom: 10px;
                 }
-            }
 
-            .activity-file {
-                .path-file {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: baseline;
-                    flex-direction: row;
+                .control-group {
+                    margin-bottom: 0;
+                }
+
+                .activity-file {
+                    .path-file {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: baseline;
+                        flex-direction: row;
+                    }
                 }
             }
         }

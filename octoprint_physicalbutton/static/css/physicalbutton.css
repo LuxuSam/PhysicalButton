@@ -5,17 +5,19 @@
   flex-direction: row;
 }
 .physicalbutton_settings input {
-  min-width: 50px;
+  margin-bottom: 0;
 }
 .physicalbutton_settings label {
-  min-width: 50px;
+  margin-bottom: 0;
 }
 .physicalbutton_settings select {
-  min-width: 50px;
+  margin-bottom: 0;
+}
+.physicalbutton_settings textarea {
+  margin-bottom: 0;
 }
 .physicalbutton_settings .header-and-button {
   padding-right: 5px;
-  align-items: flex-end;
   align-items: stretch;
   border: 1px solid LightGrey;
   border-radius: 5px;
@@ -37,50 +39,55 @@
 .physicalbutton_settings .button-list .accordion-heading {
   margin: 0;
   padding-right: 5px;
-  align-items: center;
+  align-items: baseline;
 }
 .physicalbutton_settings .button-list .accordion-heading .accordion-toggle {
   padding: 8px 5px;
 }
-.physicalbutton_settings .button-list .accordion-heading .accordion-toggle label {
+.physicalbutton_settings .button-list .accordion-inner {
+  margin-left: 0;
+  padding: 0;
+}
+.physicalbutton_settings .button-list .accordion-inner .left-side {
+  border-right: 1px solid LightGrey;
+  padding: 10px;
   margin: 0;
 }
-.physicalbutton_settings .button-list .accordion-inner {
-  padding: 5px 10px;
-}
-.physicalbutton_settings .button-list .left-side {
-  border-right: 1px solid LightGrey;
-  padding: 5px;
-}
-.physicalbutton_settings .button-list .left-side label {
-  min-width: 105px;
-}
-.physicalbutton_settings .button-list .left-side .choose-gpio label {
-  min-width: unset;
-}
-.physicalbutton_settings .button-list .left-side .choose-gpio .gpio-help {
+.physicalbutton_settings .button-list .accordion-inner .left-side .choose-gpio .gpio-help {
   display: flex;
   justify-content: flex-start;
+  margin-bottom: 0;
 }
-.physicalbutton_settings .button-list .left-side .add-new-activity {
+.physicalbutton_settings .button-list .accordion-inner .left-side .add-new-activity {
   justify-content: flex-end;
 }
-.physicalbutton_settings .button-list .left-side .add-new-activity .btn {
+.physicalbutton_settings .button-list .accordion-inner .left-side .add-new-activity .btn {
   margin-left: 0;
   width: 25%;
 }
-.physicalbutton_settings .button-list .right-side label {
-  min-width: 50px;
+.physicalbutton_settings .button-list .accordion-inner .left-side .activity-list {
+  margin-bottom: 0;
 }
-.physicalbutton_settings .button-list .right-side .remove-activity {
+.physicalbutton_settings .button-list .accordion-inner .right-side {
+  padding: 5px;
+  margin: 5px;
+}
+.physicalbutton_settings .button-list .accordion-inner .right-side .remove-activity {
   display: flex;
   justify-content: flex-end;
-  align-self: flex-end;
+  align-self: baseline;
 }
-.physicalbutton_settings .button-list .right-side .insert-at-index input {
-  width: 30px;
+.physicalbutton_settings .button-list .accordion-inner .right-side .choose-identifier {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
-.physicalbutton_settings .button-list .right-side .activity-file .path-file {
+.physicalbutton_settings .button-list .accordion-inner .right-side .insert-at-index {
+  padding-bottom: 10px;
+}
+.physicalbutton_settings .button-list .accordion-inner .right-side .control-group {
+  margin-bottom: 0;
+}
+.physicalbutton_settings .button-list .accordion-inner .right-side .activity-file .path-file {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
