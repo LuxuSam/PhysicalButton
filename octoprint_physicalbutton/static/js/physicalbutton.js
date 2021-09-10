@@ -133,6 +133,24 @@
              self.selectedActivity(this.activities()[this.activities().length - 1]);
          };
 
+        self.addOutput = function(){
+            var updatedItem = this;
+            if (!updatedItem.activities()) {
+                updatedItem.activities(new Array);
+            }
+            updatedItem.activities.push({
+                type: ko.observable('output'),
+                identifier: ko.observable('New Output'),
+                execute:{
+                    gpio: ko.observable('none'),
+                    value: ko.observable('HIGH'),
+                    time: ko.observable('500'),
+                    async: ko.observable('False')
+                }
+            });
+            self.selectedActivity(this.activities()[this.activities().length - 1]);
+        }
+
          self.removeActivity = function() {
              if (!self.selectedActivity()) {
                  return;
