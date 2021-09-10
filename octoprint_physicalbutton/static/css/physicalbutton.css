@@ -48,6 +48,9 @@
   margin-left: 0;
   padding: 0;
 }
+.physicalbutton_settings .button-list .accordion-inner label {
+  cursor: help;
+}
 .physicalbutton_settings .button-list .accordion-inner .left-side {
   border-right: 1px solid LightGrey;
   padding: 10px;
@@ -63,7 +66,7 @@
 }
 .physicalbutton_settings .button-list .accordion-inner .left-side .add-new-activity .btn {
   margin-left: 0;
-  width: 25%;
+  width: 20%;
 }
 .physicalbutton_settings .button-list .accordion-inner .left-side .activity-list {
   margin-bottom: 0;
@@ -92,4 +95,13 @@
   justify-content: space-between;
   align-items: baseline;
   flex-direction: row;
+}
+.physicalbutton_settings .button-list .accordion-inner .right-side .activity-output .output-pin {
+  padding-bottom: 10px;
+}
+.physicalbutton_settings .button-list .accordion-inner .right-side .activity-output .output-value {
+  padding-bottom: 10px;
+}
+.physicalbutton_settings .button-list .accordion-inner .right-side .activity-output .output-time {
+  padding-bottom: 10px;
 }
