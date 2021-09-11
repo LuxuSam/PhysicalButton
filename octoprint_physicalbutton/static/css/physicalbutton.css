@@ -96,12 +96,15 @@
   align-items: baseline;
   flex-direction: row;
 }
-.physicalbutton_settings .button-list .accordion-inner .right-side .activity-output .output-pin {
+.physicalbutton_settings .button-list .accordion-inner .right-side .activity-output input {
+  width: 46.5%;
+}
+.physicalbutton_settings .button-list .accordion-inner .right-side .activity-output select {
+  width: 55%;
+}
+.physicalbutton_settings .button-list .accordion-inner .right-side .activity-output .output-pin-time .output-pin {
   padding-bottom: 10px;
 }
-.physicalbutton_settings .button-list .accordion-inner .right-side .activity-output .output-value {
-  padding-bottom: 10px;
-}
-.physicalbutton_settings .button-list .accordion-inner .right-side .activity-output .output-time {
+.physicalbutton_settings .button-list .accordion-inner .right-side .activity-output .output-value-async .output-value {
   padding-bottom: 10px;
 }

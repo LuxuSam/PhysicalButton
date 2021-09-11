@@ -116,30 +116,34 @@
                                 <textarea data-bind="attr:{rows: 5}, value:$parent.selectedActivity().execute" placeholder="Path/To/File.gcode"></textarea>
                             </div>
                             <div class="activity-output" data-bind="if:$parent.selectedActivity().type() == 'output'">
-                                <div class="control-group output-pin">
-                                    <label title="The GPIO the output should be applied to.">GPIO:</label>
-                                    <select data-bind="foreach: {data:$root.gpios, as: 'gpioListItem'}, value:$parent.selectedActivity().execute.gpio">
-                                        <option data-bind="value:$data, text: gpioListItem == 'none' ? gpioListItem : 'GPIO' + gpioListItem, disable: $root.disableGpioOption(gpioListItem,button.gpio)"></option>
-                                    </select>
+                                <div class="span6 output-pin-time">
+                                    <div class="control-group output-pin">
+                                        <label title="The GPIO the output should be applied to.">GPIO:</label>
+                                        <select data-bind="foreach: {data:$root.gpios, as: 'gpioListItem'}, value:$parent.selectedActivity().execute.gpio">
+                                            <option data-bind="value:$data, text: gpioListItem == 'none' ? gpioListItem : 'GPIO' + gpioListItem, disable: $root.disableGpioOption(gpioListItem,button.gpio)"></option>
+                                        </select>
+                                    </div>
+                                    <div class="control-group output-time">
+                                        <label title="The time for how long the value will be applied. Use 0 to apply output without time!">Time (ms):</label>
+                                        <input  min="0" type="number" data-bind="value:$parent.selectedActivity().execute.time">
+                                    </div>
                                 </div>
-                                <div class="control-group output-value">
-                                    <label title="The value that should be applied to the GPIO.">Value:</label>
-                                    <select data-bind="value:$parent.selectedActivity().execute.value">
-                                        <option value="HIGH">HIGH</option>
-                                        <option value="LOW">LOW</option>
-                                        <option value="Toggle">Toggle</option>
-                                    </select>
-                                </div>
-                                <div class="control-group output-time">
-                                    <label title="The time for how long the value will be applied. Use 0 to apply output without time!">Time (ms):</label>
-                                    <input  min="0" type="number" data-bind="value:$parent.selectedActivity().execute.time">
-                                </div>
-                                <div class="control-group output-wait">
-                                    <label for="" title="Continue executing next activity immediatly without waiting">Async:</label>
-                                    <select data-bind="value:$parent.selectedActivity().execute.async">
-                                        <option value="False">False</option>
-                                        <option value="True">True</option>
-                                    </select>
+                                <div class="span6 output-value-async">
+                                    <div class="control-group output-value">
+                                        <label title="The value that should be applied to the GPIO.">Value:</label>
+                                        <select data-bind="value:$parent.selectedActivity().execute.value">
+                                            <option value="HIGH">HIGH</option>
+                                            <option value="LOW">LOW</option>
+                                            <option value="Toggle">Toggle</option>
+                                        </select>
+                                    </div>
+                                    <div class="control-group output-async">
+                                        <label for="" title="Continue executing next activity immediatly without waiting">Async:</label>
+                                        <select data-bind="value:$parent.selectedActivity().execute.async">
+                                            <option value="False">False</option>
+                                            <option value="True">True</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
