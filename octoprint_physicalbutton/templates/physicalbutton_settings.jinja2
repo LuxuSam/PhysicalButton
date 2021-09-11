@@ -119,7 +119,7 @@
                                 <div class="control-group output-pin">
                                     <label title="The GPIO the output should be applied to.">GPIO:</label>
                                     <select data-bind="foreach: {data:$root.gpios, as: 'gpioListItem'}, value:$parent.selectedActivity().execute.gpio">
-                                        <option data-bind="value:$data, text: gpioListItem == 'none' ? gpioListItem : 'GPIO' + gpioListItem, disable: $parent.gpio() == gpioListItem"></option>
+                                        <option data-bind="value:$data, text: gpioListItem == 'none' ? gpioListItem : 'GPIO' + gpioListItem, disable: $root.disableGpioOption(gpioListItem,button.gpio)"></option>
                                     </select>
                                 </div>
                                 <div class="control-group output-value">

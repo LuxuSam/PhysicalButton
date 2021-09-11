@@ -52,14 +52,17 @@ $(function() {
         }
 
         self.disableGpioOption = function(item, currentGPIO) {
-            if (item == 'none') {
+            if (item == 'none')
                 return false;
-            }
-            if (self.buttons().find(b => b.gpio() == item)) {
-                if (item != currentGPIO()) {
-                    return true;
-                }
-            }
+
+            //disable used input gpios
+            if (self.buttons().find(b => b.gpio() == item))
+                return true;
+
+            //disable used output gpios
+            if (self.buttons().find(b => b.activities().find(a => a.type() == 'output' && a.execute.gpio() == item)))
+                return true;
+
             return false;
         };
 
