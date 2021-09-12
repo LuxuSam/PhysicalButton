@@ -120,8 +120,7 @@
                                     <div class="control-group output-pin">
                                         <label title="The GPIO the output should be applied to.">GPIO:</label>
                                         <select data-bind="foreach: {data:$root.gpios, as: 'gpioListItem'}, value:$parent.selectedActivity().execute.gpio">
-                                            <option data-bind="value:$data, text: gpioListItem == 'none' ? gpioListItem : 'GPIO' + gpioListItem, disable: $root.disableGpioOption(gpioListItem,button.gpio)"></option>
-                                        </select>
+                                            <option data-bind="value:$data, text: gpioListItem == 'none' ? gpioListItem : 'GPIO' + gpioListItem, disable: $root.disableGpioOutputOption(gpioListItem)"></option>                                        </select>
                                     </div>
                                     <div class="control-group output-time">
                                         <label title="The time for how long the value will be applied. Use 0 to apply output without time!">Time (ms):</label>
@@ -130,7 +129,7 @@
                                 </div>
                                 <div class="span6 output-value-async">
                                     <div class="control-group output-value">
-                                        <label title="The value that should be applied to the GPIO.">Value:</label>
+                                        <label title="The value that should be applied to the GPIO on activation.">Active:</label>
                                         <select data-bind="value:$parent.selectedActivity().execute.value">
                                             <option value="HIGH">HIGH</option>
                                             <option value="LOW">LOW</option>

@@ -52,7 +52,7 @@ $(function() {
         }
 
         self.disableGpioOption = function(item, currentGPIO) {
-            if (item == 'none')
+            if (item == 'none' || item == currentGPIO())
                 return false;
 
             //disable used input gpios
@@ -65,6 +65,15 @@ $(function() {
 
             return false;
         };
+
+        self.disableGpioOutputOption = function(item){
+            if (item == 'none')
+                return false;
+
+            //disable used input gpios
+            if (self.buttons().find(b => b.gpio() == item))
+                return true;
+        }
 
         self.addButton = function() {
             if (!self.buttons()) {
