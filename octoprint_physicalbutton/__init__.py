@@ -204,12 +204,14 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             return
         self._logger.info("Cleaning up used GPIOs before shutting down ...")
         self.removeButtons()
+        self.removeOutputs()
         self._logger.info("Done!")
 
     def on_settings_save(self, data):
         #Handle old configuration:
         if self._settings.get(["buttons"]) != None and self._settings.get(["buttons"]) != []:
             self.removeButtons()
+            self.removeOutputs()
             self._logger.debug("Removed old button configuration")
         #Save new Settings
         octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
@@ -220,6 +222,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
     def on_settings_cleanup(self):
         self.removeButtons()
+        self.removeOutputs()
         octoprint.plugin.SettingsPlugin.on_settings_cleanup(self)
 
     def get_settings_defaults(self):
