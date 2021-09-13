@@ -2,12 +2,13 @@
 from __future__ import absolute_import
 
 import octoprint.plugin
-from gpiozero import Button
+from gpiozero import Button,OutputDevice
 import time
 import threading
 import subprocess
 
 buttonList = []
+outputList = []
 
 class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            octoprint.plugin.SettingsPlugin,
@@ -30,7 +31,18 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             if buttonMode == "Normally Closed (NC)":
                 newButton.when_released = self.reactToInput
             buttonList.append(newButton)
+            self.setupOutputPins(button)
         self._logger.debug('Added Buttons: %s' %buttonList)
+
+    def setupOutputPins(self,button):
+        global outputList
+        for activity in list(filter(lambda a: a.get("type") == "output", button.get("activities"))):
+            outputGPIO = activity.get("execute").get("gpio")
+            #check if gpio has to be setup
+            if outputGPIO == 'none' or int(outputGPIO) in list(map(lambda oD: oD.pin, outputList)):
+                continue
+            outputDevice = OutputDevice(outputGPIO)
+            outputList.append(outputDevice)
 
     def removeButtons(self):
         global buttonList
@@ -38,6 +50,13 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         for button in buttonList:
             button.close()
         buttonList.clear()
+
+    def removeOutputs(self):
+        global outputList
+        self._logger.debug('Output devices to remove: %s' %outputList)
+        for outputDevice in outputList:
+            outputDevice.close()
+        outputList.clear()
 
     def thread_react(self, pressedButton):
         #save value of button (pushed or released)
