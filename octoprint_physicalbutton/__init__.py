@@ -41,7 +41,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             #check if gpio has to be setup
             if outputGPIO == 'none' or int(outputGPIO) in list(map(lambda oD: oD.pin, outputList)):
                 continue
-            outputDevice = OutputDevice(outputGPIO)
+            outputDevice = OutputDevice(int(outputGPIO))
             outputList.append(outputDevice)
 
     def removeButtons(self):
@@ -181,6 +181,17 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         except (octoprint.printer.InvalidFileType, octoprint.printer.InvalidFileLocation) as e:
             self._logger.error(e)
             return -1
+
+    def generateOutput(self, output):
+        global outputList
+        gpio = int(output.get("gpio"))
+        value = output.get("value")
+        time = int(output.get("time"))
+        async = output.get("async") == 'True'
+
+        outputDevice = next(filter(lambda oD: oD.pin == gpio, outputList))
+        
+
 
     ####################################_Custom actions_##############################################
     def toggle_cancel_print(self):
