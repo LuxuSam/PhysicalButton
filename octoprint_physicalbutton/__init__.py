@@ -196,7 +196,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         time = int(output.get("time"))
         self._logger.debug("Time: %d" %time)
 
-        self._logger.debug(list(filter(lambda oD: oD.pin == gpio, outputList))
+        self._logger.debug(list(filter(lambda oD: oD.pin == gpio, outputList)))
 
         outputDevice = next(list(filter(lambda oD: oD.pin == gpio, outputList)))
         self._logger.debug("Output Device: %s" %outputDevice)
