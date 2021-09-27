@@ -117,6 +117,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         if action == "start":
             self._printer.start_print()
             return 0
+        if action == "start newest"
+            self.start_newest()
+            return 0
         if action == "cancel":
             self._printer.cancel_print()
             return 0
@@ -169,6 +172,16 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             self._printer.start_print()
         else:
             self._printer.cancel_print()
+
+    def start_newest(self):
+        if not self._printer.is_ready():
+            return -1
+        files = octoprint.filemanager.list_files()
+        path = ''
+        date = 0
+        self._logger.debug(files)
+
+
     ####################################_OctoPrint Functions_#########################################
 
     def on_after_startup(self):
@@ -178,6 +191,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         self._logger.debug("Setting up buttons ...")
         self.setupButtons()
         self._logger.info("Buttons have been set up!")
+        self.start_newest()
 
     def on_shutdown(self):
         if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
