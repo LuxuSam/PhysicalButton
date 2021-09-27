@@ -39,7 +39,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         for activity in list(filter(lambda a: a.get("type") == "output", button.get("activities"))):
             outputGPIO = activity.get("execute").get("gpio")
             #check if gpio has to be setup
-            if outputGPIO == 'none' or int(outputGPIO) in list(map(lambda oD: oD.pin, outputList)):
+            if outputGPIO == 'none' or int(outputGPIO) in list(map(lambda oD: oD.pin.number, outputList)):
                 continue
             outputDevice = OutputDevice(int(outputGPIO))
             outputList.append(outputDevice)
@@ -193,12 +193,13 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         time = int(output.get("time"))
 
         self._logger.debug(outputList)
+
         for item in outputList:
-            self._logger.debug("Output GPIO: %d" %item.pin)
+            self._logger.debug("Output GPIO: %d" %item.pin.number)
 
-        self._logger.debug(list(filter(lambda oD: oD.pin == gpio, outputList)))
+        self._logger.debug(list(filter(lambda oD: oD.pin.number == gpio, outputList)))
 
-        outputDevice = next(list(filter(lambda oD: oD.pin == gpio, outputList)))
+        outputDevice = next(list(filter(lambda oD: oD.pin.number == gpio, outputList)))
         self._logger.debug("Output Device: %s" %outputDevice)
 
         if output.get("async") == 'True':
