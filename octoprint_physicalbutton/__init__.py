@@ -190,11 +190,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         gpio = int(output.get("gpio"))
         value = output.get("value")
         time = int(output.get("time"))
-        async = output.get("async") == 'True'
 
         outputDevice = next(filter(lambda oD: oD.pin == gpio, outputList))
 
-        if async:
+        if output.get("async") == 'True':
             t = threading.Thread(target = self.setOutput, args=(value, time, outputDevice,))
             t.start()
         else:
