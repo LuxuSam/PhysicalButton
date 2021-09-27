@@ -97,9 +97,13 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 #Check if an executed activity failed
                 if exitCode == 0:
                     self._logger.debug("The activity with identifier '%s' was executed successfully!" %activity.get("identifier"))
+                    continue
                 if exitCode == -1:
                     self._logger.error("The activity with identifier '%s' failed! Aborting follwing activities!" %activity.get("identifier") )
                     break
+                if exitCode == -2:
+                    self._logger.error("The activity with identifier '%s' failed! No GPIO specified!" %activity.get("identifier"))
+                    continue
 
     def reactToInput(self, pressedButton):
         t = threading.Thread(target=self.thread_react, args=(pressedButton,))
@@ -187,6 +191,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
     def generateOutput(self, output):
         global outputList
+
+        if output.get("gpio") == 'none':
+            return -2
 
         gpio = int(output.get("gpio"))
         value = output.get("value")
