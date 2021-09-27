@@ -186,15 +186,14 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             return -1
 
     def generateOutput(self, output):
-        self._logger.debug("Entered function generateOutput")
         global outputList
 
         gpio = int(output.get("gpio"))
-        self._logger.debug("GPIO: %d" %gpio)
         value = output.get("value")
-        self._logger.debug("Value: %s" %value)
         time = int(output.get("time"))
-        self._logger.debug("Time: %d" %time)
+
+        for item in outputList:
+            self._logger.debug("Output GPIO: %d" %item.pin)
 
         self._logger.debug(list(filter(lambda oD: oD.pin == gpio, outputList)))
 
