@@ -92,7 +92,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                     #select the file at the given location
                     exitCode = self.selectFile(activity.get("execute"))
                 if activity.get("type") == "output":
-                    #select the file at the given location
+                    #generate output for given amount of time
                     exitCode = self.generateOutput(activity.get("execute"))
                 #Check if an executed activity failed
                 if exitCode == 0:
@@ -186,12 +186,18 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             return -1
 
     def generateOutput(self, output):
+        self._logger.debug("Entered function generateOutput")
         global outputList
+
         gpio = int(output.get("gpio"))
+        self._logger.debug("GPIO: %d" %gpio)
         value = output.get("value")
+        self._logger.debug("Value: %s" %value)
         time = int(output.get("time"))
+        self._logger.debug("Time: %d" %time)
 
         outputDevice = next(filter(lambda oD: oD.pin == gpio, outputList))
+        self._logger.debug("Output Device: %s" %outputDevice)
 
         if output.get("async") == 'True':
             t = threading.Thread(target = self.setOutput, args=(value, time, outputDevice,))
