@@ -205,7 +205,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             outputDevice.on()
         elif value == 'LOW':
             outputDevice.off()
-        elif value == 'Toggle'
+        elif value == 'Toggle':
             outputDevice.toggle()
 
         if time == 0:
