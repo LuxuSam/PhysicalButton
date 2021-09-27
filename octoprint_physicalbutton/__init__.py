@@ -176,7 +176,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     def start_newest(self):
         if not self._printer.is_ready():
             return -1
-        files = octoprint.filemanager.storage.list_files()
+        files = octoprint.filemanager.storage.StorageInterface.list_files()
         path = ''
         date = 0
         self._logger.debug(files)
