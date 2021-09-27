@@ -2,8 +2,6 @@
 from __future__ import absolute_import
 
 import octoprint.plugin
-from octoprint.server import fileManager
-
 
 from gpiozero import Button
 import time
@@ -179,7 +177,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     def start_newest(self):
         if not self._printer.is_ready():
             return -1
-        files = fileManager.list_files(self)
+        files = []
         path = ''
         date = 0
         self._logger.debug(files)
