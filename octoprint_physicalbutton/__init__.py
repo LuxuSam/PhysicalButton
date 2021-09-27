@@ -117,7 +117,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         if action == "start":
             self._printer.start_print()
             return 0
-        if action == "start newest"
+        if action == "start newest":
             self.start_newest()
             return 0
         if action == "cancel":
