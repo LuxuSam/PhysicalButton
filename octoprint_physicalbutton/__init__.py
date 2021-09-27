@@ -91,6 +91,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 if activity.get("type") == "file":
                     #select the file at the given location
                     exitCode = self.selectFile(activity.get("execute"))
+                if activity.get("type") == "output":
+                    #select the file at the given location
+                    exitCode = self.generateOutput(activity.get("execute"))
                 #Check if an executed activity failed
                 if exitCode == 0:
                     self._logger.debug("The activity with identifier '%s' was executed successfully!" %activity.get("identifier"))
@@ -190,7 +193,29 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         async = output.get("async") == 'True'
 
         outputDevice = next(filter(lambda oD: oD.pin == gpio, outputList))
-        
+
+        if async:
+            t = threading.Thread(target = self.setOutput, args=(value, time, outputDevice,))
+            t.start()
+        else:
+            self.setOutput(value, time, outputDevice)
+        return 0
+
+    def setOutput(self, value, activeTime, outputDevice):
+        if value == 'HIGH':
+            outputDevice.on()
+        elif value == 'LOW':
+            outputDevice.off()
+        elif value == 'Toggle'
+            outputDevice.toggle()
+
+        if time == 0:
+            return
+        else:
+            time.sleep(activeTime/1000)
+
+        outputDevice.toggle()
+
 
 
     ####################################_Custom actions_##############################################
