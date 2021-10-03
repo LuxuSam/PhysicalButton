@@ -33,6 +33,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             buttonList.append(newButton)
             self.setupOutputPins(button)
         self._logger.debug('Added Buttons: %s' %buttonList)
+        self._logger.debug('Added Output devices: %s' %outputList)
 
     def setupOutputPins(self,button):
         global outputList
@@ -42,6 +43,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             if outputGPIO == 'none' or int(outputGPIO) in list(map(lambda oD: oD.pin.number, outputList)):
                 continue
             outputDevice = OutputDevice(int(outputGPIO))
+            initialValue = activity.get("execute").get("initial")
+            if initialValue == "HIGH":
+                outputDevice.on()
             outputList.append(outputDevice)
 
     def removeButtons(self):
