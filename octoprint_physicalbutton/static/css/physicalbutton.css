@@ -105,6 +105,12 @@
 .physicalbutton_settings .button-list .accordion-inner .right-side .activity-output .output-pin-time .output-pin {
   padding-bottom: 10px;
 }
+.physicalbutton_settings .button-list .accordion-inner .right-side .activity-output .output-pin-time .output-time {
+  padding-bottom: 10px;
+}
 .physicalbutton_settings .button-list .accordion-inner .right-side .activity-output .output-value-async .output-value {
+  padding-bottom: 10px;
+}
+.physicalbutton_settings .button-list .accordion-inner .right-side .activity-output .output-value-async .output-async {
   padding-bottom: 10px;
 }

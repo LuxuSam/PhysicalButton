@@ -119,12 +119,20 @@
                                 <div class="span6 output-pin-time">
                                     <div class="control-group output-pin">
                                         <label title="The GPIO the output should be applied to.">GPIO:</label>
-                                        <select data-bind="foreach: {data:$root.gpios, as: 'gpioListItem'}, value:$parent.selectedActivity().execute.gpio">
-                                            <option data-bind="value:$data, text: gpioListItem == 'none' ? gpioListItem : 'GPIO' + gpioListItem, disable: $root.disableGpioOutputOption(gpioListItem)"></option>                                        </select>
+                                        <select data-bind="foreach: {data:$root.gpios, as: 'gpioListItem'}, value:$parent.selectedActivity().execute.gpio, event:{ change: function(data,event) {$parent.outputGpioChanged($parent.selectedActivity().execute.gpio(),$parent.selectedActivity().execute.id(),data,event)}}">
+                                            <option data-bind="value:$data, text: gpioListItem == 'none' ? gpioListItem : 'GPIO' + gpioListItem, disable: $root.disableGpioOutputOption(gpioListItem)"></option>
+                                        </select>
                                     </div>
                                     <div class="control-group output-time">
                                         <label title="The time for how long the value will be applied. Use 0 to apply output without time!">Time (ms):</label>
                                         <input  min="0" type="number" data-bind="value:$parent.selectedActivity().execute.time">
+                                    </div>
+                                    <div class="control-group output-init">
+                                        <label>Initial value:</label>
+                                        <select data-bind="value: $parent.selectedActivity().execute.initial, event:{ change: function(data,event) {$parent.initialValueChanged($parent.selectedActivity().execute.initial(),$parent.selectedActivity().execute.gpio(),$parent.selectedActivity().execute.id(),data,event)}}">
+                                            <option value="LOW">LOW</option>
+                                            <option value="HIGH">HIGH</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="span6 output-value-async">
