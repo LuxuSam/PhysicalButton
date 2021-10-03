@@ -128,7 +128,7 @@
                                         <input  min="0" type="number" data-bind="value:$parent.selectedActivity().execute.time">
                                     </div>
                                     <div class="control-group output-init">
-                                        <label title = "This value is applied when octoprint starts up or when settings are saved">Initial value:</label>
+                                        <label title = "This value is applied when OctoPrint starts up or when settings are saved">Initial value:</label>
                                         <select data-bind="value: $parent.selectedActivity().execute.initial, event:{ change: function(data,event) {$parent.initialValueChanged($parent.selectedActivity().execute.initial(),$parent.selectedActivity().execute.gpio(),$parent.selectedActivity().execute.id(),data,event)}}">
                                             <option value="LOW">LOW</option>
                                             <option value="HIGH">HIGH</option>
