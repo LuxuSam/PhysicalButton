@@ -157,10 +157,49 @@ $(function() {
                     gpio: ko.observable('none'),
                     value: ko.observable('HIGH'),
                     time: ko.observable('500'),
-                    async: ko.observable('False')
+                    async: ko.observable('False'),
+                    initial: ko.observable('LOW'),
+                    id: ko.observable(Date.now())
                 }
             });
             self.selectedActivity(this.activities()[this.activities().length - 1]);
+        }
+
+        self.initialValueChanged = function(initialValue, gpio, id, data, event){
+            if (gpio == 'none'){
+                return;
+            }
+            console.log(event.originalEvent);
+            if (event.originalEvent) { //user changed
+                if (initialValue == 'HIGH'){ //toggle value as old initial value is passed
+                    initialValue = 'LOW'
+                }else{
+                    initialValue = 'HIGH'
+                }
+                for (let button of self.buttons()){ //set all initial values for this gpio to the new initial value
+                    for (let activity of button.activities()){
+                        if (activity.type() == 'output' && activity.execute.id() != id && activity.execute.gpio() != 'none' && activity.execute.gpio() == gpio){
+                            activity.execute.initial(initialValue);
+                        }
+                    }
+                }
+            }
+        }
+
+        self.outputGpioChanged = function(gpio, id, data, event){
+            if (gpio == 'none'){
+                return;
+            }
+            console.log(event.originalEvent);
+            if (event.originalEvent) {
+                for (let button of self.buttons()){ //set all initial values for this gpio to the new initial value
+                    const activity = button.activities().find(activity => activity.type() == 'output' && activity.execute.id() != id && activity.execute.gpio() != 'none' && activity.execute.gpio() == gpio)
+                    if (activity){
+                        self.selectedActivity().execute.initial(activity.execute.initial());
+                        return;
+                    }
+                }
+            }
         }
 
         self.removeActivity = function() {
