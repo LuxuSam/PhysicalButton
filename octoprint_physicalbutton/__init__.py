@@ -171,10 +171,14 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         global latestFilePath
 
         files = self._file_manager.list_files(recursive=True)
-        self._logger.info(files)
-        date = 0
-        path = None
+        path = self.getLatestPath(files.["local"],0)
+
         #latestFilePath = path
+
+    def getLatestPath(self, files, latestDate):
+        for x in files:
+            self._logger.debug(x)
+        pass
 
     ####################################_Custom actions_##############################################
     def toggle_cancel_print(self):
