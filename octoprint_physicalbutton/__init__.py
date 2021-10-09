@@ -181,20 +181,17 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         currLatestFileDate = latestDate
 
         for file in files:
-            self._logger.debug("Checking file %s" %file)
             if files.get(file).get("type") == "folder":
-                self._logger.debug("It's a folder, going down in hierarchy")
                 fileDict = self.getLatestPath(files.get(file).get("children"), currLatestFileDate)
-                self._logger.debug("Going back up in hierarchy")
                 currLatestFilePath = fileDict.get("path")
                 currLatestFileDate = fileDict.get("date")
 
             if files.get(file).get("type") == "machinecode":
-                self._logger.debug("It's a file")
                 if files.get(file).get("date") > currLatestFileDate:
-                    self._logger.debug("It's later then the currently found file")
+                    self._logger.debug("%s was uploaded later than the currently found file" %file)
                     currLatestFilePath = files.get(file).get("path")
                     currLatestFileDate = files.get(file).get("date")
+                    self._logger.debug("%s has the following path: %s" %(file,currLatestFilePath))
 
         return {
             "path" : currLatestFilePath,
