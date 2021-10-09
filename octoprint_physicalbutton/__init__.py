@@ -171,8 +171,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         global latestFilePath
 
         files = self._file_manager.list_files(recursive=True)
-        path = self.getLatestPath(files.get("local"),0).get("path")
-
+        path = self.getLatestPath(files.get("local"),0)["path"]
+        self._logger.debug("Latest found file: %s" %path)
         #latestFilePath = path
 
     def getLatestPath(self, files, latestDate):
@@ -182,8 +182,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         for file in files:
             if file.get("type") == "folder":
                 fileDict = self.getLatestPath(file.get("children"), currLatestFileDate)
-                currLatestFilePath = fileDict.get("path")
-                currLatestFileDate = fileDict.get("date")
+                currLatestFilePath = fileDict["path"]
+                currLatestFileDate = fileDict["date"]
 
             if file.get("type") == "machinecode":
                 if file.get("date") > currLatestFileDate:
