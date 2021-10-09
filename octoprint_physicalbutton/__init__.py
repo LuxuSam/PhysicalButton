@@ -172,7 +172,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
         files = self._file_manager.list_files(recursive=True)
         self._logger.debug("Searching latest file!")
-        path = self.getLatestPath(files.get("local"),0)["path"]
+        path = self.getLatestPath(files.get("local"),0).get("path")
         self._logger.debug("Latest found file: %s" %path)
         #latestFilePath = path
 
@@ -182,19 +182,19 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
         for file in files:
             self._logger.debug("Checking file %s" %file)
-            if file["type"] == "folder":
+            if files.get(file).get("type") == "folder":
                 self._logger.debug("It's a folder, going down in hierarchy")
-                fileDict = self.getLatestPath(file["children"], currLatestFileDate)
+                fileDict = self.getLatestPath(file.get("children"), currLatestFileDate)
                 self._logger.debug("Going back up in hierarchy")
-                currLatestFilePath = fileDict["path"]
-                currLatestFileDate = fileDict["date"]
+                currLatestFilePath = fileDict.get("path")
+                currLatestFileDate = fileDict.get("date")
 
-            if file["type"] == "machinecode":
+            if files.get(file).get("type") == "machinecode":
                 self._logger.debug("It's a file")
-                if file["date"] > currLatestFileDate:
+                if file.get("date") > currLatestFileDate:
                     self._logger.debug("It's later then the currently found file")
-                    currLatestFilePath = file["path"]
-                    currLatestFileDate = file["date"]
+                    currLatestFilePath = file.get("path")
+                    currLatestFileDate = file.get("date")
 
         return {
             "path" : currLatestFilePath,
