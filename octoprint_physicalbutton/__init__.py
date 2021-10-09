@@ -190,7 +190,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             self._logger.error('No files found!')
             return -1
         self.selectFile(latestFilePath)
-        self._logger.debug("Fake Starting print for file: %s", %latestFilePath)
+        self._logger.debug("Fake Starting print for file: %s" %latestFilePath)
         #self._printer.start_print()
         return 0
 
@@ -200,7 +200,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         if event == "FileAdded":
             global latestFilePath
             latestFilePath = payload.path
-            self._logger.debug("Added new file: %s", %latestFilePath)
+            self._logger.debug("Added new file: %s" %latestFilePath)
 
     def on_after_startup(self):
         if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
