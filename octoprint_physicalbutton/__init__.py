@@ -9,6 +9,7 @@ import threading
 import subprocess
 
 buttonList = []
+latestFilePath = None
 
 class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            octoprint.plugin.SettingsPlugin,
@@ -119,8 +120,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             self._printer.start_print()
             return 0
         if action == "start newest":
-            self.start_newest()
-            return 0
+            return self.start_newest()
         if action == "cancel":
             self._printer.cancel_print()
             return 0
@@ -167,6 +167,15 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             self._logger.error(e)
             return -1
 
+    def updateLatestFilePath(self):
+        global latestFilePath
+
+        files = self._file_manager.list_files()
+        self._logger.info(files)
+        date = 0
+        path = None
+        #latestFilePath = path
+
     ####################################_Custom actions_##############################################
     def toggle_cancel_print(self):
         if self._printer.is_ready():
@@ -175,15 +184,23 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             self._printer.cancel_print()
 
     def start_newest(self):
-        if not self._printer.is_ready():
+        if (latestFilePath is None) or (not self._file_manager.file_exists(latestFilePath)):
+            self.updateLatestFilePath()
+        if (latestFilePath is None):
+            self._logger.error('No files found!')
             return -1
-        files = []
-        path = ''
-        date = 0
-        self._logger.debug(files)
+        self.selectFile(latestFilePath)
+        self._logger.debug("Fake Starting print for file: %s", %latestFilePath)
+        #self._printer.start_print()
+        return 0
 
 
     ####################################_OctoPrint Functions_#########################################
+    def on_event(self, event, payload):
+        if event == "FileAdded":
+            global latestFilePath
+            latestFilePath = payload.path
+            self._logger.debug("Added new file: %s", %latestFilePath)
 
     def on_after_startup(self):
         if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
