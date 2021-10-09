@@ -170,7 +170,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
     def updateLatestFilePath(self):
         global latestFilePath
 
-        files = self._file_manager.list_files()
+        files = self._file_manager.list_files(recursive=True)
         self._logger.info(files)
         date = 0
         path = None
@@ -185,7 +185,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
     def start_newest(self):
         if (latestFilePath is None) or (not self._file_manager.file_exists(latestFilePath)):
-            self.updateLatestFilePath(recursive=True)
+            self.updateLatestFilePath()
         if (latestFilePath is None):
             self._logger.error('No files found!')
             return -1
