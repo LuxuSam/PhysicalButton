@@ -171,7 +171,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         global latestFilePath
 
         files = self._file_manager.list_files(recursive=True)
-        path = self.getLatestPath(files.["local"],0)
+        path = self.getLatestPath(files.get("local"),0)
 
         #latestFilePath = path
 
