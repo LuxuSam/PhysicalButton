@@ -188,7 +188,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         for file in files:
             file = files.get(file)
             if file.get("type") == "folder":
-                fileDict = self.getLatestPath(file.get("children"), currLatestFileDate)
+                fileDict = self.getLatestPath(file.get("children"), currLatestFileDate, currLatestFilePath)
                 self._logger.debug("fileDict: %s" %fileDict)
                 currLatestFilePath = fileDict.get("path")
                 currLatestFileDate = fileDict.get("date")
