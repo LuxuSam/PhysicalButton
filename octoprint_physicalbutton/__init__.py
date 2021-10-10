@@ -174,9 +174,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
         files = self._file_manager.list_files(recursive = True)
         localFileDict = self.getLatestPath(files.get("local"), None, 0)
         pathLocal = localFileDict.get("path")
-
-        self._logger.debug("Latest found file: %s" %pathLocal)
-
         latestFilePath = pathLocal
 
     def getLatestPath(self, files, latestPath, latestDate):
