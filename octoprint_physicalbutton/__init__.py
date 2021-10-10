@@ -83,8 +83,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
                     break
 
     def reactToInput(self, pressedButton):
-        self.thread_react(pressedButton)
-        return
         t = threading.Thread(target=self.thread_react, args=(pressedButton,))
         t.start()
 
@@ -206,7 +204,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
     def start_newest(self):
         self._logger.debug("Start newest: test debug message")
         self._logger.debug("latestFilePath: %s" %latestFilePath)
-        self._logger.debug("self._file_manager.file_exists(latestFilePath) = %s" %self._file_manager.file_exists("local",latestFilePath))
         if (latestFilePath is None) or (not self._file_manager.file_exists("local",latestFilePath)):
             self._logger.debug("latestFilePath not set yet, start search")
             self.updateLatestFilePath()
