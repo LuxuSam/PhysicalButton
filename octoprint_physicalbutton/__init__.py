@@ -222,7 +222,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
     def on_event(self, event, payload):
         if event == "FileAdded":
             global latestFilePath
-            latestFilePath = payload.path
+            latestFilePath = payload.get("path")
             self._logger.debug("Added new file: %s" %latestFilePath)
 
     def on_after_startup(self):
