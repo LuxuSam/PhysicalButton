@@ -203,6 +203,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
 
     def start_newest(self):
         self._logger.debug("Start newest test debug message")
+        self._logger.debug("latestFilePath: %s" %latestFilePath)
         self._logger.debug("self._file_manager.file_exists(latestFilePath) = %s" %self._file_manager.file_exists(latestFilePath))
         if (latestFilePath is None) or (self._file_manager.file_exists(latestFilePath) == False):
             self._logger.debug("latestFilePath not set yet, start search")
