@@ -213,8 +213,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
         if self.selectFile(latestFilePath) == -1:
             return -1
 
-        self._logger.debug("Fake Starting print for file: %s" %latestFilePath)
-        #self._printer.start_print()
+        self._printer.start_print()
         return 0
 
 
