@@ -11,11 +11,12 @@ import subprocess
 buttonList = []
 latestFilePath = None
 
-class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
+class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
+                           octoprint.plugin.EventHandlerPlugin,
                            octoprint.plugin.SettingsPlugin,
-                           octoprint.plugin.TemplatePlugin,
-                           octoprint.plugin.AssetPlugin,
-                           octoprint.plugin.ShutdownPlugin
+                           octoprint.plugin.ShutdownPlugin,
+                           octoprint.plugin.StartupPlugin,
+                           octoprint.plugin.TemplatePlugin
                            ):
 
     ########################################_Helper functions_########################################
