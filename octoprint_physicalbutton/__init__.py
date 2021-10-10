@@ -205,7 +205,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             self._printer.cancel_print()
 
     def start_newest(self):
-        global latestFilePath
         if (latestFilePath is None) or (not self._file_manager.file_exists(latestFilePath)):
             self._logger.debug("latestFilePath not set yet, start search")
             self.updateLatestFilePath()
@@ -214,7 +213,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             return -1
         self.selectFile(latestFilePath)
         self._logger.debug("Fake Starting print for file: %s" %latestFilePath)
-        latestFilePath = None
         #self._printer.start_print()
         return 0
 
