@@ -120,8 +120,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
         if action == "start":
             self._printer.start_print()
             return 0
-        if action == "start newest":
-            return self.start_newest()
+        if action == "start latest":
+            return self.start_latest()
         if action == "cancel":
             self._printer.cancel_print()
             return 0
@@ -201,7 +201,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
         else:
             self._printer.cancel_print()
 
-    def start_newest(self):
+    def start_latest(self):
         if (latestFilePath is None) or (not self._file_manager.file_exists("local",latestFilePath)):
             self._logger.debug("latestFilePath not set yet, start search")
             self.updateLatestFilePath()
