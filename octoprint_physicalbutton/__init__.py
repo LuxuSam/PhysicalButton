@@ -172,7 +172,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
         global latestFilePath
 
         files = self._file_manager.list_files(recursive = True)
-        localFileDict = self.getLatestPath(files.get("local"), None, 0)
+        localFileDict = self.getLatestPath(files.get("local"), None, -1)
         pathLocal = localFileDict.get("path")
         latestFilePath = pathLocal
 
@@ -215,7 +215,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
 
         self._printer.start_print()
         return 0
-
 
     ####################################_OctoPrint Functions_#########################################
     def on_event(self, event, payload):
