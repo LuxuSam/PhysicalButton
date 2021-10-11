@@ -2,19 +2,23 @@
 from __future__ import absolute_import
 
 import octoprint.plugin
+
 from gpiozero import Button,OutputDevice
+
 import time
 import threading
 import subprocess
 
 buttonList = []
 outputList = []
+latestFilePath = None
 
-class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
+class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
+                           octoprint.plugin.EventHandlerPlugin,
                            octoprint.plugin.SettingsPlugin,
-                           octoprint.plugin.TemplatePlugin,
-                           octoprint.plugin.AssetPlugin,
-                           octoprint.plugin.ShutdownPlugin
+                           octoprint.plugin.ShutdownPlugin,
+                           octoprint.plugin.StartupPlugin,
+                           octoprint.plugin.TemplatePlugin
                            ):
 
     ########################################_Helper functions_########################################
@@ -147,6 +151,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         if action == "start":
             self._printer.start_print()
             return 0
+        if action == "start latest":
+            return self.start_latest()
         if action == "cancel":
             self._printer.cancel_print()
             return 0
@@ -193,6 +199,32 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             self._logger.error(e)
             return -1
 
+    def updateLatestFilePath(self):
+        global latestFilePath
+
+        files = self._file_manager.list_files(recursive = True)
+        localFileDict = self.getLatestPath(files.get("local"), None, -1)
+        pathLocal = localFileDict.get("path")
+        latestFilePath = pathLocal
+
+    def getLatestPath(self, files, latestPath, latestDate):
+        for file in files:
+            file = files.get(file)
+            if file.get("type") == "folder":
+                fileDict = self.getLatestPath(file.get("children"), latestPath, latestDate)
+                latestPath = fileDict.get("path")
+                latestDate = fileDict.get("date")
+
+            if file.get("type") == "machinecode":
+                if file.get("date") > latestDate:
+                    latestPath = file.get("path")
+                    latestDate = file.get("date")
+
+        return {
+            "path" : latestPath,
+            "date" : latestDate
+        }
+
     def generateOutput(self, output):
         global outputList
 
@@ -227,15 +259,34 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
         outputDevice.toggle()
 
-
-
     ####################################_Custom actions_##############################################
     def toggle_cancel_print(self):
         if self._printer.is_ready():
             self._printer.start_print()
         else:
             self._printer.cancel_print()
+
+    def start_latest(self):
+        if (latestFilePath is None) or (not self._file_manager.file_exists("local",latestFilePath)):
+            self._logger.debug("latestFilePath not set yet, start search")
+            self.updateLatestFilePath()
+
+        if latestFilePath is None:
+            self._logger.error('No files found!')
+            return -1
+
+        if self.selectFile(latestFilePath) == -1:
+            return -1
+
+        self._printer.start_print()
+        return 0
+
     ####################################_OctoPrint Functions_#########################################
+    def on_event(self, event, payload):
+        if event == "FileAdded":
+            global latestFilePath
+            latestFilePath = payload.get("path")
+            self._logger.debug("Added new file: %s" %latestFilePath)
 
     def on_after_startup(self):
         if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:

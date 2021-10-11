@@ -11,13 +11,13 @@ $(function() {
         //settings
         self.settingsViewModel = parameters[0];
 
-        //GPIOs:
-        self.gpios = ko.observableArray(['none', '2', '3', '4', '5', '6',
-            '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17',
-            '18', '19', '20', '21', '22', '23', '24', '25', '26', '27'
-        ]);
-        //actions:
-        self.actions = ko.observableArray(['none', 'connect', 'disconnect', 'home', 'pause', 'resume', 'toggle pause-resume', 'start', 'cancel', 'toggle start-cancel']);
+         //GPIOs:
+         self.gpios = ko.observableArray(['none', '2', '3', '4', '5', '6',
+             '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17',
+             '18', '19', '20', '21', '22', '23', '24', '25', '26', '27'
+         ]);
+         //actions:
+         self.actions = ko.observableArray(['none', 'connect', 'disconnect', 'home', 'pause', 'resume', 'toggle pause-resume', 'start', 'start latest', 'cancel', 'toggle start-cancel']);
 
         //button modes:
         self.buttonModes = ko.observableArray(['Normally Open (NO)', 'Normally Closed (NC)']);
