@@ -87,6 +87,9 @@
 .physicalbutton_settings .button-list .accordion-inner .right-side .insert-at-index {
   padding-bottom: 10px;
 }
+.physicalbutton_settings .button-list .accordion-inner .right-side .insert-at-index a {
+  cursor: pointer;
+}
 .physicalbutton_settings .button-list .accordion-inner .right-side .control-group {
   margin-bottom: 0;
 }
