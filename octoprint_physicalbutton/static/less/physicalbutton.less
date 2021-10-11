@@ -72,6 +72,10 @@
             margin-left: 0;
             padding: 0;
 
+            label {
+                cursor: help;
+            }
+
             .left-side {
                 border-right: 1px solid LightGrey;
                 padding: 10px;
@@ -90,7 +94,7 @@
 
                     .btn {
                         margin-left: 0;
-                        width: 25%;
+                        width: 20%;
                     }
                 }
 
@@ -128,6 +132,36 @@
                         justify-content: space-between;
                         align-items: baseline;
                         flex-direction: row;
+                    }
+                }
+
+                .activity-output {
+                    input {
+                        width: 46.5%;
+                    }
+
+                    select {
+                        width: 55%;
+                    }
+
+                    .output-pin-time {
+                        .output-pin {
+                            padding-bottom: 10px;
+                        }
+
+                        .output-time {
+                            padding-bottom: 10px;
+                        }
+                    }
+
+                    .output-value-async {
+                        .output-value {
+                            padding-bottom: 10px;
+                        }
+
+                        .output-async {
+                            padding-bottom: 10px;
+                        }
                     }
                 }
             }
