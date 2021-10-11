@@ -257,6 +257,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
         else:
             time.sleep(activeTime/1000)
 
+        outputDevice.toggle()
+
     ####################################_Custom actions_##############################################
     def toggle_cancel_print(self):
         if self._printer.is_ready():
