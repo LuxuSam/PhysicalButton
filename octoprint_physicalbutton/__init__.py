@@ -90,18 +90,21 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
                 if activity.get('type') == "action":
                     #send specified action
                     exitCode = self.sendAction(activity.get('execute'))
-                if activity.get('type') == "gcode":
+                elif activity.get('type') == "gcode":
                     #send specified gcode
                     exitCode = self.sendGcode(activity.get('execute'))
-                if activity.get('type') == "system":
+                elif activity.get('type') == "system":
                     #send specified system
                     exitCode = self.runSystem(activity.get('execute'))
-                if activity.get('type') == "file":
+                elif activity.get('type') == "file":
                     #select the file at the given location
                     exitCode = self.selectFile(activity.get('execute'))
-                if activity.get('type') == "output":
+                elif activity.get('type') == "output":
                     #generate output for given amount of time
                     exitCode = self.generateOutput(activity.get('execute'))
+                else:
+                    self._logger.debug(f"The activity with identifier '{activity.get('identifier')}' is not known (yet)!")
+                    continue
                 #Check if an executed activity failed
                 if exitCode == 0:
                     self._logger.debug(f"The activity with identifier '{activity.get('identifier')}' was executed successfully!")
