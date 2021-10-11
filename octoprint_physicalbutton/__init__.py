@@ -25,10 +25,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
     def setupButtons(self):
         global buttonList
         for button in self._settings.get(["buttons"]):
-            if button.get("gpio") == "none":
+            if button.get('gpio') == "none":
                 continue
-            buttonGPIO = int(button.get("gpio"))
-            buttonMode = button.get("buttonMode")
+            buttonGPIO = int(button.get('gpio'))
+            buttonMode = button.get('buttonMode')
             newButton = Button(buttonGPIO, pull_up=True, bounce_time=None)
             if buttonMode == "Normally Open (NO)":
                 newButton.when_pressed = self.reactToInput
@@ -41,13 +41,13 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
 
     def setupOutputPins(self,button):
         global outputList
-        for activity in list(filter(lambda a: a.get("type") == "output", button.get("activities"))):
-            outputGPIO = activity.get("execute").get("gpio")
+        for activity in list(filter(lambda a: a.get('type') == "output", button.get('activities'))):
+            outputGPIO = activity.get('execute').get('gpio')
             #check if gpio has to be setup
             if outputGPIO == 'none' or int(outputGPIO) in list(map(lambda oD: oD.pin.number, outputList)):
                 continue
             outputDevice = OutputDevice(int(outputGPIO))
-            initialValue = activity.get("execute").get("initial")
+            initialValue = activity.get('execute').get('initial')
             if initialValue == "HIGH":
                 outputDevice.on()
             outputList.append(outputDevice)
@@ -72,45 +72,45 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
 
         #search for pressed button
         for btn in self._settings.get(["buttons"]):
-            if btn.get("gpio") == "none":
+            if btn.get('gpio') == "none":
                 continue
-            if int(btn.get("gpio")) == pressedButton.pin.number:
+            if int(btn.get('gpio')) == pressedButton.pin.number:
                 button = btn
                 break
 
-        waitTime = int(button.get("buttonTime"))
+        waitTime = int(button.get('buttonTime'))
         time.sleep(waitTime/1000)
 
         if pressedButton.value == buttonValue:
-            self._logger.debug(f"Reacting to button {button.get("buttonName")}")
+            self._logger.debug(f"Reacting to button {button.get('buttonName')}")
             #execute actions for button in order
-            for activity in button.get("activities"):
+            for activity in button.get('activities'):
                 exitCode = 0
-                self._logger.debug(f"Sending activity with identifier '{activity.get("identifier")}' ...")
-                if activity.get("type") == "action":
+                self._logger.debug(f"Sending activity with identifier '{activity.get('identifier')}' ...")
+                if activity.get('type') == "action":
                     #send specified action
-                    exitCode = self.sendAction(activity.get("execute"))
-                if activity.get("type") == "gcode":
+                    exitCode = self.sendAction(activity.get('execute'))
+                if activity.get('type') == "gcode":
                     #send specified gcode
-                    exitCode = self.sendGcode(activity.get("execute"))
-                if activity.get("type") == "system":
+                    exitCode = self.sendGcode(activity.get('execute'))
+                if activity.get('type') == "system":
                     #send specified system
-                    exitCode = self.runSystem(activity.get("execute"))
-                if activity.get("type") == "file":
+                    exitCode = self.runSystem(activity.get('execute'))
+                if activity.get('type') == "file":
                     #select the file at the given location
-                    exitCode = self.selectFile(activity.get("execute"))
-                if activity.get("type") == "output":
+                    exitCode = self.selectFile(activity.get('execute'))
+                if activity.get('type') == "output":
                     #generate output for given amount of time
-                    exitCode = self.generateOutput(activity.get("execute"))
+                    exitCode = self.generateOutput(activity.get('execute'))
                 #Check if an executed activity failed
                 if exitCode == 0:
-                    self._logger.debug(f"The activity with identifier '{activity.get("identifier")}' was executed successfully!")
+                    self._logger.debug(f"The activity with identifier '{activity.get('identifier')}' was executed successfully!")
                     continue
                 if exitCode == -1:
-                    self._logger.error(f"The activity with identifier '{activity.get("identifier")}' failed! Aborting follwing activities!")
+                    self._logger.error(f"The activity with identifier '{activity.get('identifier')}' failed! Aborting follwing activities!")
                     break
                 if exitCode == -2:
-                    self._logger.error(f"The activity with identifier '{activity.get("identifier")}' failed! No GPIO specified!")
+                    self._logger.error(f"The activity with identifier '{activity.get('identifier')}' failed! No GPIO specified!")
                     continue
 
     def reactToInput(self, pressedButton):
@@ -172,11 +172,11 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
                 ret = subprocess.check_output(command,
                     stderr=subprocess.STDOUT, shell=True)
                 # log output
-                self._logger.info(f"Command '{command}' returned: {ret.decode("utf-8")}")
+                self._logger.info(f"Command '{command}' returned: {ret.decode('utf-8')}")
                 return 0
             except subprocess.CalledProcessError as e:
                 # return exception and stop further processing
-                self._logger.error(f"Error [{e.returncode}] executing command '{command}': {e.output.decode("utf-8")}")
+                self._logger.error(f"Error [{e.returncode}] executing command '{command}': {e.output.decode('utf-8')}")
                 return -1
 
     def selectFile(self, path):
@@ -201,22 +201,22 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
         global latestFilePath
 
         files = self._file_manager.list_files(recursive = True)
-        localFileDict = self.getLatestPath(files.get("local"), None, -1)
-        pathLocal = localFileDict.get("path")
+        localFileDict = self.getLatestPath(files.get('local'), None, -1)
+        pathLocal = localFileDict.get('path')
         latestFilePath = pathLocal
 
     def getLatestPath(self, files, latestPath, latestDate):
         for file in files:
             file = files.get(file)
-            if file.get("type") == "folder":
-                fileDict = self.getLatestPath(file.get("children"), latestPath, latestDate)
-                latestPath = fileDict.get("path")
-                latestDate = fileDict.get("date")
+            if file.get('type') == "folder":
+                fileDict = self.getLatestPath(file.get('children'), latestPath, latestDate)
+                latestPath = fileDict.get('path')
+                latestDate = fileDict.get('date')
 
-            if file.get("type") == "machinecode":
-                if file.get("date") > latestDate:
-                    latestPath = file.get("path")
-                    latestDate = file.get("date")
+            if file.get('type') == "machinecode":
+                if file.get('date') > latestDate:
+                    latestPath = file.get('path')
+                    latestDate = file.get('date')
 
         return {
             "path" : latestPath,
@@ -226,16 +226,16 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
     def generateOutput(self, output):
         global outputList
 
-        if output.get("gpio") == 'none':
+        if output.get('gpio') == 'none':
             return -2
 
-        gpio = int(output.get("gpio"))
-        value = output.get("value")
-        time = int(output.get("time"))
+        gpio = int(output.get('gpio'))
+        value = output.get('value')
+        time = int(output.get('time'))
 
         outputDevice = next(iter(filter(lambda oD: oD.pin.number == gpio, outputList)))
 
-        if output.get("async") == 'True':
+        if output.get('async') == 'True':
             t = threading.Thread(target = self.setOutput, args=(value, time, outputDevice,))
             t.start()
         else:
@@ -283,7 +283,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
     def on_event(self, event, payload):
         if event == "FileAdded":
             global latestFilePath
-            latestFilePath = payload.get("path")
+            latestFilePath = payload.get('path')
             self._logger.debug(f"Added new file: {latestFilePath}")
 
     def on_after_startup(self):
