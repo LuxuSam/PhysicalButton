@@ -2,12 +2,13 @@
 from __future__ import absolute_import
 
 import octoprint.plugin
-from gpiozero import Button
+from gpiozero import Button,OutputDevice
 import time
 import threading
 import subprocess
 
 buttonList = []
+outputList = []
 
 class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                            octoprint.plugin.SettingsPlugin,
@@ -30,7 +31,22 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             if buttonMode == "Normally Closed (NC)":
                 newButton.when_released = self.reactToInput
             buttonList.append(newButton)
+            self.setupOutputPins(button)
         self._logger.debug('Added Buttons: %s' %buttonList)
+        self._logger.debug('Added Output devices: %s' %outputList)
+
+    def setupOutputPins(self,button):
+        global outputList
+        for activity in list(filter(lambda a: a.get("type") == "output", button.get("activities"))):
+            outputGPIO = activity.get("execute").get("gpio")
+            #check if gpio has to be setup
+            if outputGPIO == 'none' or int(outputGPIO) in list(map(lambda oD: oD.pin.number, outputList)):
+                continue
+            outputDevice = OutputDevice(int(outputGPIO))
+            initialValue = activity.get("execute").get("initial")
+            if initialValue == "HIGH":
+                outputDevice.on()
+            outputList.append(outputDevice)
 
     def removeButtons(self):
         global buttonList
@@ -38,6 +54,13 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
         for button in buttonList:
             button.close()
         buttonList.clear()
+
+    def removeOutputs(self):
+        global outputList
+        self._logger.debug('Output devices to remove: %s' %outputList)
+        for outputDevice in outputList:
+            outputDevice.close()
+        outputList.clear()
 
     def thread_react(self, pressedButton):
         #save value of button (pushed or released)
@@ -72,12 +95,19 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
                 if activity.get("type") == "file":
                     #select the file at the given location
                     exitCode = self.selectFile(activity.get("execute"))
+                if activity.get("type") == "output":
+                    #generate output for given amount of time
+                    exitCode = self.generateOutput(activity.get("execute"))
                 #Check if an executed activity failed
                 if exitCode == 0:
                     self._logger.debug("The activity with identifier '%s' was executed successfully!" %activity.get("identifier"))
+                    continue
                 if exitCode == -1:
                     self._logger.error("The activity with identifier '%s' failed! Aborting follwing activities!" %activity.get("identifier") )
                     break
+                if exitCode == -2:
+                    self._logger.error("The activity with identifier '%s' failed! No GPIO specified!" %activity.get("identifier"))
+                    continue
 
     def reactToInput(self, pressedButton):
         t = threading.Thread(target=self.thread_react, args=(pressedButton,))
@@ -163,6 +193,42 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             self._logger.error(e)
             return -1
 
+    def generateOutput(self, output):
+        global outputList
+
+        if output.get("gpio") == 'none':
+            return -2
+
+        gpio = int(output.get("gpio"))
+        value = output.get("value")
+        time = int(output.get("time"))
+
+        outputDevice = next(iter(filter(lambda oD: oD.pin.number == gpio, outputList)))
+
+        if output.get("async") == 'True':
+            t = threading.Thread(target = self.setOutput, args=(value, time, outputDevice,))
+            t.start()
+        else:
+            self.setOutput(value, time, outputDevice)
+        return 0
+
+    def setOutput(self, value, activeTime, outputDevice):
+        if value == 'HIGH':
+            outputDevice.on()
+        elif value == 'LOW':
+            outputDevice.off()
+        elif value == 'Toggle':
+            outputDevice.toggle()
+
+        if activeTime == 0:
+            return
+        else:
+            time.sleep(activeTime/1000)
+
+        outputDevice.toggle()
+
+
+
     ####################################_Custom actions_##############################################
     def toggle_cancel_print(self):
         if self._printer.is_ready():
@@ -185,12 +251,14 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
             return
         self._logger.info("Cleaning up used GPIOs before shutting down ...")
         self.removeButtons()
+        self.removeOutputs()
         self._logger.info("Done!")
 
     def on_settings_save(self, data):
         #Handle old configuration:
         if self._settings.get(["buttons"]) != None and self._settings.get(["buttons"]) != []:
             self.removeButtons()
+            self.removeOutputs()
             self._logger.debug("Removed old button configuration")
         #Save new Settings
         octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
@@ -201,6 +269,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.StartupPlugin,
 
     def on_settings_cleanup(self):
         self.removeButtons()
+        self.removeOutputs()
         octoprint.plugin.SettingsPlugin.on_settings_cleanup(self)
 
     def get_settings_defaults(self):

@@ -52,7 +52,7 @@
                                     <a data-toggle="modal" href="#gpioHelp"><i class="fas fa-question-circle"></i></a>
                                 </div>
                                 <select data-bind="foreach: {data:$root.gpios, as: 'gpioListItem'}, value:button.gpio">
-                                    <option data-bind="value:$data, text: gpioListItem == 'none' ? gpioListItem : 'GPIO'+gpioListItem ,disable: $root.disableGpioOption(gpioListItem,button.gpio)"></option>
+                                    <option data-bind="value:$data, text: gpioListItem == 'none' ? gpioListItem : 'GPIO' + gpioListItem, disable: $root.disableGpioOption(gpioListItem,button.gpio)"></option>
                                 </select>
                             </div>
                             <div class="control-group choose-mode">
@@ -61,13 +61,14 @@
                             </div>
                             <div class="control-group choose-time">
                                 <label for="" title="Choose how long the button has to be activated until an activity triggers">Hold Time (ms):</label>
-                                <input type="number" data-bind="value: button.buttonTime">
+                                <input min="0" type="number" data-bind="value: button.buttonTime">
                             </div>
                             <div class="btn-group control-group add-new-activity">
-                                <button class="btn" data-bind="click: $parent.addAction">Action</button>
-                                <button class="btn" data-bind="click: $parent.addFile">File</button>
-                                <button class="btn" data-bind="click: $parent.addGCODE">GCODE</button>
-                                <button class="btn" data-bind="click: $parent.addSystem">System</button>
+                                <button class="btn btn-small" data-bind="click: $parent.addAction">Action</button>
+                                <button class="btn btn-small" data-bind="click: $parent.addFile">File</button>
+                                <button class="btn btn-small" data-bind="click: $parent.addGCODE">GCODE</button>
+                                <button class="btn btn-small" data-bind="click: $parent.addSystem">System</button>
+                                <button class="btn btn-small" data-bind="click: $parent.addOutput">Output</button>
                             </div>
                             <div class="control-group activity-list">
                                 <label for="" title="List of your added activities">Activities:</label>
@@ -107,12 +108,50 @@
                             </div>
                             <div class="control-group activity-file" data-bind="if:$parent.selectedActivity().type() == 'file'">
                                 <div class="control-group path-file">
-                                    <label for="" title="Type in a relative path from the uploads folder or an absolute path to a file. Add @sd: if the file is on the SD of your printer">Path to file:&nbsp;&nbsp;</label>
+                                    <label for="" title="Type in a relative path from the uploads folder or an absolute path to a file. Add @sd: if the file is on the SD of your printer.">Path to file:&nbsp;&nbsp;</label>
                                     <a data-toggle="modal" href="#attentionFile" data-bind="if:$parent.selectedActivity().type() == 'file'">
                                         <i class="fas fa-info-circle"></i>
                                     </a>
                                 </div>
                                 <textarea data-bind="attr:{rows: 5}, value:$parent.selectedActivity().execute" placeholder="Path/To/File.gcode"></textarea>
+                            </div>
+                            <div class="activity-output" data-bind="if:$parent.selectedActivity().type() == 'output'">
+                                <div class="span6 output-pin-time">
+                                    <div class="control-group output-pin">
+                                        <label title="The GPIO the output should be applied to.">GPIO:</label>
+                                        <select data-bind="foreach: {data:$root.gpios, as: 'gpioListItem'}, value:$parent.selectedActivity().execute.gpio, event:{ change: function(data,event) {$parent.outputGpioChanged($parent.selectedActivity().execute.gpio(),$parent.selectedActivity().execute.id(),data,event)}}">
+                                            <option data-bind="value:$data, text: gpioListItem == 'none' ? gpioListItem : 'GPIO' + gpioListItem, disable: $root.disableGpioOutputOption(gpioListItem)"></option>
+                                        </select>
+                                    </div>
+                                    <div class="control-group output-time">
+                                        <label title="The time for how long the value will be applied. Use 0 to apply output without time!">Time (ms):</label>
+                                        <input  min="0" type="number" data-bind="value:$parent.selectedActivity().execute.time">
+                                    </div>
+                                    <div class="control-group output-init">
+                                        <label title = "This value is applied when OctoPrint starts up or when settings are saved">Initial value:</label>
+                                        <select data-bind="value: $parent.selectedActivity().execute.initial, event:{ change: function(data,event) {$parent.initialValueChanged($parent.selectedActivity().execute.initial(),$parent.selectedActivity().execute.gpio(),$parent.selectedActivity().execute.id(),data,event)}}">
+                                            <option value="LOW">LOW</option>
+                                            <option value="HIGH">HIGH</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="span6 output-value-async">
+                                    <div class="control-group output-value">
+                                        <label title="The value that should be applied to the GPIO on activation.">Active:</label>
+                                        <select data-bind="value:$parent.selectedActivity().execute.value">
+                                            <option value="HIGH">HIGH</option>
+                                            <option value="LOW">LOW</option>
+                                            <option value="Toggle">Toggle</option>
+                                        </select>
+                                    </div>
+                                    <div class="control-group output-async">
+                                        <label for="" title="Continue executing next activity immediatly without waiting">Async:</label>
+                                        <select data-bind="value:$parent.selectedActivity().execute.async">
+                                            <option value="False">False</option>
+                                            <option value="True">True</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -127,7 +166,7 @@
                 <h3 id="modalHeader">Are you sure?</h3>
             </div>
             <div class="modal-body">
-                You are about to delete the button <strong data-bind="text: button.buttonName()"></strong> which uses <strong data-bind="text: 'GPIO'+button.gpio()"></strong><br><br>
+                You are about to delete the button <strong data-bind="text: button.buttonName()"></strong> which uses <strong data-bind="text: 'GPIO' + button.gpio()"></strong><br><br>
                 <small>The deletion will not be finalized until you save your settings</small>
             </div>
             <div class="modal-footer">
