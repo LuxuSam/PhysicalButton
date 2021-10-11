@@ -20,8 +20,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
                            octoprint.plugin.StartupPlugin,
                            octoprint.plugin.TemplatePlugin
                            ):
-
-    ########################################_Helper functions_########################################
+                           
+    ##################################################################################################
+    ########################################_GPIO Setup functions_####################################
+    ##################################################################################################
     def setupButtons(self):
         global buttonList
         for button in self._settings.get(["buttons"]):
@@ -66,6 +68,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             outputDevice.close()
         outputList.clear()
 
+    ##################################################################################################
+    ########################################_React to button_#########################################
+    ##################################################################################################
     def thread_react(self, pressedButton):
         #save value of button (pushed or released)
         buttonValue = pressedButton.value
@@ -120,6 +125,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
         t = threading.Thread(target=self.thread_react, args=(pressedButton,))
         t.start()
 
+    ##################################################################################################
+    ########################################_Activities_##############################################
+    ##################################################################################################
     def sendGcode(self, gcodetxt):
         if not self._printer.is_operational():
             self._logger.error(f"Your machine is not operational!")
@@ -200,6 +208,28 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             self._logger.error(e)
             return -1
 
+    def generateOutput(self, output):
+        global outputList
+
+        if output.get('gpio') == 'none':
+            return -2
+
+        gpio = int(output.get('gpio'))
+        value = output.get('value')
+        time = int(output.get('time'))
+
+        outputDevice = next(iter(filter(lambda oD: oD.pin.number == gpio, outputList)))
+
+        if output.get('async') == 'True':
+            t = threading.Thread(target = self.setOutput, args=(value, time, outputDevice,))
+            t.start()
+        else:
+            self.setOutput(value, time, outputDevice)
+        return 0
+
+    ##################################################################################################
+    ########################################_Helper functions_########################################
+    ##################################################################################################
     def updateLatestFilePath(self):
         global latestFilePath
 
@@ -226,25 +256,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             "date" : latestDate
         }
 
-    def generateOutput(self, output):
-        global outputList
-
-        if output.get('gpio') == 'none':
-            return -2
-
-        gpio = int(output.get('gpio'))
-        value = output.get('value')
-        time = int(output.get('time'))
-
-        outputDevice = next(iter(filter(lambda oD: oD.pin.number == gpio, outputList)))
-
-        if output.get('async') == 'True':
-            t = threading.Thread(target = self.setOutput, args=(value, time, outputDevice,))
-            t.start()
-        else:
-            self.setOutput(value, time, outputDevice)
-        return 0
-
     def setOutput(self, value, activeTime, outputDevice):
         if value == 'HIGH':
             outputDevice.on()
@@ -260,7 +271,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
 
         outputDevice.toggle()
 
-    ####################################_Custom actions_##############################################
+    ##################################################################################################
+    ########################################_Custom actions_##########################################
+    ##################################################################################################
     def toggle_cancel_print(self):
         if self._printer.is_ready():
             self._printer.start_print()
@@ -282,7 +295,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
         self._printer.start_print()
         return 0
 
-    ####################################_OctoPrint Functions_#########################################
+    ##################################################################################################
+    ########################################_OctoPrint Functions_#####################################
+    ##################################################################################################
     def on_event(self, event, payload):
         if event == "FileAdded":
             global latestFilePath
