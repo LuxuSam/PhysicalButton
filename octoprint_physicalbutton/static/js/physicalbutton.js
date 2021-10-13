@@ -187,14 +187,16 @@ $(function() {
                     return;
                 }
                 if(self.selectedActivity().type() == 'file'){
-                    if (identifier == 'New File'){
-
+                    var execute = self.selectedActivity().execute().split('/')
+                    var last = execute[execute.length -1]
+                    if (identifier == 'New File' || identifier.includes(last){
+                        self.selectedActivity().identifier(last);
                     }
                     return;
                 }
                 if(self.selectedActivity().type() == 'output'){
                     if (identifier == 'New Output'){
-                        
+
                     }
                     return;
                 }
