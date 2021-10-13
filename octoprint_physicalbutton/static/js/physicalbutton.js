@@ -193,7 +193,9 @@ $(function() {
                     return;
                 }
                 if(self.selectedActivity().type() == 'output'){
-                    if (identifier == 'New Output')
+                    if (identifier == 'New Output'){
+                        
+                    }
                     return;
                 }
             }
