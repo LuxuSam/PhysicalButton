@@ -100,7 +100,7 @@
                             </div>
                             <div class="control-group activity-action" data-bind="if:$parent.selectedActivity().type() == 'action'">
                                 <label for="" title="Choose an action that should be executed on trigger">Action:</label>
-                                <select data-bind="options:$root.actions, value:$parent.selectedActivity().execute"></select>
+                                <select data-bind="options:$root.actions, value:$parent.selectedActivity().execute, event:{change: $parent.actionChanged}"></select>
                             </div>
                             <div class="control-group activity-system" data-bind="if:$parent.selectedActivity().type() == 'system'">
                                 <label for="" title="Type in commands for the Pi to run">System:</label>

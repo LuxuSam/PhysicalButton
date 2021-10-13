@@ -165,11 +165,18 @@ $(function() {
             self.selectedActivity(this.activities()[this.activities().length - 1]);
         }
 
+        self.actionChanged = function(data, event){
+            if(event.originalEvent && self.selectedActivity.type() == 'action'){
+                if (self.selectedActivity.identifier() == 'New Action' || self.actions().includes(self.selectedActivity.identifier())){
+                    console.log(data);
+                }
+            }
+        }
+
         self.initialValueChanged = function(initialValue, gpio, id, data, event){
             if (gpio == 'none'){
                 return;
             }
-            console.log(event.originalEvent);
             if (event.originalEvent) { //user changed
                 if (initialValue == 'HIGH'){ //toggle value as old initial value is passed
                     initialValue = 'LOW'
