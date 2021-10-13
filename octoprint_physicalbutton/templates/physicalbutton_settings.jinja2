@@ -96,7 +96,7 @@
                             </div>
                             <div class="control-group activity-gcode" data-bind="if:$parent.selectedActivity().type() == 'gcode'">
                                 <label for="" title="Choose  GCODE that should be executed on trigger">GCODE:</label>
-                                <textarea data-bind="attr:{rows: 5}, value:$parent.selectedActivity().execute"></textarea>
+                                <textarea data-bind="attr:{rows: 5}, value:$parent.selectedActivity().execute, event:{change: $parent.activityChanged}"></textarea>
                             </div>
                             <div class="control-group activity-action" data-bind="if:$parent.selectedActivity().type() == 'action'">
                                 <label for="" title="Choose an action that should be executed on trigger">Action:</label>
@@ -104,7 +104,7 @@
                             </div>
                             <div class="control-group activity-system" data-bind="if:$parent.selectedActivity().type() == 'system'">
                                 <label for="" title="Type in commands for the Pi to run">System:</label>
-                                <textarea data-bind="attr:{rows: 5}, value:$parent.selectedActivity().execute"></textarea>
+                                <textarea data-bind="attr:{rows: 5}, value:$parent.selectedActivity().execute, event:{change: $parent.activityChanged}"></textarea>
                             </div>
                             <div class="control-group activity-file" data-bind="if:$parent.selectedActivity().type() == 'file'">
                                 <div class="control-group path-file">
@@ -113,7 +113,7 @@
                                         <i class="fas fa-info-circle"></i>
                                     </a>
                                 </div>
-                                <textarea data-bind="attr:{rows: 5}, value:$parent.selectedActivity().execute" placeholder="Path/To/File.gcode"></textarea>
+                                <textarea data-bind="attr:{rows: 5}, value:$parent.selectedActivity().execute" placeholder="Path/To/File.gcode, event:{change: $parent.activityChanged}"></textarea>
                             </div>
                             <div class="activity-output" data-bind="if:$parent.selectedActivity().type() == 'output'">
                                 <div class="span6 output-pin-time">
