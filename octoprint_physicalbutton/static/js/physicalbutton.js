@@ -166,10 +166,35 @@ $(function() {
         }
 
         self.activityChanged = function(data, event){
-            if(event.originalEvent && self.selectedActivity().type() == 'action'){
+            if(event.originalEvent){
                 var identifier = self.selectedActivity().identifier();
-                if (identifier == 'New Action' || self.actions().includes(identifier) || identifier.replace(/\s/g, "") == '') {
-                    self.selectedActivity().identifier(self.selectedActivity().execute());
+                if(self.selectedActivity().type() == 'action'){
+                    if (identifier == 'New Action' || self.actions().includes(identifier) || identifier.replace(/\s/g, "") == '') {
+                        self.selectedActivity().identifier(self.selectedActivity().execute());
+                    }
+                    return;
+                }
+                if(self.selectedActivity().type() == 'gcode'){
+                    if (identifier == 'New GCODE'){
+
+                    }
+                    return;
+                }
+                if(self.selectedActivity().type() == 'system'){
+                    if (identifier == 'New System Command'){
+
+                    }
+                    return;
+                }
+                if(self.selectedActivity().type() == 'file'){
+                    if (identifier == 'New File'){
+
+                    }
+                    return;
+                }
+                if(self.selectedActivity().type() == 'output'){
+                    if (identifier == 'New Output')
+                    return;
                 }
             }
         }
