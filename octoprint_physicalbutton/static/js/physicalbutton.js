@@ -166,8 +166,9 @@ $(function() {
         }
 
         self.actionChanged = function(data, event){
-            if(event.originalEvent && self.selectedActivity.type() == 'action'){
-                if (self.selectedActivity.identifier() == 'New Action' || self.actions().includes(self.selectedActivity.identifier())){
+            console.log(self.selectedActivity());
+            if(event.originalEvent && self.selectedActivity().type() == 'action'){
+                if (self.selectedActivity().identifier() == 'New Action' || self.actions().includes(self.selectedActivity().identifier())){
                     console.log(data);
                 }
             }
