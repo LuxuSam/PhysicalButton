@@ -165,7 +165,7 @@ $(function() {
             self.selectedActivity(this.activities()[this.activities().length - 1]);
         }
 
-        self.actionChanged = function(data, event){
+        self.activityChanged = function(data, event){
             if(event.originalEvent && self.selectedActivity().type() == 'action'){
                 var identifier = self.selectedActivity().identifier();
                 if (identifier == 'New Action' || self.actions().includes(identifier) || identifier.replace(/\s/g, "") == '') {
