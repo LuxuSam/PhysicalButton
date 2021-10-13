@@ -165,11 +165,11 @@ $(function() {
             self.selectedActivity(this.activities()[this.activities().length - 1]);
         }
 
-        self.actionChanged = function(data, event){
-            console.log(self.selectedActivity());
+        self.actionChanged = function(action, data, event){
             if(event.originalEvent && self.selectedActivity().type() == 'action'){
-                if (self.selectedActivity().identifier() == 'New Action' || self.actions().includes(self.selectedActivity().identifier())){
-                    console.log(data);
+                var identifier = self.selectedActivity().identifier();
+                if (identifier == 'New Action' || self.actions().includes(identifier) || identifier.replace(/\s/g, "") == '') {
+                    self.selectedActivity().identifier(self.selectedActivity().execute());
                 }
             }
         }
