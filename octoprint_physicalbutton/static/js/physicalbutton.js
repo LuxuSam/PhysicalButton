@@ -189,7 +189,7 @@ $(function() {
                 if(self.selectedActivity().type() == 'file'){
                     var execute = self.selectedActivity().execute().split('/')
                     var last = execute[execute.length -1]
-                    if (identifier == 'New File' || identifier.includes(last){
+                    if (identifier == 'New File' || identifier.includes(last)){
                         self.selectedActivity().identifier(last);
                     }
                     return;
