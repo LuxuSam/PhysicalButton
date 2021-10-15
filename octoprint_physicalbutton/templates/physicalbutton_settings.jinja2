@@ -119,13 +119,13 @@
                                 <div class="span6 output-pin-time">
                                     <div class="control-group output-pin">
                                         <label title="The GPIO the output should be applied to.">GPIO:</label>
-                                        <select data-bind="foreach: {data:$root.gpios, as: 'gpioListItem'}, value:$parent.selectedActivity().execute.gpio, event:{ change: function(data,event) {$parent.outputGpioChanged($parent.selectedActivity().execute.gpio(),$parent.selectedActivity().execute.id(),data,event)}}">
+                                        <select data-bind="foreach: {data:$root.gpios, as: 'gpioListItem'}, value:$parent.selectedActivity().execute.gpio, event:{ change: function(data,event) {$parent.activityChanged(data,event); $parent.outputGpioChanged($parent.selectedActivity().execute.gpio(),$parent.selectedActivity().execute.id(),data,event)}}">
                                             <option data-bind="value:$data, text: gpioListItem == 'none' ? gpioListItem : 'GPIO' + gpioListItem, disable: $root.disableGpioOutputOption(gpioListItem)"></option>
                                         </select>
                                     </div>
                                     <div class="control-group output-time">
                                         <label title="The time for how long the value will be applied. Use 0 to apply output without time!">Time (ms):</label>
-                                        <input  min="0" type="number" data-bind="value:$parent.selectedActivity().execute.time">
+                                        <input  min="0" type="number" data-bind="value:$parent.selectedActivity().execute.time, event:{change: $parent.activityChanged}">
                                     </div>
                                     <div class="control-group output-init">
                                         <label title = "This value is applied when OctoPrint starts up or when settings are saved">Initial value:</label>
@@ -138,10 +138,8 @@
                                 <div class="span6 output-value-async">
                                     <div class="control-group output-value">
                                         <label title="The value that should be applied to the GPIO on activation.">Active:</label>
-                                        <select data-bind="value:$parent.selectedActivity().execute.value">
-                                            <option value="HIGH">HIGH</option>
-                                            <option value="LOW">LOW</option>
-                                            <option value="Toggle">Toggle</option>
+                                        <select data-bind="foreach: {data:$root.outputOptions, as: 'output'}, value:$parent.selectedActivity().execute.value, event:{change: $parent.activityChanged}">
+                                            <option data-bind="value:output, text:output"></option>
                                         </select>
                                     </div>
                                     <div class="control-group output-async">
