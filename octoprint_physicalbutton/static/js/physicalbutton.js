@@ -22,6 +22,9 @@ $(function() {
         //button modes:
         self.buttonModes = ko.observableArray(['Normally Open (NO)', 'Normally Closed (NC)']);
 
+        //output options:
+        self.outputOptions = ko.observableArray(['HIGH', 'LOW', 'Toggle']);
+
         //Saved Buttons
         self.buttons = ko.observableArray();
 
@@ -165,11 +168,73 @@ $(function() {
             self.selectedActivity(this.activities()[this.activities().length - 1]);
         }
 
+        self.activityChanged = function(data, event){
+            if(event.originalEvent){
+                const identifier = self.selectedActivity().identifier();
+                if(self.selectedActivity().type() == 'action'){
+                    if (identifier == 'New Action' || identifier.replace(/\s/g, "") == '' || self.actions().includes(identifier)) {
+                        const execute = self.selectedActivity().execute();
+                        self.selectedActivity().identifier(execute);
+                    }
+                    return;
+                }
+
+                if(self.selectedActivity().type() == 'gcode'){
+                    if (identifier == 'New GCODE' || identifier.replace(/\s/g, "") == ''){
+                        const execute = self.selectedActivity().execute().split('\n');
+                        const first = execute[0];
+
+                        self.selectedActivity().identifier(first);
+                    }
+                    return;
+                }
+
+                if(self.selectedActivity().type() == 'system'){
+                    if (identifier == 'New System Command' || identifier.replace(/\s/g, "") == ''){
+                        const execute = self.selectedActivity().execute().split('\n');
+                        const first = execute[0];
+                        self.selectedActivity().identifier(first);
+                    }
+                    return;
+                }
+
+                if(self.selectedActivity().type() == 'file'){
+                    const fileformats = ['s3g', 'x3d','gcode', 'gco', 'g']
+
+                    if (identifier == 'New File' || identifier.replace(/\s/g, "") == ''
+                        || fileformats.map(x => identifier.split('.')[identifier.split('.').length -1] == x).reduce((prev,curr) => prev || curr)){
+                        const execute = self.selectedActivity().execute().split('/');
+                        const file = execute[execute.length -1];
+
+                        if (fileformats.map(x => file.split('.')[file.split('.').length-1] == x).reduce((prev,curr) => prev || curr)){
+                            self.selectedActivity().identifier(file);
+                        }
+                    }
+                    return;
+                }
+
+                if(self.selectedActivity().type() == 'output'){
+                    if (identifier == 'New Output' || identifier.replace(/\s/g, "") == '' || identifier.includes('GPIO none') ||(identifier.includes('GPIO') && identifier.includes('-') && identifier.includes('ms'))){
+                        const gpio = self.selectedActivity().execute.gpio();
+                        var value = self.selectedActivity().execute.value();
+                        value = value[0] + value.substring(1).toLowerCase();
+                        const time = self.selectedActivity().execute.time();
+                        var newIdentifier = 'GPIO' + gpio + '-' + value + '-' + time + 'ms'
+                        if (gpio == 'none'){
+                            newIdentifier = 'GPIO none';
+                        }
+                        self.selectedActivity().identifier(newIdentifier);
+
+                    }
+                    return;
+                }
+            }
+        }
+
         self.initialValueChanged = function(initialValue, gpio, id, data, event){
             if (gpio == 'none'){
                 return;
             }
-            console.log(event.originalEvent);
             if (event.originalEvent) { //user changed
                 if (initialValue == 'HIGH'){ //toggle value as old initial value is passed
                     initialValue = 'LOW'
@@ -190,9 +255,8 @@ $(function() {
             if (gpio == 'none'){
                 return;
             }
-            console.log(event.originalEvent);
             if (event.originalEvent) {
-                for (let button of self.buttons()){ //set all initial values for this gpio to the new initial value
+                for (let button of self.buttons()){ //set initial value if it was already set for this gpio
                     const activity = button.activities().find(activity => activity.type() == 'output' && activity.execute.id() != id && activity.execute.gpio() != 'none' && activity.execute.gpio() == gpio)
                     if (activity){
                         self.selectedActivity().execute.initial(activity.execute.initial());
