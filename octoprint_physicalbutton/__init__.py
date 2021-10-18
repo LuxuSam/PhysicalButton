@@ -20,7 +20,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
                            octoprint.plugin.StartupPlugin,
                            octoprint.plugin.TemplatePlugin
                            ):
-                           
+
     ##################################################################################################
     ########################################_GPIO Setup functions_####################################
     ##################################################################################################
@@ -168,8 +168,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             self._printer.cancel_print()
             return 0
         if action == 'toggle start-cancel':
-            self.toggle_cancel_print()
-            return 0
+            return self.toggle_cancel_print()
+        if action == 'toggle start latest-cancel':
+            return self.toggle_cancel_start_latest()
+
         self._logger.debug(f"No action selected or action (yet) unknown")
         return 0
 
@@ -279,6 +281,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             self._printer.start_print()
         else:
             self._printer.cancel_print()
+        return 0
 
     def start_latest(self):
         if (latestFilePath is None) or (not self._file_manager.file_exists("local",latestFilePath)):
@@ -295,6 +298,12 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
         self._printer.start_print()
         return 0
 
+    def toggle_cancel_start_latest(self):
+        if self._printer.is_ready():
+            return self.start_latest()
+        else:
+            self._printer.cancel_print()
+            return 0
     ##################################################################################################
     ########################################_OctoPrint Functions_#####################################
     ##################################################################################################
