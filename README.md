@@ -40,7 +40,7 @@ You can edit, move or remove activities in the right pane.
 * **Choose activities for your button**
   * Action:
     * You can choose between different actions:  
-    connect, disconnect, home (x, y and z are homed), pause, resume, start, start latest, cancel, toggle pause-resume,  toggle start-cancel, toggle start latest-cancel
+    connect, disconnect, home (x, y and z are homed), pause, resume, start, start latest, cancel, toggle pause-resume, toggle start-cancel, toggle start latest-cancel
   * File:
     * You can specify the path to a file which will be selected.
     * To start the execution of a file, add 'start action' behind the 'file activity'.
