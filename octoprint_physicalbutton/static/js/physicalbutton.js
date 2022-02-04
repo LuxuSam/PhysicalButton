@@ -18,7 +18,7 @@ $(function() {
          ]);
          //actions:
          self.actions = ko.observableArray(['none', 'connect', 'disconnect', 'home', 'pause', 'resume', 'toggle pause-resume',
-                                            'start', 'start latest', 'cancel', 'toggle start-cancel', 'toggle start latest-cancel']);
+                                            'start', 'start latest', 'cancel', 'toggle start-cancel', 'toggle start latest-cancel', 'unselect file']);
 
         //button modes:
         self.buttonModes = ko.observableArray(['Normally Open (NO)', 'Normally Closed (NC)']);
