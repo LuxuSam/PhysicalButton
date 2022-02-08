@@ -171,6 +171,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             return self.toggle_cancel_print()
         if action == 'toggle start latest-cancel':
             return self.toggle_cancel_start_latest()
+        if action == 'unselect file':
+            return self._printer.unselect_file()
 
         self._logger.debug(f"No action selected or action (yet) unknown")
         return 0
