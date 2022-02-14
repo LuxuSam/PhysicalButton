@@ -55,12 +55,16 @@ $(function() {
             }
         }
 
-        self.disableGpioOption = function(item, currentGPIO) {
+        self.disableGpioOption = function(item, currentGPIO, disableLEDs) {
             if (item == 'none' || item == currentGPIO())
                 return false;
 
             //disable used input gpios
             if (self.buttons().find(b => b.gpio() == item))
+                return true;
+
+            //disable used LEDs
+            if (disableLEDs && self.buttons().find(b => b.ledgpio() == item))
                 return true;
 
             //disable used output gpios
@@ -88,6 +92,7 @@ $(function() {
                 buttonMode: ko.observable('Normally Open (NO)'),
                 buttonName: ko.observable('New Button Name'),
                 gpio: ko.observable('none'),
+                ledgpio: ko.observable('none'),
                 buttonTime: ko.observable('500'),
                 id: ko.observable(Date.now())
             });

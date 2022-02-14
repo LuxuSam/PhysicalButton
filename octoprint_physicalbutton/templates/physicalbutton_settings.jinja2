@@ -52,12 +52,21 @@
                                     <a data-toggle="modal" href="#gpioHelp"><i class="fas fa-question-circle"></i></a>
                                 </div>
                                 <select data-bind="foreach: {data:$root.gpios, as: 'gpioListItem'}, value:button.gpio">
-                                    <option data-bind="value:$data, text: gpioListItem == 'none' ? gpioListItem : 'GPIO' + gpioListItem, disable: $root.disableGpioOption(gpioListItem,button.gpio)"></option>
+                                    <option data-bind="value:$data, text: gpioListItem == 'none' ? gpioListItem : 'GPIO' + gpioListItem, disable: $root.disableGpioOption(gpioListItem,button.gpio,true)"></option>
                                 </select>
                             </div>
                             <div class="control-group choose-mode">
                                 <label for="" title="Choose a mode for your button">Mode:</label>
                                 <select data-bind="value: button.buttonMode, options:$root.buttonModes"></select>
+                            </div>
+                            <div class="control-group choose-gpio-led">
+                                <div class="control-group gpio-help">
+                                    <label for="" title="Choose a  pin for your button-LED (Chosen in BCM-mode)">LED-GPIO: </label>
+                                    <a data-toggle="modal" href="#gpioHelp"><i class="fas fa-question-circle"></i></a>
+                                </div>
+                                <select data-bind="foreach: {data:$root.gpios, as: 'gpioListItem'}, value:button.ledgpio">
+                                    <option data-bind="value:$data, text: gpioListItem == 'none' ? gpioListItem : 'GPIO' + gpioListItem, disable: $root.disableGpioOption(gpioListItem,button.ledgpio,false)"></option>
+                                </select>
                             </div>
                             <div class="control-group choose-time">
                                 <label for="" title="Choose how long the button has to be activated until an activity triggers">Hold Time (ms):</label>
