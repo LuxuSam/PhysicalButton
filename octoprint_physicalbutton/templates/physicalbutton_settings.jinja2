@@ -59,6 +59,10 @@
                                 <label for="" title="Choose a mode for your button">Mode:</label>
                                 <select data-bind="value: button.buttonMode, options:$root.buttonModes"></select>
                             </div>
+                            <div class="control-group choose-type">
+                                <label for="" title="Choose a mode for your button">Mode:</label>
+                                <select data-bind="value: button.buttonType, options:$root.buttonTypes"></select>
+                            </div>
                             <div class="control-group choose-time">
                                 <label for="" title="Choose how long the button has to be activated until an activity triggers">Hold Time (ms):</label>
                                 <input min="0" type="number" data-bind="value: button.buttonTime">

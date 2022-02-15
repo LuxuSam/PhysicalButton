@@ -23,6 +23,9 @@ $(function() {
         //button modes:
         self.buttonModes = ko.observableArray(['Normally Open (NO)', 'Normally Closed (NC)']);
 
+        //is shift button:
+        self.buttonTypes = ko.observableArray(['Regular Button', 'Shift Button']);
+
         //output options:
         self.outputOptions = ko.observableArray(['HIGH', 'LOW', 'Toggle']);
 
