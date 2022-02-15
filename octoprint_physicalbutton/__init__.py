@@ -9,6 +9,7 @@ import time
 import threading
 import subprocess
 
+shiftButton = None
 buttonList = []
 outputList = []
 latestFilePath = None
@@ -25,17 +26,23 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
     ########################################_GPIO Setup functions_####################################
     ##################################################################################################
     def setupButtons(self):
-        global buttonList
+        global buttonList, shiftButton
         for button in self._settings.get(["buttons"]):
             if button.get('gpio') == "none":
                 continue
             buttonGPIO = int(button.get('gpio'))
             buttonMode = button.get('buttonMode')
+            buttonType = button.get('buttonType')
             newButton = Button(buttonGPIO, pull_up=True, bounce_time=None)
             if buttonMode == "Normally Open (NO)":
                 newButton.when_pressed = self.reactToInput
             if buttonMode == "Normally Closed (NC)":
                 newButton.when_released = self.reactToInput
+            if buttonType == "Shift Button":
+                if shiftButton is None:
+                    shiftButton = newButton
+                else:
+                    self._logger.error(f"Cannot use multiple shift buttons.")
             buttonList.append(newButton)
             self.setupOutputPins(button)
         self._logger.debug(f"Added Buttons: {buttonList}")
@@ -55,11 +62,12 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             outputList.append(outputDevice)
 
     def removeButtons(self):
-        global buttonList
+        global buttonList, shiftButton
         self._logger.debug(f"Buttons to remove: {buttonList}")
         for button in buttonList:
             button.close()
         buttonList.clear()
+        shiftButton = None
 
     def removeOutputs(self):
         global outputList
@@ -83,6 +91,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
                 button = btn
                 break
 
+        shift_pressed = shiftButton is not None and shiftButton.is_pressed
+        if shift_pressed:
+            self._logger.debug(f"Shift button is pressed.")
+
         waitTime = int(button.get('buttonTime'))
         time.sleep(waitTime/1000)
 
@@ -91,6 +103,12 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             #execute actions for button in order
             for activity in button.get('activities'):
                 exitCode = 0
+
+                # skip if triggerwhen-value is not met
+                if activity.get("triggerwhen") == "Shift-Pressed" and not shift_pressed or activity.get("triggerwhen") == "Shift-Not-Pressed" and shift_pressed:
+                    self._logger.debug(f"Skipping action due to triggerwhen='{activity.get('triggerwhen')}' but shift-value is '{shift_pressed}'.")
+                    continue
+
                 self._logger.debug(f"Sending activity with identifier '{activity.get('identifier')}' ...")
                 if activity.get('type') == "action":
                     #send specified action
