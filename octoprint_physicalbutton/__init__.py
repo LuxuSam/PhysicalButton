@@ -3,13 +3,14 @@ from __future__ import absolute_import
 
 import octoprint.plugin
 
-from gpiozero import Button,OutputDevice
+from gpiozero import Button, OutputDevice, LED
 
 import time
 import threading
 import subprocess
 
 buttonList = []
+ledDict = {}
 outputList = []
 latestFilePath = None
 
@@ -25,7 +26,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
     ########################################_GPIO Setup functions_####################################
     ##################################################################################################
     def setupButtons(self):
-        global buttonList
+        global buttonList, ledDict
         for button in self._settings.get(["buttons"]):
             if button.get('gpio') == "none":
                 continue
@@ -36,10 +37,32 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
                 newButton.when_pressed = self.reactToInput
             if buttonMode == "Normally Closed (NC)":
                 newButton.when_released = self.reactToInput
+            if button.get('ledgpio') != "none":
+                s = button.get('ledgpio')
+                buttonLED = int(button.get('ledgpio'))
+                if buttonLED not in ledDict:
+                    led = LED(buttonLED)
+                    ledDict[buttonLED] = led
+                else:
+                    led = ledDict[buttonLED]
+
+                old_when_pressed = newButton.when_pressed
+                old_when_released = newButton.when_released
+                def when_pressed(*args, **kwargs):
+                    led.on(*args, **kwargs)
+                    if old_when_pressed:
+                        old_when_pressed(*args, **kwargs)
+                def when_released(*args, **kwargs):
+                    led.off(*args, **kwargs)
+                    if old_when_released:
+                        old_when_released(*args, **kwargs)
+                newButton.when_pressed = when_pressed
+                newButton.when_released = when_released
             buttonList.append(newButton)
             self.setupOutputPins(button)
         self._logger.debug(f"Added Buttons: {buttonList}")
         self._logger.debug(f"Added Output devices: {outputList}")
+        self._logger.debug(f"Added LEDs: {ledDict}")
 
     def setupOutputPins(self,button):
         global outputList
