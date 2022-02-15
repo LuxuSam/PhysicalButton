@@ -88,6 +88,8 @@ You can edit, move or remove activities in the right pane.
       * Use this mode if your button is usually not pressed (open).
     * Normally Closed (NC)
       * Use this mode if your button is usually pressed (closed).
+* **LED-GPIO**
+    * Each button-state can be visualized by a LED connected to a GPIO-pin.
 * **Hold Time**
   * This is where you set the hold time for your button, meaning how long the button has to be held until the reaction is triggered.
 * **Choose activities for your button**
