@@ -82,6 +82,8 @@ You can edit, move or remove activities in the right pane.
   * This is where you put the name of your button to differentiate it in the list of buttons.
 * **GPIO**
   * This is the GPIO you connect your button to. The other cable has to be connected to a ground pin (Buttons are configured to use internal pulled-up resistors). You can only create one button per GPIO.
+* **Button Type**
+    * One Button may be used as a "shift"-Button. In this case an action can be executed depending on the value of the dedicated shift button.
 * **Mode**
   * Depending on your button setup or wiring you have to choose between the following two modes:
     * Normally Open (NO)
@@ -115,6 +117,7 @@ You can edit, move or remove activities in the right pane.
     * The async option lets the output run while also continuing with the next activities.
     * The initial value sets the level of the GPIO pin for startup and settings save.
   * These activities will be executed in order of your list. You can also rearrange them by inserting them at your desired position.
+  * Each activity can be filtered according to the shift-Button status.
 
 ----
 ### ⚠️ Use at your own risk ⚠️
