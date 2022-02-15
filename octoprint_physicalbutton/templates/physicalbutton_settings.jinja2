@@ -98,6 +98,14 @@
                                 <a type="btn" data-bind="click: $parent.updatePosition" title="Place the activity at your chosen position">Insert at position:</a>
                                 <input type="number" min="1" data-bind="value:$parent.index, attr:{max:activities().length}">
                             </div>
+                            <div class="control-group action-on-shift">
+                                <label for="" title="Call the activity always, or only when the value of shift key is given.">Trigger When:</label>
+                                <select data-bind="value:$parent.selectedActivity().triggerwhen">
+                                    <option value="Always">Always</option>
+                                    <option value="Shift-Pressed">Shift Pressed</option>
+                                    <option value="Shift-Not-Pressed">Shift Not Pressed</option>
+                                </select>
+                            </div>
                             <div class="control-group activity-gcode" data-bind="if:$parent.selectedActivity().type() == 'gcode'">
                                 <label for="" title="Choose  GCODE that should be executed on trigger">GCODE:</label>
                                 <textarea data-bind="attr:{rows: 5}, value:$parent.selectedActivity().execute, event:{change: $parent.activityChanged}"></textarea>
