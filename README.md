@@ -39,8 +39,31 @@ You can edit, move or remove activities in the right pane.
   * This is where you set the hold time for your button, meaning how long the button has to be held until the reaction is triggered.
 * **Choose activities for your button**
   * Action:
-    * You can choose between different actions:  
-    connect, disconnect, home (x, y and z are homed), pause, resume, start, start latest, cancel, toggle pause-resume, toggle start-cancel, toggle start latest-cancel
+    * You can choose between different actions:
+      * connect:
+        * Connect to the printer.
+      * disconnect
+        * Disconnect from the printer.
+      * home
+        * Homes all axes of the printer.
+      * pause
+        * Pause the current print.
+      * resume
+        * Resume the current print.
+      * start
+        * Start printing the currently selected file.
+      * start latest
+        * Start printing the latest uploaded file.
+      * cancel
+        * Cancel the current print.
+      * toggle pause-resume
+        * Toggle between pausing and resuming a print.
+      * toggle start-cancel
+        * Toggle between starting the currently selected file or cancelling a print.
+      * toggle start latest-cancel
+        * Toggle between starting the latest uploaded file and cancelling a print.
+      * unselect file
+        * Unselect the currently selected file.
   * File:
     * You can specify the path to a file which will be selected.
     * To start the execution of a file, add 'start action' behind the 'file activity'.
