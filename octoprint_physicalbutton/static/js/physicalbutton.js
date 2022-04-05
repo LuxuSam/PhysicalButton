@@ -26,6 +26,9 @@ $(function() {
         //output options:
         self.outputOptions = ko.observableArray(['HIGH', 'LOW', 'Toggle']);
 
+        //supported plugins:
+        self.externalActions = ko.observable(true);
+
         //SimplyPrint:
         self.isSimplyPrintInstalled = ko.observable();
         self.simplyPrintActions = ko.observableArray([]);
