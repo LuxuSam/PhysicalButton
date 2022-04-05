@@ -70,6 +70,9 @@
                                 <button class="btn btn-small" data-bind="click: $parent.addSystem">System</button>
                                 <button class="btn btn-small" data-bind="click: $parent.addOutput">Output</button>
                             </div>
+                            <div class="btn-group control-group add-new-plugin-activity">
+                                <button class="btn btn-small" data-bind="click: $parent.addSimplyPrint">SimplyPrint</button>
+                            </div>
                             <div class="control-group activity-list">
                                 <label for="" title="List of your added activities">Activities:</label>
                                 <select
@@ -114,6 +117,10 @@
                                     </a>
                                 </div>
                                 <textarea data-bind="attr:{rows: 5}, value:$parent.selectedActivity().execute, event:{change: $parent.activityChanged}" placeholder="Path/To/File.gcode"></textarea>
+                            </div>
+                            <div class="control-group activity-simplyprint" data-bind="if:$parent.selectedActivity().type() == 'simplyprint'">
+                                <label for="" title="Choose an action that should be executed on trigger">Action:</label>
+                                <select data-bind="options:$root.simplyPrintActions, value:$parent.selectedActivity().execute, event:{change: $parent.activityChanged}"></select>
                             </div>
                             <div class="activity-output" data-bind="if:$parent.selectedActivity().type() == 'output'">
                                 <div class="span6 output-pin-time">
