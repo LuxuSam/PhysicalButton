@@ -42,6 +42,8 @@ $(function() {
 
         self.onBeforeBinding = function() {
             self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
+            self.isSimplyPrintInstalled(true);
+            self.simplyPrintActions(["just", "some", "test", "values"])
         };
 
         self.onSettingsBeforeSave = function() {
@@ -51,6 +53,8 @@ $(function() {
 
         self.onSettingsShown = function() {
             self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
+            self.isSimplyPrintInstalled(true);
+            self.simplyPrintActions(["just", "some", "test", "values"])
         };
 
         self.viewChanged = function(obj, event) {
