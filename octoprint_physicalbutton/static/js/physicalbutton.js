@@ -27,7 +27,7 @@ $(function() {
         self.outputOptions = ko.observableArray(['HIGH', 'LOW', 'Toggle']);
 
         //supported plugins:
-        self.externalActions = ko.observable(true);
+        self.externalActions = ko.observable();
 
         //SimplyPrint:
         self.isSimplyPrintInstalled = ko.observable();
@@ -45,8 +45,7 @@ $(function() {
 
         self.onBeforeBinding = function() {
             self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
-            self.isSimplyPrintInstalled(true);
-            self.simplyPrintActions(["just", "some", "test", "values"])
+            self.supportedPluginsInstalled();
         };
 
         self.onSettingsBeforeSave = function() {
@@ -56,9 +55,15 @@ $(function() {
 
         self.onSettingsShown = function() {
             self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
+            self.supportedPluginsInstalled();
+        };
+
+        self.supportedPluginsInstalled = function (){
+            //TODO: Check if and what supported plugins are installed
+            self.externalActions = ko.observable(true);
             self.isSimplyPrintInstalled(true);
             self.simplyPrintActions(["just", "some", "test", "values"])
-        };
+        }
 
         self.viewChanged = function(obj, event) {
             if (event.originalEvent) { //user changed
