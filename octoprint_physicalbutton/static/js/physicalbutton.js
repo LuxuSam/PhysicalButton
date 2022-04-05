@@ -26,6 +26,10 @@ $(function() {
         //output options:
         self.outputOptions = ko.observableArray(['HIGH', 'LOW', 'Toggle']);
 
+        //SimplyPrint:
+        self.isSimplyPrintInstalled = ko.observable();
+        self.simplyPrintActions = ko.observableArray([]);
+
         //Saved Buttons
         self.buttons = ko.observableArray();
 
@@ -165,6 +169,19 @@ $(function() {
                     initial: ko.observable('LOW'),
                     id: ko.observable(Date.now())
                 }
+            });
+            self.selectedActivity(this.activities()[this.activities().length - 1]);
+        }
+
+        self.addSimplyPrint = function() {
+            var updatedItem = this;
+            if (!updatedItem.activities()) {
+                updatedItem.activities(new Array);
+            }
+            updatedItem.activities.push({
+                type: ko.observable('simplyprint'),
+                identifier: ko.observable('New Action'),
+                execute: ko.observable('none')
             });
             self.selectedActivity(this.activities()[this.activities().length - 1]);
         }
