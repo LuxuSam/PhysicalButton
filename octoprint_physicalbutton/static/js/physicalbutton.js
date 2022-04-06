@@ -28,7 +28,7 @@ $(function() {
 
         //supported Plugin:
         self.externalActions = ko.observable();
-        self.supportedPlugins = ko.observableArray([])
+        self.supportedPlugins = ko.observableArray([]);
         self.supportedPluginActions = ko.observableArray([]);
 
         //Saved Buttons
