@@ -59,8 +59,12 @@ $(function() {
 
         self.showExternalActions = function() {
             //TODO: Check if and what supported plugins are installed
-            self.externalActions(true);
+
             self.supportedPlugins(['none','SimplyPrint']);
+
+            self.externalActions(false);
+            if (self.supportedPlugins().length > 0)
+                self.externalActions(true);
             self.supportedPluginActions(["none", "just", "some", "test", "values"]);
         }
 
