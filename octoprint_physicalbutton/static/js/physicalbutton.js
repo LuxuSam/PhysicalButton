@@ -26,12 +26,10 @@ $(function() {
         //output options:
         self.outputOptions = ko.observableArray(['HIGH', 'LOW', 'Toggle']);
 
-        //supported plugins:
+        //supported Plugin:
         self.externalActions = ko.observable();
-
-        //SimplyPrint:
-        self.isSimplyPrintInstalled = ko.observable();
-        self.simplyPrintActions = ko.observableArray([]);
+        self.supportedPlugins = ko.observableArray([])
+        self.supportedPluginActions = ko.observableArray([]);
 
         //Saved Buttons
         self.buttons = ko.observableArray();
@@ -45,7 +43,7 @@ $(function() {
 
         self.onBeforeBinding = function() {
             self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
-            self.supportedPluginsInstalled();
+            self.showExternalActions();
         };
 
         self.onSettingsBeforeSave = function() {
@@ -55,14 +53,15 @@ $(function() {
 
         self.onSettingsShown = function() {
             self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
-            self.supportedPluginsInstalled();
+            self.showExternalActions();
         };
 
-        self.supportedPluginsInstalled = function (){
+
+        self.showExternalActions = function() {
             //TODO: Check if and what supported plugins are installed
-            self.externalActions = ko.observable(true);
-            self.isSimplyPrintInstalled(true);
-            self.simplyPrintActions(["just", "some", "test", "values"])
+            self.externalActions(true);
+            self.supportedPlugins(['none','SimplyPrint']);
+            self.supportedPluginActions(["none", "just", "some", "test", "values"]);
         }
 
         self.viewChanged = function(obj, event) {
@@ -185,17 +184,20 @@ $(function() {
             self.selectedActivity(this.activities()[this.activities().length - 1]);
         }
 
-        self.addSimplyPrint = function() {
-            var updatedItem = this;
+        self.addPluginAction = function(){
+            let updatedItem = this
             if (!updatedItem.activities()) {
-                updatedItem.activities(new Array);
+                updatedItem.activities([]);
             }
             updatedItem.activities.push({
-                type: ko.observable('simplyprint'),
-                identifier: ko.observable('New Action'),
-                execute: ko.observable('none')
+                type: ko.observable('plugin'),
+                identifier: ko.observable('New Plugin Action'),
+                execute: {
+                    plugin: ko.observable("none"),
+                    action: ko.observable('none')
+                }
             });
-            self.selectedActivity(this.activities()[this.activities().length - 1]);
+            self.selectedActivity(updatedItem.activities()[updatedItem.activities().length - 1]);
         }
 
         self.activityChanged = function(data, event){
