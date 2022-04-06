@@ -100,6 +100,12 @@
 .physicalbutton_settings .button-list .accordion-inner .right-side .control-group {
   margin-bottom: 0;
 }
+.physicalbutton_settings .button-list .accordion-inner .right-side .activity-plugin .control-group {
+  width: 48%;
+}
+.physicalbutton_settings .button-list .accordion-inner .right-side .activity-plugin .control-group select {
+  width: 70%;
+}
 .physicalbutton_settings .button-list .accordion-inner .right-side .activity-file .path-file {
   display: flex;
   justify-content: space-between;
