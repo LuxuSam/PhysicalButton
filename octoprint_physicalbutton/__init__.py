@@ -88,7 +88,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
 
         if pressedButton.value == buttonValue:
             self._logger.debug(f"Reacting to button {button.get('buttonName')}")
-            #execute actions for button in order
+            # execute actions for button in order
             for activity in button.get('activities'):
                 exitCode = 0
                 self._logger.debug(f"Sending activity with identifier '{activity.get('identifier')}' ...")
@@ -107,10 +107,12 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
                 elif activity.get('type') == "output":
                     #generate output for given amount of time
                     exitCode = self.generateOutput(activity.get('execute'))
+                elif activity.type('type') == "plugin":
+                    exitCode = self.sendPluginAction(activity.get('execute'))
                 else:
                     self._logger.debug(f"The activity with identifier '{activity.get('identifier')}' is not known (yet)!")
                     continue
-                #Check if an executed activity failed
+                # Check if an executed activity failed
                 if exitCode == 0:
                     self._logger.debug(f"The activity with identifier '{activity.get('identifier')}' was executed successfully!")
                     continue
@@ -231,6 +233,12 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             self.setOutput(value, time, outputDevice)
         return 0
 
+    def sendPluginAction(self, plugin_action):
+        plugin = plugin_action.get('plugin')
+        action = plugin_action.get('action')
+        # TODO: Check if plugin still installed, if yes send specified action to plugin
+
+        return -1
     ##################################################################################################
     ########################################_Helper functions_########################################
     ##################################################################################################
@@ -275,6 +283,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
 
         outputDevice.toggle()
 
+    def checkForSupportedPlugins(self):
+        # TODO: Check if supported plugins are present and save those into a dictionary with provided actions
+
+        pass
     ##################################################################################################
     ########################################_Custom actions_##########################################
     ##################################################################################################
@@ -352,7 +364,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
 
     def get_settings_defaults(self):
         return dict(
-            buttons = []
+            buttons = [],
+            installedSupportedPlugins = []
         )
 
     def get_template_configs(self):
