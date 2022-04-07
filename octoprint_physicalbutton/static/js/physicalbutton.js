@@ -62,7 +62,7 @@ $(function() {
 
         };
 
-
+        //TODO: remove occurrences of this when finished
         self.showExternalActions = function() {
             self.supportedPlugins(
                 {
