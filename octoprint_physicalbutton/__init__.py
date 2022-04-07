@@ -242,9 +242,19 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
     def sendPluginAction(self, plugin_action):
         plugin = plugin_action.get('plugin')
         action = plugin_action.get('action')
-        # TODO: Check if plugin still installed, if yes send specified action to plugin
+        if plugin not in self._plugin_manager.plugins:
+            self._logger.error(f"The plugin with identifier {plugin} is not installed!")
+            return -1
+        plugin_info = self._plugin_manager.get_plugin_info(plugin)
+        if not plugin_info.enabled:
+            self._logger.error(f"The plugin with identifier {plugin} is not enabled!")
+            return -1
+        if not (plugin_info.version > sup_inst_plugins.get('supported').get(plugin)):
+            self._logger.error(f"The plugin with identifier {plugin} does not have minimal required version!")
+            return -1
 
-        return -1
+        # TODO: send specified action to plugin
+
     ##################################################################################################
     ########################################_Helper functions_########################################
     ##################################################################################################
