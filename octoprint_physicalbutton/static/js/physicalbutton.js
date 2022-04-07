@@ -57,6 +57,7 @@ $(function() {
         self.onDataUpdaterPluginMessage = function (plugin, message){
             if(plugin !== "physicalbutton")
                 return;
+            self.supportedPlugins(message);
 
         };
 
