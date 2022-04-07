@@ -56,6 +56,12 @@ $(function() {
             self.showExternalActions();
         };
 
+        self.onDataUpdaterPluginMessage = function (plugin, message){
+            if(plugin !== "physicalbutton")
+                return;
+
+        };
+
 
         self.showExternalActions = function() {
             //TODO: Check if and what supported plugins are installed
