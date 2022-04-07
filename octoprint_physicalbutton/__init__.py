@@ -12,6 +12,12 @@ import subprocess
 buttonList = []
 outputList = []
 latestFilePath = None
+sup_inst_plugins = {
+    'installed': {},  # identifier : array of possible actions
+    'supported': {'SimplyPrint': '0',  # identifier : minimal version
+                  }
+}
+
 
 class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
                            octoprint.plugin.EventHandlerPlugin,
