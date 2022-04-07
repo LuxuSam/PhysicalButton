@@ -315,7 +315,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             actions = []  # TODO: get actions of specified plugin
             sup_inst_plugins.get('installed')[plugin] = actions
 
-        pass
     ##################################################################################################
     ########################################_Custom actions_##########################################
     ##################################################################################################
