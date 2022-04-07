@@ -364,6 +364,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
         self.setupButtons()
         self._logger.info(f"Buttons have been set up!")
 
+        self._logger.debug(f"Setup for third party plugins, if any are available")
+        self.setup_for_installed_plugins()
+
+
     def on_shutdown(self):
         if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
             self._logger.debug(f"No buttons to clean up ...")
