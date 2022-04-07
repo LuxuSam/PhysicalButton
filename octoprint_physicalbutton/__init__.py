@@ -303,14 +303,14 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
         global sup_inst_plugins
         for plugin in sup_inst_plugins.get('supported').keys():
             if plugin not in self._plugin_manager.plugins:
-                self._logger.log(f"The plugin with identifier {plugin} is not installed!")
+                self._logger.debug(f"The plugin with identifier {plugin} is not installed!")
                 continue
             plugin_info = self._plugin_manager.get_plugin_info(plugin)
             if not plugin_info.enabled:
-                self._logger.log(f"The plugin with identifier {plugin} is not enabled!")
+                self._logger.debug(f"The plugin with identifier {plugin} is not enabled!")
                 continue
             if not (plugin_info.version > sup_inst_plugins.get('supported').get(plugin)):
-                self._logger.log(f"The plugin with identifier {plugin} does not have minimal required version!")
+                self._logger.debug(f"The plugin with identifier {plugin} does not have minimal required version!")
                 continue
             actions = []  # TODO: get actions of specified plugin
             sup_inst_plugins.get('installed')[plugin] = actions
