@@ -27,9 +27,7 @@ $(function() {
         self.outputOptions = ko.observableArray(['HIGH', 'LOW', 'Toggle']);
 
         //supported Plugin:
-        self.externalActions = ko.observable();
         self.supportedPlugins = ko.observableArray([]);
-        self.supportedPluginActions = ko.observableArray([]);
 
         //Saved Buttons
         self.buttons = ko.observableArray();
@@ -64,14 +62,12 @@ $(function() {
 
 
         self.showExternalActions = function() {
-            //TODO: Check if and what supported plugins are installed
-
-            self.supportedPlugins(['none','SimplyPrint']);
-
-            self.externalActions(false);
-            if (self.supportedPlugins().length > 0)
-                self.externalActions(true);
-            self.supportedPluginActions(["none", "just", "some", "test", "values"]);
+            self.supportedPlugins(
+                {
+                    "SimplyPrint": ["stop","start","just","more","test","values"],
+                    "TestPlugin": ["other", "test", "values"]
+                }
+            );
         }
 
         self.viewChanged = function(obj, event) {
