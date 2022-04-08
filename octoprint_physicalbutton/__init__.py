@@ -137,7 +137,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
                     continue
 
     def reactToInput(self, pressedButton):
-        t = threading.Thread(target=self.thread_react, args=(pressedButton,))
+        self.thread_react(pressedButton)
+        #t = threading.Thread(target=self.thread_react, args=(pressedButton,))
         t.start()
 
     ##################################################################################################
