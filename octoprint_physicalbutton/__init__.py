@@ -13,8 +13,8 @@ buttonList = []
 outputList = []
 latestFilePath = None
 sup_inst_plugins = {
-    'installed': {},  # identifier : array of possible actions
-    'supported': {'SimplyPrint': '0',  # identifier : minimal version
+    'installed': {},                        # identifier : [possible actions]
+    'supported': {'SimplyPrint': '3.1.2',       # identifier : minimal version
                   }
 }
 
