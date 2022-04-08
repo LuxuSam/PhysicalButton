@@ -5,6 +5,14 @@ import octoprint.plugin
 
 from gpiozero import Button,OutputDevice
 
+
+# Set this to true if not programming on raspberry pi
+debug = True
+if debug:
+    import gpiozero
+    from gpiozero.pins.mock import MockFactory
+    gpiozero.Device.pin_factory = MockFactory()
+
 import time
 import threading
 import subprocess
