@@ -7,7 +7,7 @@ from gpiozero import Button,OutputDevice
 
 
 # Set this to true if not programming on raspberry pi
-debug = True
+debug = False
 if debug:
     import gpiozero
     from gpiozero.pins.mock import MockFactory
