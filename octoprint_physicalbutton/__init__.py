@@ -323,7 +323,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             self._logger.debug(f"{plugin} is supported. Setting up actions for {plugin}!")
             actions = []  # TODO: get actions of specified plugin
             sup_inst_plugins.get('installed')[plugin] = actions
-        self._plugin_manager.send_plugin_message("physicalbutton", sup_inst_plugins.get('installed'))
+
+
 
     ##################################################################################################
     ########################################_Custom actions_##########################################
@@ -364,6 +365,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             global latestFilePath
             latestFilePath = payload.get('path')
             self._logger.debug(f"Added new file: {latestFilePath}")
+        elif event == "ClientOpened":
+            self._plugin_manager.send_plugin_message("physicalbutton", sup_inst_plugins.get('installed'))
 
     def on_after_startup(self):
         if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
