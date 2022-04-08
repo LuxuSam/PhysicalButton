@@ -257,7 +257,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
         if not plugin_info.enabled:
             self._logger.error(f"The plugin with identifier {plugin} is not enabled!")
             return -1
-        if not (plugin_info.version > sup_inst_plugins.get('supported').get(plugin)):
+        if not (plugin_info.version >= sup_inst_plugins.get('supported').get(plugin)):
             self._logger.error(f"The plugin with identifier {plugin} does not have minimal required version!")
             return -1
 
@@ -317,7 +317,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             if not plugin_info.enabled:
                 self._logger.debug(f"The plugin with identifier {plugin} is not enabled!")
                 continue
-            if not (plugin_info.version > sup_inst_plugins.get('supported').get(plugin)):
+            if not (plugin_info.version >= sup_inst_plugins.get('supported').get(plugin)):
                 self._logger.debug(f"The plugin with identifier {plugin} does not have minimal required version!")
                 continue
             actions = []  # TODO: get actions of specified plugin
