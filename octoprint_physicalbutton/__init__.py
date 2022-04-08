@@ -314,7 +314,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
                 self._logger.debug(f"The plugin with identifier {plugin} is not installed!")
                 continue
             plugin_info = self._plugin_manager.get_plugin_info(plugin)
-            if not plugin_info.enabled:
+            if not plugin_info:
                 self._logger.debug(f"The plugin with identifier {plugin} is not enabled!")
                 continue
             if not (plugin_info.version >= sup_inst_plugins.get('supported').get(plugin)):
