@@ -20,11 +20,10 @@ import subprocess
 buttonList = []
 outputList = []
 latestFilePath = None
-sup_inst_plugins = {
-    'installed': {},                        # identifier : [possible actions]
-    'supported': {'SimplyPrint': '3.1.2',       # identifier : minimal version
-                  }
-}
+registered_plugins = {
+            'actions': {},                          # identifier : [possible actions]
+            'callbacks': {},                        # identifier : {action: callback}
+        }
 
 
 class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
@@ -248,20 +247,22 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
         return 0
 
     def sendPluginAction(self, plugin_action):
-        plugin = plugin_action.get('plugin')
+        identifier = plugin_action.get('plugin')
         action = plugin_action.get('action')
-        if plugin not in self._plugin_manager.plugins:
-            self._logger.error(f"The plugin with identifier {plugin} is not installed!")
+        if identifier not in self._plugin_manager.plugins:
+            self._logger.error(f"The plugin with identifier {identifier} is not installed!")
             return -1
-        plugin_info = self._plugin_manager.get_plugin_info(plugin)
-        if not plugin_info.enabled:
-            self._logger.error(f"The plugin with identifier {plugin} is not enabled!")
+        if not self._plugin_manager.get_plugin_info(identifier):
+            self._logger.error(f"The plugin with identifier {identifier} is not enabled!")
             return -1
-        if not (plugin_info.version >= sup_inst_plugins.get('supported').get(plugin)):
-            self._logger.error(f"The plugin with identifier {plugin} does not have minimal required version!")
+        if identifier not in registered_plugins.get('actions').keys():
+            self._logger.error(f"The plugin with identifier {identifier} has no registered actions!")
             return -1
-
-        # TODO: send specified action to plugin
+        if action not in registered_plugins.get('actions')[identifier]:
+            self._logger.error(f"The plugin with identifier {identifier} did not register that action!")
+            return -1
+        callback = registered_plugins.get('callbacks').get(identifier).get(action)
+        callback()
 
     ##################################################################################################
     ########################################_Helper functions_########################################
@@ -307,24 +308,17 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
 
         outputDevice.toggle()
 
-    def setup_for_installed_plugins(self):
-        global sup_inst_plugins
-        for plugin in sup_inst_plugins.get('supported').keys():
-            if plugin not in self._plugin_manager.plugins:
-                self._logger.debug(f"The plugin with identifier {plugin} is not installed!")
-                continue
-            plugin_info = self._plugin_manager.get_plugin_info(plugin)
-            if not plugin_info:
-                self._logger.debug(f"The plugin with identifier {plugin} is not enabled!")
-                continue
-            if not (plugin_info.version >= sup_inst_plugins.get('supported').get(plugin)):
-                self._logger.debug(f"The plugin with identifier {plugin} does not have minimal required version!")
-                continue
-            self._logger.debug(f"{plugin} is supported. Setting up actions for {plugin}!")
-            actions = []  # TODO: get actions of specified plugin
-            sup_inst_plugins.get('installed')[plugin] = actions
-
-
+    def register_button_action(self, identifier, action, callback):
+        global registered_plugins
+        # has plugin already registered an action, if not initialize array and dictionary for plugin
+        if identifier not in registered_plugins.get('actions').keys():
+            registered_plugins.get('actions')[identifier] = []
+            registered_plugins.get('callbacks')[identifier] = {}
+        # save the action to pass to the frontend and save the callback for that action
+        if action not in registered_plugins.get('actions')[identifier]:
+            registered_plugins.get('actions')[identifier].append(action)
+            registered_plugins.get('callbacks').get(identifier)[action] = callback
+            self._logger.debug(f"Plugin '{identifier}' registered the action '{action}'")
 
     ##################################################################################################
     ########################################_Custom actions_##########################################
@@ -360,13 +354,23 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
     ##################################################################################################
     ########################################_OctoPrint Functions_#####################################
     ##################################################################################################
+
+    # TODO: Remove this later
+    def fake_callback_1(self):
+        self._logger.debug('This is a fake callback test 1')
+    def fake_callback_2(self):
+        self._logger.debug('This is a fake callback test 2')
+    def fake_callback_3(self):
+        self._logger.debug('This is a fake callback test 3')
+
+
     def on_event(self, event, payload):
         if event == "FileAdded":
             global latestFilePath
             latestFilePath = payload.get('path')
             self._logger.debug(f"Added new file: {latestFilePath}")
         elif event == "ClientOpened":
-            self._plugin_manager.send_plugin_message("physicalbutton", sup_inst_plugins.get('installed'))
+            self._plugin_manager.send_plugin_message("physicalbutton", registered_plugins.get('actions'))
 
     def on_after_startup(self):
         if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
@@ -376,9 +380,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
         self.setupButtons()
         self._logger.info(f"Buttons have been set up!")
 
-        self._logger.debug(f"Setup for third party plugins, if any are available")
-        self.setup_for_installed_plugins()
-
+        # TODO: Remove this later
+        self.register_button_action('physicalbutton', 'fake1', self.fake_callback_1)
+        self.register_button_action('physicalbutton', 'fake2', self.fake_callback_2)
+        self.register_button_action('physicalbutton', 'fake3', self.fake_callback_3)
 
     def on_shutdown(self):
         if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
@@ -409,8 +414,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
 
     def get_settings_defaults(self):
         return dict(
-            buttons = [],
-            installedSupportedPlugins = []
+            buttons = []
         )
 
     def get_template_configs(self):
@@ -463,3 +467,8 @@ def __plugin_load__():
     __plugin_hooks__ = {
 	   "octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information
     }
+
+    global  __plugin_helpers__
+    __plugin_helpers__ = dict(
+        register_button_action = __plugin_implementation__.register_button_action
+    )
