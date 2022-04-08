@@ -90,6 +90,25 @@ You can edit, move or remove activities in the right pane.
 You can only configure one button per GPIO.
 If you want more activities to be activated upon button press (/release), add more activities to the button.
 
+### Custom actions from your plugin:
+If you are a developer and want to include functions of your plugin into PhysicalButton, you can proceed as follows:
+
+ * To get the function to register an action:
+```python
+helpers = self._plugin_manager.get_helpers("physicalbutton", "register_button_action")
+if helpers and "register_button_action" in helpers:
+    self.register_button_action = helpers["register_button_action"]
+```
+ * To register an action:
+   * `some action` is a string with the name that should be displayed.
+   * `some_action_callback` should be a function without parameters that is executed on a button press.
+```python
+self.register_button_action('your_plugin_identifier', 'some action', self.some_action_callback)
+```
+
+
+
+
 ---
 ## Screenshots
 ![Output activity](/assets/img/plugins/physicalbutton/PhysicalButton_output.png)</br></br>
