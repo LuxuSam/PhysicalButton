@@ -120,7 +120,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
                 elif activity.get('type') == "output":
                     #generate output for given amount of time
                     exitCode = self.generateOutput(activity.get('execute'))
-                elif activity.type('type') == "plugin":
+                elif activity.get('type') == "plugin":
                     exitCode = self.sendPluginAction(activity.get('execute'))
                 else:
                     self._logger.debug(f"The activity with identifier '{activity.get('identifier')}' is not known (yet)!")
