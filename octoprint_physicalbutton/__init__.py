@@ -354,16 +354,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
     ##################################################################################################
     ########################################_OctoPrint Functions_#####################################
     ##################################################################################################
-
-    # TODO: Remove this later
-    def fake_callback_1(self):
-        self._logger.debug('This is a fake callback test 1')
-    def fake_callback_2(self):
-        self._logger.debug('This is a fake callback test 2')
-    def fake_callback_3(self):
-        self._logger.debug('This is a fake callback test 3')
-
-
     def on_event(self, event, payload):
         if event == "FileAdded":
             global latestFilePath
@@ -379,11 +369,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
         self._logger.debug(f"Setting up buttons ...")
         self.setupButtons()
         self._logger.info(f"Buttons have been set up!")
-
-        # TODO: Remove this later
-        self.register_button_action('physicalbutton', 'fake1', self.fake_callback_1)
-        self.register_button_action('physicalbutton', 'fake2', self.fake_callback_2)
-        self.register_button_action('physicalbutton', 'fake3', self.fake_callback_3)
 
     def on_shutdown(self):
         if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
