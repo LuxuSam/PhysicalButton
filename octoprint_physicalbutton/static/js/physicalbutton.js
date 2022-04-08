@@ -42,7 +42,6 @@ $(function() {
 
         self.onBeforeBinding = function() {
             self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
-            self.showExternalActions();
         };
 
         self.onSettingsBeforeSave = function() {
@@ -52,25 +51,13 @@ $(function() {
 
         self.onSettingsShown = function() {
             self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
-            self.showExternalActions();
         };
 
         self.onDataUpdaterPluginMessage = function (plugin, message){
             if(plugin !== "physicalbutton")
                 return;
             self.supportedPlugins(message);
-
         };
-
-        //TODO: remove occurrences of this when finished
-        self.showExternalActions = function() {
-            self.supportedPlugins(
-                {
-                    "SimplyPrint": ["stop","start","just","more","test","values"],
-                    "TestPlugin": ["other", "test", "values"]
-                }
-            );
-        }
 
         self.viewChanged = function(obj, event) {
             if (event.originalEvent) { //user changed
