@@ -308,8 +308,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
 
         outputDevice.toggle()
 
-    def register_button_action(self, identifier, action, callback):
+    def register_button_action(self, plugin, action, callback):
         global registered_plugins
+
+        identifier = plugin._identifier
         # has plugin already registered an action, if not initialize array and dictionary for plugin
         if identifier not in registered_plugins.get('actions').keys():
             registered_plugins.get('actions')[identifier] = []
