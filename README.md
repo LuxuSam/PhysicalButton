@@ -103,7 +103,7 @@ if helpers and "register_button_action" in helpers:
    * `some action` is a string with the name that should be displayed.
    * `some_callback` should be a function without parameters that is executed on a button press.
 ```python
-self.register_button_action('your_plugin_identifier', 'some action', self.some_callback)
+self.register_button_action(self, 'some action', self.some_callback)
 ```
 
 
