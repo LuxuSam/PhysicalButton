@@ -338,7 +338,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
                 self._logger.debug(f"{identifier} registered action: {action}.")
             else:
                 self._logger.error(f"{identifier} tried to register action {action}.")
-                self._logegr.error(f"{action} is already registered for {identifier}!")
+                self._logger.error(f"{action} is already registered for {identifier}!")
 
     ##################################################################################################
     ########################################_Custom actions_##########################################
