@@ -97,22 +97,15 @@ If you are a developer and want to include functions of your plugin into Physica
 
  * To get the functions to register actions:
 ```python
-helpers = self._plugin_manager.get_helpers("physicalbutton", "register_button_action", "register_button_actions")
-if helpers:
-    if "register_button_action" in helpers:
-        self.register_button_action = helpers["register_button_action"]
-    if "register_button_actions" in helpers:
-        self.register_button_actions = helpers["register_button_actions"]
+helpers = self._plugin_manager.get_helpers("physicalbutton", "register_button_actions")
+if helpers and "register_button_actions" in helpers:
+    self.register_button_actions = helpers["register_button_actions"]
 ```
 
- * To register a single action use `self.register_button_action(self, 'some action', self.some_callback)` with:
-   * `some action` is a string with the name that should be displayed.
-   * `some_callback` should be a function without parameters that is executed on a button press.
-
-
-* To register a list of actions use `self.register_button_actions(self, action_dictionary)` with:
-  * `action_dictionary` is a dictionary which has the structure `{'some action' : some_callback}`
-  * `some action` and `some_callback` as defined like for a single action.
+* To register actions use `self.register_button_actions(self, action_dictionary)` with:
+  * `action_dictionary` is a dictionary which has the structure `{'some action' : some_callback, ...}`
+  * `some action` is a string with the name that should be displayed.
+  * `some_callback` should be a function without parameters that is executed on a button press.
 
 
 
