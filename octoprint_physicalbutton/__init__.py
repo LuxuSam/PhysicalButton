@@ -308,22 +308,6 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
 
         outputDevice.toggle()
 
-    def register_button_action(self, plugin, action, callback):
-        global registered_plugins
-
-        identifier = plugin._identifier
-        # has plugin already registered an action, if not initialize array and dictionary for plugin
-        if identifier not in registered_plugins:
-            registered_plugins[identifier] = {}
-
-        # save the action to pass to the frontend and save the callback for that action
-        if action not in registered_plugins[identifier]:
-            registered_plugins[identifier][action] = callback
-            self._logger.debug(f"{identifier} registered action: {action}.")
-        else:
-            self._logger.error(f"{identifier} tried to register action {action}.")
-            self._logger.error(f"{action} is already registered for {identifier}!")
-
     def register_button_actions(self, plugin, action_callback):
         global registered_plugins
 
@@ -478,6 +462,5 @@ def __plugin_load__():
 
     global  __plugin_helpers__
     __plugin_helpers__ = dict(
-        register_button_action = __plugin_implementation__.register_button_action,
         register_button_actions = __plugin_implementation__.register_button_actions
     )
