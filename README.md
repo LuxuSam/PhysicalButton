@@ -84,6 +84,8 @@ You can edit, move or remove activities in the right pane.
     * By setting the time to 0, the output will continue until you toggle it again.
     * The async option lets the output run while also continuing with the next activities.
     * The initial value sets the level of the GPIO pin for startup and settings save.
+  * Plugin:
+    * This activity will appear if other plugins provide actions for this plugin.
   * These activities will be executed in order of your list. You can also rearrange them by inserting them at your desired position.
 
 ### Note:
