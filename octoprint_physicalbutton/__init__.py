@@ -364,9 +364,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             latestFilePath = payload.get('path')
             self._logger.debug(f"Added new file: {latestFilePath}")
         elif event == "ClientOpened" or event == "SettingsUpdated":
-            registered_plugin_actions = {}
-            for identifier in registered_plugins:
-                registered_plugin_actions[identifier] = list(registered_plugins[identifier].keys())
+            registered_plugin_actions = {identifier: list(registered_plugins[identifier].keys()) for identifier in registered_plugins}
             self._plugin_manager.send_plugin_message("physicalbutton", registered_plugin_actions)
 
     def on_after_startup(self):
