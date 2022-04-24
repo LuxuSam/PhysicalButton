@@ -255,6 +255,17 @@ $(function() {
                     }
                     return;
                 }
+
+                if (self.selectedActivity().type() == 'plugin') {
+                    let plugin = identifier.split(': ').length > 1 ? identifier.split(': ')[0] : '';
+                    let action = identifier.split(': ').length > 1 ? identifier.split(': ')[1] : '';
+                    if (identifier === 'New Plugin Action' || identifier.replace(/\s/g, "") === '' || (Object.keys(self.supportedPlugins()).includes(plugin) && self.supportedPlugins()[plugin].includes(action))) {
+                        let newIdentifier = self.selectedActivity().execute.plugin() + ': ' + self.selectedActivity().execute.action();
+                        self.selectedActivity().identifier(newIdentifier);
+                    }
+                    return;
+                }
+
             }
         }
 
