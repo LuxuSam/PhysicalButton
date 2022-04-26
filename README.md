@@ -85,7 +85,8 @@ You can edit, move or remove activities in the right pane.
     * The async option lets the output run while also continuing with the next activities.
     * The initial value sets the level of the GPIO pin for startup and settings save.
   * Plugin:
-    * This activity will appear if other plugins provide actions for this plugin.
+    * This activity works in a similar way as the action activity.
+    * This activity will only appear if other plugins provide actions for this plugin.
   * These activities will be executed in order of your list. You can also rearrange them by inserting them at your desired position.
 
 ### Note:
@@ -114,6 +115,7 @@ if helpers and "register_button_actions" in helpers:
 ![GCODE activity](/assets/img/plugins/physicalbutton/PhysicalButton_gcode.png)</br></br>
 ![System activity](/assets/img/plugins/physicalbutton/PhysicalButton_system.png)</br></br>
 ![File activity](/assets/img/plugins/physicalbutton/PhysicalButton_file.png)</br></br>
+![Plugin activity](/assets/img/plugins/physicalbutton/PhysicalButton_plugin.png)</br></br>
 ![Delete Button](/assets/img/plugins/physicalbutton/PhysicalButton_delete.png)
 
 
