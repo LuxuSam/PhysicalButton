@@ -185,7 +185,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             try:
                 # send command to Pi
                 ret = subprocess.check_output(command,
-                    stderr=subprocess.STDOUT, shell=True)
+                    stderr=subprocess.STDOUT, shell=True, executable='/bin/bash')
                 # log output
                 self._logger.info(f"Command '{command}' returned: {ret.decode('utf-8')}")
                 return 0
