@@ -68,6 +68,13 @@
   margin-left: 0;
   width: 20%;
 }
+.physicalbutton_settings .button-list .accordion-inner .left-side .add-new-plugin-activity {
+  justify-content: flex-end;
+}
+.physicalbutton_settings .button-list .accordion-inner .left-side .add-new-plugin-activity .btn {
+  margin-left: 0;
+  width: 20%;
+}
 .physicalbutton_settings .button-list .accordion-inner .left-side .activity-list {
   margin-bottom: 0;
 }
@@ -92,6 +99,12 @@
 }
 .physicalbutton_settings .button-list .accordion-inner .right-side .control-group {
   margin-bottom: 0;
+}
+.physicalbutton_settings .button-list .accordion-inner .right-side .activity-plugin .control-group {
+  width: 48%;
+}
+.physicalbutton_settings .button-list .accordion-inner .right-side .activity-plugin .control-group select {
+  width: 70%;
 }
 .physicalbutton_settings .button-list .accordion-inner .right-side .activity-file .path-file {
   display: flex;

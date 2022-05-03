@@ -84,11 +84,29 @@ You can edit, move or remove activities in the right pane.
     * By setting the time to 0, the output will continue until you toggle it again.
     * The async option lets the output run while also continuing with the next activities.
     * The initial value sets the level of the GPIO pin for startup and settings save.
+  * Plugin:
+    * This activity works in a similar way as the action activity.
+    * This activity will only appear if other plugins provide actions for this plugin.
   * These activities will be executed in order of your list. You can also rearrange them by inserting them at your desired position.
 
 ### Note:
 You can only configure one button per GPIO.
 If you want more activities to be activated upon button press (/release), add more activities to the button.
+
+## Custom actions from your plugin:
+If you are a developer and want to include functionality of your plugin into PhysicalButton, you can proceed as follows:
+
+ * To get the function to register actions:
+```python
+helpers = self._plugin_manager.get_helpers("physicalbutton", "register_button_actions")
+if helpers and "register_button_actions" in helpers:
+    self.register_button_actions = helpers["register_button_actions"]
+```
+
+* To register actions use `self.register_button_actions(self, some_action_callback_dict)` with:
+  * `some_action_callback_dict` being a dictionary with structure `{some_action : some_callback, ...}`.
+    * `some_action` being a string with the name that should be displayed.
+    * `some_callback` being a function without parameters that is executed on a button press.
 
 ---
 ## Screenshots
@@ -97,6 +115,7 @@ If you want more activities to be activated upon button press (/release), add mo
 ![GCODE activity](/assets/img/plugins/physicalbutton/PhysicalButton_gcode.png)</br></br>
 ![System activity](/assets/img/plugins/physicalbutton/PhysicalButton_system.png)</br></br>
 ![File activity](/assets/img/plugins/physicalbutton/PhysicalButton_file.png)</br></br>
+![Plugin activity](/assets/img/plugins/physicalbutton/PhysicalButton_plugin.png)</br></br>
 ![Delete Button](/assets/img/plugins/physicalbutton/PhysicalButton_delete.png)
 
 

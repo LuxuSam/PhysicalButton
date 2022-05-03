@@ -5,6 +5,14 @@ import octoprint.plugin
 
 from gpiozero import Button,OutputDevice
 
+
+# Set this to true if not programming on raspberry pi
+debug = False
+if debug:
+    import gpiozero
+    from gpiozero.pins.mock import MockFactory
+    gpiozero.Device.pin_factory = MockFactory()
+
 import time
 import threading
 import subprocess
@@ -12,6 +20,12 @@ import subprocess
 buttonList = []
 outputList = []
 latestFilePath = None
+registered_plugins = {}     # registered_plugins{
+                            #   identifier : {
+                            #       action : callback,
+                            #   }
+                            # }
+
 
 class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
                            octoprint.plugin.EventHandlerPlugin,
@@ -88,7 +102,7 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
 
         if pressedButton.value == buttonValue:
             self._logger.debug(f"Reacting to button {button.get('buttonName')}")
-            #execute actions for button in order
+            # execute actions for button in order
             for activity in button.get('activities'):
                 exitCode = 0
                 self._logger.debug(f"Sending activity with identifier '{activity.get('identifier')}' ...")
@@ -107,10 +121,12 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
                 elif activity.get('type') == "output":
                     #generate output for given amount of time
                     exitCode = self.generateOutput(activity.get('execute'))
+                elif activity.get('type') == "plugin":
+                    exitCode = self.sendPluginAction(activity.get('execute'))
                 else:
                     self._logger.debug(f"The activity with identifier '{activity.get('identifier')}' is not known (yet)!")
                     continue
-                #Check if an executed activity failed
+                # Check if an executed activity failed
                 if exitCode == 0:
                     self._logger.debug(f"The activity with identifier '{activity.get('identifier')}' was executed successfully!")
                     continue
@@ -231,6 +247,23 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             self.setOutput(value, time, outputDevice)
         return 0
 
+    def sendPluginAction(self, plugin_action):
+        identifier = plugin_action.get('plugin')
+        action = plugin_action.get('action')
+        if identifier not in self._plugin_manager.plugins:
+            self._logger.error(f"The plugin with identifier {identifier} is not installed!")
+            return -1
+        if not self._plugin_manager.get_plugin_info(identifier):
+            self._logger.error(f"The plugin with identifier {identifier} is not enabled!")
+            return -1
+        if identifier not in registered_plugins:
+            self._logger.error(f"The plugin with identifier {identifier} has no registered actions!")
+            return -1
+        if action not in registered_plugins[identifier]:
+            self._logger.error(f"The plugin with identifier {identifier} did not register that action!")
+            return -1
+        registered_plugins[identifier][action]()
+
     ##################################################################################################
     ########################################_Helper functions_########################################
     ##################################################################################################
@@ -275,6 +308,22 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
 
         outputDevice.toggle()
 
+    def register_button_actions(self, plugin, action_callback):
+        global registered_plugins
+
+        identifier = plugin._identifier
+        # has plugin already registered an action, if not initialize array and dictionary for plugin
+        if identifier not in registered_plugins:
+            registered_plugins[identifier] = {}
+
+        for action in action_callback:
+            if action not in registered_plugins[identifier]:
+                registered_plugins[identifier][action] = action_callback[action]
+                self._logger.debug(f"{identifier} registered action: {action}.")
+            else:
+                self._logger.error(f"{identifier} tried to register action {action}.")
+                self._logger.error(f"{action} is already registered for {identifier}!")
+
     ##################################################################################################
     ########################################_Custom actions_##########################################
     ##################################################################################################
@@ -314,6 +363,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             global latestFilePath
             latestFilePath = payload.get('path')
             self._logger.debug(f"Added new file: {latestFilePath}")
+        elif event == "ClientOpened" or event == "SettingsUpdated":
+            registered_plugin_actions = {identifier: list(registered_plugins[identifier].keys()) for identifier in registered_plugins}
+            self._plugin_manager.send_plugin_message("physicalbutton", registered_plugin_actions)
 
     def on_after_startup(self):
         if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
@@ -405,3 +457,8 @@ def __plugin_load__():
     __plugin_hooks__ = {
 	   "octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information
     }
+
+    global  __plugin_helpers__
+    __plugin_helpers__ = dict(
+        register_button_actions = __plugin_implementation__.register_button_actions
+    )
