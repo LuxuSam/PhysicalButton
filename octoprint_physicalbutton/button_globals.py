@@ -1,4 +1,4 @@
 button_list = []
 output_list = []
-latestFilePath = None
+latest_file_path = None
 registered_plugins = {}
