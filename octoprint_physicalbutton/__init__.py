@@ -7,14 +7,6 @@ from . import button_globals as bg
 from .lib.button_gpio_setup import setup_buttons, remove_buttons, remove_outputs
 from .lib.button_helpers import register_button_actions
 
-# Set this to true if not programming on raspberry pi
-debug = True
-if debug:
-    import gpiozero
-    from gpiozero.pins.mock import MockFactory
-
-    gpiozero.Device.pin_factory = MockFactory()
-
 
 class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
                            octoprint.plugin.EventHandlerPlugin,
@@ -34,10 +26,10 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             self._plugin_manager.send_plugin_message("physicalbutton", registered_plugin_actions)
 
     def on_after_startup(self):
-        bg.plugin = self
         if self._settings.get(["buttons"]) is None or self._settings.get(["buttons"]) == []:
             self._logger.debug(f"No buttons to initialize!")
             return
+        bg.plugin = self
         self._logger.debug(f"Setting up buttons ...")
         setup_buttons()
         self._logger.info(f"Buttons have been set up!")

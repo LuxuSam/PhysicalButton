@@ -1,7 +1,12 @@
-from gpiozero import Button, OutputDevice
-
 from .. import button_globals as bg
 from .button_reaction import react_to_input
+
+if bg.debug:
+    import gpiozero
+    from gpiozero.pins.mock import MockFactory
+    gpiozero.Device.pin_factory = MockFactory()
+
+from gpiozero import Button, OutputDevice
 
 
 def setup_buttons():
