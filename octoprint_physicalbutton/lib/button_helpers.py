@@ -1,15 +1,15 @@
-def register_button_actions(printer, plugin, action_callback):
-    global registered_plugins
+from .. import button_globals as bg
 
-    identifier = plugin._identifier
+def register_button_actions(plugin_instance, action_callback):
+    identifier = plugin_instance._identifier
     # has plugin already registered an action, if not initialize array and dictionary for plugin
-    if identifier not in registered_plugins:
-        registered_plugins[identifier] = {}
+    if identifier not in bg.registered_plugins:
+        bg.registered_plugins[identifier] = {}
 
     for action in action_callback:
-        if action not in registered_plugins[identifier]:
-            registered_plugins[identifier][action] = action_callback[action]
-            printer._logger.debug(f"{identifier} registered action: {action}.")
+        if action not in bg.registered_plugins[identifier]:
+            bg.registered_plugins[identifier][action] = action_callback[action]
+            bg.plugin._logger.debug(f"{identifier} registered action: {action}.")
         else:
-            printer._logger.error(f"{identifier} tried to register action {action}.")
-            printer._logger.error(f"{action} is already registered for {identifier}!")
+            bg.plugin._logger.error(f"{identifier} tried to register action {action}.")
+            bg.plugin._logger.error(f"{action} is already registered for {identifier}!")

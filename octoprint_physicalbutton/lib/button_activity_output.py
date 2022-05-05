@@ -1,10 +1,10 @@
 import threading
 import time
 
+from .. import button_globals as bg
 
-def generate_output(printer, output):
-    global output_list
 
+def generate_output(output):
     if output.get('gpio') == 'none':
         return -2
 
@@ -12,17 +12,17 @@ def generate_output(printer, output):
     value = output.get('value')
     active_time = int(output.get('time'))
 
-    output_device = next(iter(filter(lambda o_d: o_d.pin.number == gpio, output_list)))
+    output_device = next(iter(filter(lambda o_d: o_d.pin.number == gpio, bg.output_list)))
 
     if output.get('async') == 'True':
-        t = threading.Thread(target=printer.set_output, args=(value, active_time, output_device,))
+        t = threading.Thread(target=set_output, args=(value, active_time, output_device,))
         t.start()
     else:
-        printer.set_output(value, active_time, output_device)
+        set_output(value, active_time, output_device)
     return 0
 
 
-def set_output(printer, value, active_time, output_device):
+def set_output(value, active_time, output_device):
     if value == 'HIGH':
         output_device.on()
     elif value == 'LOW':

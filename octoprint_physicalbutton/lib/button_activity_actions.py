@@ -1,87 +1,90 @@
-def send_action(printer, action):
+from .. import button_globals as bg
+
+
+def send_action(action):
     if action == "connect":
-        printer._printer.connect()
+        bg.plugin._printer.connect()
         return 0
     elif action == "disconnect":
-        printer._printer.disconnect()
+        bg.plugin._printer.disconnect()
         return 0
     elif action == "home":
-        printer._printer.home(["x", "y", "z"])
+        bg.plugin._printer.home(["x", "y", "z"])
         return 0
     elif action == "pause":
-        printer._printer.pause_print()
+        bg.plugin._printer.pause_print()
         return 0
     elif action == "resume":
-        printer._printer.resume_print()
+        bg.plugin._printer.resume_print()
         return 0
     elif action == 'toggle pause-resume':
-        printer._printer.toggle_pause_print()
+        bg.plugin._printer.toggle_pause_print()
         return 0
     elif action == "start":
-        printer._printer.start_print()
+        bg.plugin._printer.start_print()
+        return 0
+    elif action == "cancel":
+        bg.plugin._printer.cancel_print()
+        return 0
+    elif action == 'unselect file':
+        bg.plugin._printer.unselect_file()
         return 0
     elif action == "start latest":
-        return printer.start_latest()
-    elif action == "cancel":
-        printer._printer.cancel_print()
-        return 0
+        return start_latest()
     elif action == 'toggle start-cancel':
-        return printer.toggle_cancel_print()
+        return toggle_cancel_print()
     elif action == 'toggle start latest-cancel':
-        return printer.toggle_cancel_start_latest()
-    elif action == 'unselect file':
-        return printer._printer.unselect_file()
+        return toggle_cancel_start_latest()
 
-    printer._logger.debug(f"No action selected or action (yet) unknown")
+    bg.plugin._logger.debug(f"No action selected or action (yet) unknown")
     return 0
 
 
-def toggle_cancel_print(printer):
-    if printer._printer.is_ready():
-        printer._printer.start_print()
+def toggle_cancel_print():
+    if bg.plugin._printer.is_ready():
+        bg.plugin._printer.start_print()
     else:
-        printer._printer.cancel_print()
+        bg.plugin._printer.cancel_print()
     return 0
 
 
-def start_latest(printer):
-    if (latest_file_path is None) or (not printer._file_manager.file_exists("local", latest_file_path)):
-        printer._logger.debug(f"latestFilePath not set yet, start search")
-        printer.update_latest_file_path()
+def start_latest():
+    if (bg.latest_file_path is None) or (not bg.plugin._file_manager.file_exists("local", bg.latest_file_path)):
+        bg.plugin._logger.debug(f"latest_file_path not set yet, start search")
+        bg.plugin.update_latest_file_path()
 
-    if latest_file_path is None:
-        printer._logger.error(f"No files found!")
+    if bg.latest_file_path is None:
+        bg.plugin._logger.error(f"No files found!")
         return -1
 
-    if printer.selectFile(latest_file_path) == -1:
+    if bg.plugin.selectFile(bg.latest_file_path) == -1:
         return -1
 
-    printer._printer.start_print()
+    bg.plugin._printer.start_print()
     return 0
 
 
-def toggle_cancel_start_latest(printer):
-    if printer._printer.is_ready():
-        return printer.start_latest()
+def toggle_cancel_start_latest():
+    if bg.plugin._printer.is_ready():
+        return bg.plugin.start_latest()
     else:
-        printer._printer.cancel_print()
+        bg.plugin._printer.cancel_print()
         return 0
 
 
-def update_latest_file_path(printer):
-    global latest_file_path
-
-    files = printer._file_manager.list_files(recursive=True)
-    local_file_dict = printer.get_latest_path(files.get('local'), None, -1)
+def update_latest_file_path():
+    files = bg.plugin._file_manager.list_files(recursive=True)
+    local_file_dict = get_latest_path(files.get('local'), None, -1)
     path_local = local_file_dict.get('path')
-    latest_file_path = path_local
+
+    bg.latest_file_path = path_local
 
 
-def get_latest_path(printer, files, latest_path, latest_date):
+def get_latest_path(files, latest_path, latest_date):
     for file in files:
         file = files.get(file)
         if file.get('type') == "folder":
-            file_dict = printer.get_latest_path(file.get('children'), latest_path, latest_date)
+            file_dict = get_latest_path(file.get('children'), latest_path, latest_date)
             latest_path = file_dict.get('path')
             latest_date = file_dict.get('date')
 
