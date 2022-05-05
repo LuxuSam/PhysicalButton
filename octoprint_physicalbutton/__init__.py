@@ -3,28 +3,17 @@ from __future__ import absolute_import
 
 import octoprint.plugin
 
-from gpiozero import Button,OutputDevice
-
+from . import button_globals as bg
+from .lib.button_gpio_setup import setup_buttons, remove_buttons, remove_outputs
+from .lib.button_helpers import register_button_actions
 
 # Set this to true if not programming on raspberry pi
-debug = False
+debug = True
 if debug:
     import gpiozero
     from gpiozero.pins.mock import MockFactory
+
     gpiozero.Device.pin_factory = MockFactory()
-
-import time
-import threading
-import subprocess
-
-buttonList = []
-outputList = []
-latestFilePath = None
-registered_plugins = {}     # registered_plugins{
-                            #   identifier : {
-                            #       action : callback,
-                            #   }
-                            # }
 
 
 class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
@@ -35,381 +24,59 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
                            octoprint.plugin.TemplatePlugin
                            ):
 
-    ##################################################################################################
-    ########################################_GPIO Setup functions_####################################
-    ##################################################################################################
-    def setupButtons(self):
-        global buttonList
-        for button in self._settings.get(["buttons"]):
-            if button.get('gpio') == "none":
-                continue
-            buttonGPIO = int(button.get('gpio'))
-            buttonMode = button.get('buttonMode')
-            newButton = Button(buttonGPIO, pull_up=True, bounce_time=None)
-            if buttonMode == "Normally Open (NO)":
-                newButton.when_pressed = self.reactToInput
-            if buttonMode == "Normally Closed (NC)":
-                newButton.when_released = self.reactToInput
-            buttonList.append(newButton)
-            self.setupOutputPins(button)
-        self._logger.debug(f"Added Buttons: {buttonList}")
-        self._logger.debug(f"Added Output devices: {outputList}")
-
-    def setupOutputPins(self,button):
-        global outputList
-        for activity in list(filter(lambda a: a.get('type') == "output", button.get('activities'))):
-            outputGPIO = activity.get('execute').get('gpio')
-            #check if gpio has to be setup
-            if outputGPIO == 'none' or int(outputGPIO) in list(map(lambda oD: oD.pin.number, outputList)):
-                continue
-            outputDevice = OutputDevice(int(outputGPIO))
-            initialValue = activity.get('execute').get('initial')
-            if initialValue == "HIGH":
-                outputDevice.on()
-            outputList.append(outputDevice)
-
-    def removeButtons(self):
-        global buttonList
-        self._logger.debug(f"Buttons to remove: {buttonList}")
-        for button in buttonList:
-            button.close()
-        buttonList.clear()
-
-    def removeOutputs(self):
-        global outputList
-        self._logger.debug(f"Output devices to remove: {outputList}")
-        for outputDevice in outputList:
-            outputDevice.close()
-        outputList.clear()
-
-    ##################################################################################################
-    ########################################_React to button_#########################################
-    ##################################################################################################
-    def thread_react(self, pressedButton):
-        #save value of button (pushed or released)
-        buttonValue = pressedButton.value
-
-        #search for pressed button
-        for btn in self._settings.get(["buttons"]):
-            if btn.get('gpio') == "none":
-                continue
-            if int(btn.get('gpio')) == pressedButton.pin.number:
-                button = btn
-                break
-
-        waitTime = int(button.get('buttonTime'))
-        time.sleep(waitTime/1000)
-
-        if pressedButton.value == buttonValue:
-            self._logger.debug(f"Reacting to button {button.get('buttonName')}")
-            # execute actions for button in order
-            for activity in button.get('activities'):
-                exitCode = 0
-                self._logger.debug(f"Sending activity with identifier '{activity.get('identifier')}' ...")
-                if activity.get('type') == "action":
-                    #send specified action
-                    exitCode = self.sendAction(activity.get('execute'))
-                elif activity.get('type') == "gcode":
-                    #send specified gcode
-                    exitCode = self.sendGcode(activity.get('execute'))
-                elif activity.get('type') == "system":
-                    #send specified system
-                    exitCode = self.runSystem(activity.get('execute'))
-                elif activity.get('type') == "file":
-                    #select the file at the given location
-                    exitCode = self.selectFile(activity.get('execute'))
-                elif activity.get('type') == "output":
-                    #generate output for given amount of time
-                    exitCode = self.generateOutput(activity.get('execute'))
-                elif activity.get('type') == "plugin":
-                    exitCode = self.sendPluginAction(activity.get('execute'))
-                else:
-                    self._logger.debug(f"The activity with identifier '{activity.get('identifier')}' is not known (yet)!")
-                    continue
-                # Check if an executed activity failed
-                if exitCode == 0:
-                    self._logger.debug(f"The activity with identifier '{activity.get('identifier')}' was executed successfully!")
-                    continue
-                if exitCode == -1:
-                    self._logger.error(f"The activity with identifier '{activity.get('identifier')}' failed! Aborting follwing activities!")
-                    break
-                if exitCode == -2:
-                    self._logger.error(f"The activity with identifier '{activity.get('identifier')}' failed! No GPIO specified!")
-                    continue
-
-    def reactToInput(self, pressedButton):
-        t = threading.Thread(target=self.thread_react, args=(pressedButton,))
-        t.start()
-
-    ##################################################################################################
-    ########################################_Activities_##############################################
-    ##################################################################################################
-    def sendGcode(self, gcodetxt):
-        if not self._printer.is_operational():
-            self._logger.error(f"Your machine is not operational!")
-            return -1
-        #split gcode lines in single commands without comment and add to list
-        commandList = []
-        for temp in gcodetxt.splitlines():
-            commandList.append(temp.split(";")[0].strip())
-        #send commandList to printer
-        self._printer.commands(commandList, force = False)
-        return 0
-
-    def sendAction(self, action):
-        if action == "connect":
-            self._printer.connect()
-            return 0
-        if action == "disconnect":
-            self._printer.disconnect()
-            return 0
-        if action == "home":
-            self._printer.home(["x","y","z"])
-            return 0
-        if action == "pause":
-            self._printer.pause_print()
-            return 0
-        if action == "resume":
-            self._printer.resume_print()
-            return 0
-        if action == 'toggle pause-resume':
-            self._printer.toggle_pause_print()
-            return 0
-        if action == "start":
-            self._printer.start_print()
-            return 0
-        if action == "start latest":
-            return self.start_latest()
-        if action == "cancel":
-            self._printer.cancel_print()
-            return 0
-        if action == 'toggle start-cancel':
-            return self.toggle_cancel_print()
-        if action == 'toggle start latest-cancel':
-            return self.toggle_cancel_start_latest()
-        if action == 'unselect file':
-            return self._printer.unselect_file()
-
-        self._logger.debug(f"No action selected or action (yet) unknown")
-        return 0
-
-    def runSystem(self, commands):
-        # split commands lines and execute one by one, unless there is an error
-        for command in commands.splitlines():
-            self._logger.info(f"Executing system command '{command}'")
-
-            try:
-                # send command to Pi
-                ret = subprocess.check_output(command,
-                    stderr=subprocess.STDOUT, shell=True, executable='/bin/bash')
-                # log output
-                self._logger.info(f"Command '{command}' returned: {ret.decode('utf-8')}")
-                return 0
-            except subprocess.CalledProcessError as e:
-                # return exception and stop further processing
-                self._logger.error(f"Error [{e.returncode}] executing command '{command}': {e.output.decode('utf-8')}")
-                return -1
-
-    def selectFile(self, path):
-        try:
-            if not self._printer.is_ready():
-                self._logger.error(f"Your machine is not ready to select a file!")
-                return -1
-            if '@sd:' in path:
-                path = path.replace('@sd:','').strip()
-                self._printer.select_file(path, True, printAfterSelect = False)
-                self._logger.debug(f"Selecting SD-file '{path}'")
-            else:
-                path = path.strip()
-                self._printer.select_file(path, False, printAfterSelect = False)
-                self._logger.debug(f"Selecting file '{path}'")
-            return 0
-        except (octoprint.printer.InvalidFileType, octoprint.printer.InvalidFileLocation) as e:
-            self._logger.error(e)
-            return -1
-
-    def generateOutput(self, output):
-        global outputList
-
-        if output.get('gpio') == 'none':
-            return -2
-
-        gpio = int(output.get('gpio'))
-        value = output.get('value')
-        time = int(output.get('time'))
-
-        outputDevice = next(iter(filter(lambda oD: oD.pin.number == gpio, outputList)))
-
-        if output.get('async') == 'True':
-            t = threading.Thread(target = self.setOutput, args=(value, time, outputDevice,))
-            t.start()
-        else:
-            self.setOutput(value, time, outputDevice)
-        return 0
-
-    def sendPluginAction(self, plugin_action):
-        identifier = plugin_action.get('plugin')
-        action = plugin_action.get('action')
-        if identifier not in self._plugin_manager.plugins:
-            self._logger.error(f"The plugin with identifier {identifier} is not installed!")
-            return -1
-        if not self._plugin_manager.get_plugin_info(identifier):
-            self._logger.error(f"The plugin with identifier {identifier} is not enabled!")
-            return -1
-        if identifier not in registered_plugins:
-            self._logger.error(f"The plugin with identifier {identifier} has no registered actions!")
-            return -1
-        if action not in registered_plugins[identifier]:
-            self._logger.error(f"The plugin with identifier {identifier} did not register that action!")
-            return -1
-        registered_plugins[identifier][action]()
-
-    ##################################################################################################
-    ########################################_Helper functions_########################################
-    ##################################################################################################
-    def updateLatestFilePath(self):
-        global latestFilePath
-
-        files = self._file_manager.list_files(recursive = True)
-        localFileDict = self.getLatestPath(files.get('local'), None, -1)
-        pathLocal = localFileDict.get('path')
-        latestFilePath = pathLocal
-
-    def getLatestPath(self, files, latestPath, latestDate):
-        for file in files:
-            file = files.get(file)
-            if file.get('type') == "folder":
-                fileDict = self.getLatestPath(file.get('children'), latestPath, latestDate)
-                latestPath = fileDict.get('path')
-                latestDate = fileDict.get('date')
-
-            if file.get('type') == "machinecode":
-                if file.get('date') > latestDate:
-                    latestPath = file.get('path')
-                    latestDate = file.get('date')
-
-        return {
-            "path" : latestPath,
-            "date" : latestDate
-        }
-
-    def setOutput(self, value, activeTime, outputDevice):
-        if value == 'HIGH':
-            outputDevice.on()
-        elif value == 'LOW':
-            outputDevice.off()
-        elif value == 'Toggle':
-            outputDevice.toggle()
-
-        if activeTime == 0:
-            return
-        else:
-            time.sleep(activeTime/1000)
-
-        outputDevice.toggle()
-
-    def register_button_actions(self, plugin, action_callback):
-        global registered_plugins
-
-        identifier = plugin._identifier
-        # has plugin already registered an action, if not initialize array and dictionary for plugin
-        if identifier not in registered_plugins:
-            registered_plugins[identifier] = {}
-
-        for action in action_callback:
-            if action not in registered_plugins[identifier]:
-                registered_plugins[identifier][action] = action_callback[action]
-                self._logger.debug(f"{identifier} registered action: {action}.")
-            else:
-                self._logger.error(f"{identifier} tried to register action {action}.")
-                self._logger.error(f"{action} is already registered for {identifier}!")
-
-    ##################################################################################################
-    ########################################_Custom actions_##########################################
-    ##################################################################################################
-    def toggle_cancel_print(self):
-        if self._printer.is_ready():
-            self._printer.start_print()
-        else:
-            self._printer.cancel_print()
-        return 0
-
-    def start_latest(self):
-        if (latestFilePath is None) or (not self._file_manager.file_exists("local",latestFilePath)):
-            self._logger.debug(f"latestFilePath not set yet, start search")
-            self.updateLatestFilePath()
-
-        if latestFilePath is None:
-            self._logger.error(f"No files found!")
-            return -1
-
-        if self.selectFile(latestFilePath) == -1:
-            return -1
-
-        self._printer.start_print()
-        return 0
-
-    def toggle_cancel_start_latest(self):
-        if self._printer.is_ready():
-            return self.start_latest()
-        else:
-            self._printer.cancel_print()
-            return 0
-    ##################################################################################################
-    ########################################_OctoPrint Functions_#####################################
-    ##################################################################################################
     def on_event(self, event, payload):
         if event == "FileAdded":
-            global latestFilePath
-            latestFilePath = payload.get('path')
-            self._logger.debug(f"Added new file: {latestFilePath}")
+            bg.latest_file_path = payload.get('path')
+            self._logger.debug(f"Added new file: {bg.latest_file_path}")
         elif event == "ClientOpened" or event == "SettingsUpdated":
-            registered_plugin_actions = {identifier: list(registered_plugins[identifier].keys()) for identifier in registered_plugins}
+            registered_plugin_actions = {identifier: list(bg.registered_plugins[identifier].keys())
+                                         for identifier in bg.registered_plugins}
             self._plugin_manager.send_plugin_message("physicalbutton", registered_plugin_actions)
 
     def on_after_startup(self):
-        if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
+        bg.plugin = self
+        if self._settings.get(["buttons"]) is None or self._settings.get(["buttons"]) == []:
             self._logger.debug(f"No buttons to initialize!")
             return
         self._logger.debug(f"Setting up buttons ...")
-        self.setupButtons()
+        setup_buttons()
         self._logger.info(f"Buttons have been set up!")
 
     def on_shutdown(self):
-        if self._settings.get(["buttons"]) == None or self._settings.get(["buttons"]) == []:
+        if self._settings.get(["buttons"]) is None or self._settings.get(["buttons"]) == []:
             self._logger.debug(f"No buttons to clean up ...")
             return
         self._logger.info(f"Cleaning up used GPIOs before shutting down ...")
-        self.removeButtons()
-        self.removeOutputs()
+        remove_buttons()
+        remove_outputs()
         self._logger.info(f"Done!")
 
     def on_settings_save(self, data):
-        #Handle old configuration:
-        if self._settings.get(["buttons"]) != None and self._settings.get(["buttons"]) != []:
-            self.removeButtons()
-            self.removeOutputs()
+        # Handle old configuration:
+        if self._settings.get(["buttons"]) is not None and self._settings.get(["buttons"]) != []:
+            remove_buttons()
+            remove_outputs()
             self._logger.debug(f"Removed old button configuration")
-        #Save new Settings
+        # Save new Settings
         octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
-        #Handle new configuration
-        if self._settings.get(["buttons"]) != None and self._settings.get(["buttons"]) != []:
-            self.setupButtons()
+        # Handle new configuration
+        if self._settings.get(["buttons"]) is not None and self._settings.get(["buttons"]) != []:
+            setup_buttons()
             self._logger.debug(f"Added new button configuration")
 
     def on_settings_cleanup(self):
-        self.removeButtons()
-        self.removeOutputs()
+        remove_buttons()
+        remove_outputs()
         octoprint.plugin.SettingsPlugin.on_settings_cleanup(self)
 
     def get_settings_defaults(self):
         return dict(
-            buttons = []
+            buttons=[]
         )
 
     def get_template_configs(self):
         return [
-            dict(type = "settings", custom_bindings = True)
+            dict(type="settings", custom_bindings=True)
         ]
 
     def get_assets(self):
@@ -419,17 +86,17 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             less=["less/physicalbutton.less"]
         )
 
-	##~~ Softwareupdate hook
+    # ~~ Softwareupdate hook
     def get_update_information(self):
         return {
             "physicalbutton": {
-                "displayName" : "Physical Button",
-                "displayVersion" : self._plugin_version,
-                "type" : "github_release",
-                "user" : "LuxuSam",
-                "repo" : "PhysicalButton",
-                "current" : self._plugin_version,
-                "pip" : "https://github.com/LuxuSam/PhysicalButton/archive/{target_version}.zip",
+                "displayName": "Physical Button",
+                "displayVersion": self._plugin_version,
+                "type": "github_release",
+                "user": "LuxuSam",
+                "repo": "PhysicalButton",
+                "current": self._plugin_version,
+                "pip": "https://github.com/LuxuSam/PhysicalButton/archive/{target_version}.zip",
                 "stable_branch": {
                     "name": "Stable",
                     "branch": "master",
@@ -445,8 +112,9 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             }
         }
 
+
 __plugin_name__ = "Physical Button"
-__plugin_pythoncompat__ = ">=3,<4" # python 3
+__plugin_pythoncompat__ = ">=3,<4"  # python 3
 
 
 def __plugin_load__():
@@ -455,10 +123,10 @@ def __plugin_load__():
 
     global __plugin_hooks__
     __plugin_hooks__ = {
-	   "octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information
+        "octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information
     }
 
-    global  __plugin_helpers__
+    global __plugin_helpers__
     __plugin_helpers__ = dict(
-        register_button_actions = __plugin_implementation__.register_button_actions
+        register_button_actions=register_button_actions
     )
