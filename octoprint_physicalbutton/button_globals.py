@@ -8,4 +8,4 @@ latest_file_path = None
 registered_plugins = {}
 
 # Set this to true if not programming on raspberry pi
-debug = True
+debug = False
