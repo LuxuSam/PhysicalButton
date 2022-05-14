@@ -11,6 +11,11 @@ from .activities.plugin_action import send_plugin_action
 from .activities.system import run_system
 
 
+def react_to_input(pressed_button):
+    t = threading.Thread(target=thread_react, args=(pressed_button,))
+    t.start()
+
+
 def thread_react(pressed_button):
     # save value of button (pushed or released)
     button_value = pressed_button.value
@@ -63,8 +68,3 @@ def thread_react(pressed_button):
                     f"The activity with identifier '{activity.get('identifier')}' failed! "
                     f"No GPIO specified!")
                 continue
-
-
-def react_to_input(pressed_button):
-    t = threading.Thread(target=thread_react, args=(pressed_button,))
-    t.start()
