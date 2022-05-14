@@ -1,5 +1,6 @@
 from ... import button_globals as bg
 
+
 def send_gcode(gcode_txt):
     if not bg.plugin._printer.is_operational():
         bg.plugin._logger.error(f"Your machine is not operational!")

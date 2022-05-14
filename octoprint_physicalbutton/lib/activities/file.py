@@ -2,6 +2,7 @@ import octoprint.plugin
 
 from ... import button_globals as bg
 
+
 def select_file(path):
     try:
         if not bg.plugin._printer.is_ready():

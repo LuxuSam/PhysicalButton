@@ -1,5 +1,6 @@
 from .. import button_globals as bg
 
+
 def register_button_actions(plugin_instance, action_callback):
     identifier = plugin_instance._identifier
     # has plugin already registered an action, if not initialize array and dictionary for plugin
