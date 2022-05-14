@@ -35,8 +35,8 @@ def send_action(action):
         return toggle_cancel_print()
     elif action == 'toggle start latest-cancel':
         return toggle_cancel_start_latest()
-
-    bg.plugin._logger.debug(f"No action selected or action (yet) unknown")
+    else:
+        bg.plugin._logger.debug(f"No action selected or action (yet) unknown")
     return 0
 
 
