@@ -26,10 +26,11 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             self._plugin_manager.send_plugin_message("physicalbutton", registered_plugin_actions)
 
     def on_after_startup(self):
+        bg.plugin = self
+
         if self._settings.get(["buttons"]) is None or self._settings.get(["buttons"]) == []:
             self._logger.debug(f"No buttons to initialize!")
             return
-        bg.plugin = self
         self._logger.debug(f"Setting up buttons ...")
         setup_buttons()
         self._logger.info(f"Buttons have been set up!")
@@ -57,6 +58,8 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             self._logger.debug(f"Added new button configuration")
 
     def on_settings_cleanup(self):
+        bg.plugin = self
+
         remove_buttons()
         remove_outputs()
         octoprint.plugin.SettingsPlugin.on_settings_cleanup(self)
