@@ -1,7 +1,7 @@
 import threading
 import time
 
-from .. import button_globals as bg
+from ... import button_globals as bg
 
 
 def generate_output(output):

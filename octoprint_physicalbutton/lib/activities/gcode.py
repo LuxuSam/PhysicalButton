@@ -1,4 +1,4 @@
-from .. import button_globals as bg
+from ... import button_globals as bg
 
 def send_gcode(gcode_txt):
     if not bg.plugin._printer.is_operational():

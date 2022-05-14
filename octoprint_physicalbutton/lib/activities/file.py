@@ -1,6 +1,6 @@
 import octoprint.plugin
 
-from .. import button_globals as bg
+from ... import button_globals as bg
 
 def select_file(path):
     try:

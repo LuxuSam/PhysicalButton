@@ -1,5 +1,5 @@
 import subprocess
-from .. import button_globals as bg
+from ... import button_globals as bg
 
 def run_system(commands):
     # split commands lines and execute one by one, unless there is an error
