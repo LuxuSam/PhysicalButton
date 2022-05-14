@@ -4,8 +4,8 @@ from __future__ import absolute_import
 import octoprint.plugin
 
 from . import button_globals as bg
-from .lib.button_gpio_setup import setup_buttons, remove_buttons, remove_outputs
-from .lib.button_helpers import register_button_actions
+from .lib.gpio_setup import setup_buttons, remove_buttons, remove_outputs
+from .lib.helpers import register_button_actions
 
 
 class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
