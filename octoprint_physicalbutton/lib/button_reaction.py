@@ -2,12 +2,13 @@ import time
 import threading
 
 from .. import button_globals as bg
-from .button_activity_actions import send_action
-from .button_activity_file import select_file
-from .button_activity_gcode import send_gcode
-from .button_activity_output import generate_output
-from .button_activity_plugin_action import send_plugin_action
-from .button_activity_system import run_system
+
+from .activities.actions import send_action
+from .activities.file import select_file
+from .activities.gcode import send_gcode
+from .activities.output import generate_output
+from .activities.plugin_action import send_plugin_action
+from .activities.system import run_system
 
 
 def thread_react(pressed_button):
