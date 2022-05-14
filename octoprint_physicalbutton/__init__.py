@@ -16,6 +16,15 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
                            octoprint.plugin.TemplatePlugin
                            ):
 
+    def on_after_startup(self):
+        bg.plugin = self
+        if self._settings.get(["buttons"]) is None or self._settings.get(["buttons"]) == []:
+            self._logger.debug(f"No buttons to initialize!")
+            return
+        self._logger.debug(f"Setting up buttons ...")
+        setup_buttons()
+        self._logger.info(f"Buttons have been set up!")
+
     def on_event(self, event, payload):
         if event == "FileAdded":
             bg.latest_file_path = payload.get('path')
@@ -25,33 +34,16 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
                                          for identifier in bg.registered_plugins}
             self._plugin_manager.send_plugin_message("physicalbutton", registered_plugin_actions)
 
-    def on_after_startup(self):
-        bg.plugin = self
-
-        if self._settings.get(["buttons"]) is None or self._settings.get(["buttons"]) == []:
-            self._logger.debug(f"No buttons to initialize!")
-            return
-        self._logger.debug(f"Setting up buttons ...")
-        setup_buttons()
-        self._logger.info(f"Buttons have been set up!")
-
-    def on_shutdown(self):
-        if self._settings.get(["buttons"]) is None or self._settings.get(["buttons"]) == []:
-            self._logger.debug(f"No buttons to clean up ...")
-            return
-        self._logger.info(f"Cleaning up used GPIOs before shutting down ...")
-        remove_buttons()
-        remove_outputs()
-        self._logger.info(f"Done!")
-
     def on_settings_save(self, data):
         # Handle old configuration:
         if self._settings.get(["buttons"]) is not None and self._settings.get(["buttons"]) != []:
             remove_buttons()
             remove_outputs()
             self._logger.debug(f"Removed old button configuration")
+
         # Save new Settings
         octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
+
         # Handle new configuration
         if self._settings.get(["buttons"]) is not None and self._settings.get(["buttons"]) != []:
             setup_buttons()
@@ -59,10 +51,19 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
 
     def on_settings_cleanup(self):
         bg.plugin = self
-
         remove_buttons()
         remove_outputs()
         octoprint.plugin.SettingsPlugin.on_settings_cleanup(self)
+
+    def on_shutdown(self):
+        if self._settings.get(["buttons"]) is None or self._settings.get(["buttons"]) == []:
+            self._logger.debug(f"No buttons to clean up ...")
+            return
+
+        self._logger.info(f"Cleaning up used GPIOs before shutting down ...")
+        remove_buttons()
+        remove_outputs()
+        self._logger.info(f"Done!")
 
     def get_settings_defaults(self):
         return dict(
