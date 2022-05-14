@@ -1,4 +1,4 @@
-from .. import button_globals as bg
+from ... import button_globals as bg
 
 
 def send_plugin_action(plugin_action):
