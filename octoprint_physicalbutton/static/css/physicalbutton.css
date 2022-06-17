@@ -39,10 +39,18 @@
 .physicalbutton_settings .button-list .accordion-heading {
   margin: 0;
   padding-right: 5px;
-  align-items: baseline;
+  align-items: center;
 }
 .physicalbutton_settings .button-list .accordion-heading .accordion-toggle {
   padding: 8px 5px;
+}
+.physicalbutton_settings .button-list .accordion-heading .enable-delete-button {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+}
+.physicalbutton_settings .button-list .accordion-heading .enable-delete-button .delete-button {
+  margin-left: 5px;
 }
 .physicalbutton_settings .button-list .accordion-inner {
   margin-left: 0;
