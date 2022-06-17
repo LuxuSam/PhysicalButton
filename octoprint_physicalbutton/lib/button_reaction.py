@@ -12,6 +12,8 @@ from .activities.system import run_system
 
 
 def react_to_input(pressed_button):
+    thread_react(pressed_button)
+    return
     t = threading.Thread(target=thread_react, args=(pressed_button,))
     t.start()
 
