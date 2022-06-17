@@ -51,7 +51,7 @@ def toggle_cancel_print():
 def start_latest():
     if (bg.latest_file_path is None) or (not bg.plugin._file_manager.file_exists("local", bg.latest_file_path)):
         bg.plugin._logger.debug(f"latest_file_path not set yet, start search")
-        bg.plugin.update_latest_file_path()
+        update_latest_file_path()
 
     if bg.latest_file_path is None:
         bg.plugin._logger.error(f"No files found!")
@@ -66,7 +66,7 @@ def start_latest():
 
 def toggle_cancel_start_latest():
     if bg.plugin._printer.is_ready():
-        return bg.plugin.start_latest()
+        return start_latest()
     else:
         bg.plugin._printer.cancel_print()
         return 0
