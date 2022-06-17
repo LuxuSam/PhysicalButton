@@ -1,4 +1,5 @@
 from ... import button_globals as bg
+from .file import select_file
 
 
 def send_action(action):
@@ -57,7 +58,7 @@ def start_latest():
         bg.plugin._logger.error(f"No files found!")
         return -1
 
-    if bg.plugin.selectFile(bg.latest_file_path) == -1:
+    if select_file(bg.latest_file_path) == -1:
         return -1
 
     bg.plugin._printer.start_print()
