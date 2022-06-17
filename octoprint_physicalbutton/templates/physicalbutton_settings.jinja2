@@ -29,17 +29,17 @@
     <div id="accordionID" class="accordion button-list" data-bind="foreach: { data:buttons, as: 'button' }">
         <div class="accordion-group">
             <!-- Accordion Header-->
-            <div class="control-group accordion-heading" button-header>
+            <div class="control-group accordion-heading" data-bind="style: { 'background-color': button.enabled() ? '' : 'lightgrey' }" button-header>
                 <a class="accordion-toggle open-button" data-toggle="collapse" data-parent="#accordionID" data-bind="attr:{href: '#'+ id()}, click: $parent.changeSelection">
-                    <label data-bind="text: buttonName"></label>
+                    <label data-bind="text: buttonName, style: { 'color': button.enabled() ? '' : 'grey' }"></label>
                 </a>
-                <div>
+                <div class="enable-delete-button">
                     <a style="text-decoration: none" data-bind="click: function() {button.enabled(!button.enabled())}">
                         <!-- ko if: button.enabled -->
-                        <i class="fa fa-toggle-on"></i>
+                        <i class="fas fa-toggle-on fa-2x" style="color: green"></i>
                         <!-- /ko -->
                         <!-- ko ifnot: button.enabled -->
-                        <i class="fa fa-toggle-off"></i>
+                        <i class="fas fa-toggle-off fa-2x" style="color: red"></i>
                         <!-- /ko -->
                     </a>
                     <button class="btn btn-danger delete-button" data-toggle="modal" data-bind="attr:{href: '#delete'+button.id()}" title="Delete this button">
@@ -48,7 +48,7 @@
                 </div>
             </div>
             <!-- Accordion Body-->
-            <div class="accordion-body fade collapse" data-bind="attr:{id: button.id()}">
+            <div class="accordion-body fade collapse" data-bind="attr:{id: button.id()},style: { 'background-color': button.enabled() ? '' : 'lightgrey' }">
                 <div class="accordion-inner">
                     <div class="row-fluid">
                         <div class="span6 left-side">
