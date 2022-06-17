@@ -33,9 +33,19 @@
                 <a class="accordion-toggle open-button" data-toggle="collapse" data-parent="#accordionID" data-bind="attr:{href: '#'+ id()}, click: $parent.changeSelection">
                     <label data-bind="text: buttonName"></label>
                 </a>
-                <button class="btn btn-danger delete-button" data-toggle="modal" data-bind="attr:{href: '#delete'+button.id()}" title="Delete this button">
-                    <i class="far fa-trash-alt"></i>
-                </button>
+                <div>
+                    <a style="text-decoration: none" data-bind="click: function() {button.enabled(!button.enabled())}">
+                        <!-- ko if: button.enabled -->
+                        <i class="fa fa-toggle-on"></i>
+                        <!-- /ko -->
+                        <!-- ko ifnot: button.enabled -->
+                        <i class="fa fa-toggle-off"></i>
+                        <!-- /ko -->
+                    </a>
+                    <button class="btn btn-danger delete-button" data-toggle="modal" data-bind="attr:{href: '#delete'+button.id()}" title="Delete this button">
+                        <i class="far fa-trash-alt"></i>
+                    </button>
+                </div>
             </div>
             <!-- Accordion Body-->
             <div class="accordion-body fade collapse" data-bind="attr:{id: button.id()}">
@@ -71,7 +81,11 @@
                                 <button class="btn btn-small" data-bind="click: $parent.addOutput">Output</button>
                             </div>
                             <div class="btn-group control-group add-new-plugin-activity" data-bind="if:Object.keys($root.supportedPlugins()).length > 0">
-re                                <button class="btn btn-small" data-bind="click: $parent.addPluginAction">Plugin</button>
+                                <button class="btn btn-small" data-bind="click: $parent.addPluginAction">Plugin</button>
+                            </div>
+                            <div class="control-group choose-enable-during-print">
+                                <label for="" title="Choose if the button is enabled while printing:">Enabled while printing:</label>
+                                <input type="checkbox" data-bind="value: button.enabledWhilePrinting, checked:button.enabledWhilePrinting">
                             </div>
                             <div class="control-group activity-list">
                                 <label for="" title="List of your added activities">Activities:</label>

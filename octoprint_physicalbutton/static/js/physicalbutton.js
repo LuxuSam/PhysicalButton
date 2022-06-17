@@ -97,6 +97,8 @@ $(function() {
                 activities: ko.observableArray([]),
                 buttonMode: ko.observable('Normally Open (NO)'),
                 buttonName: ko.observable('New Button Name'),
+                enabled: ko.observable(true),
+                enabledWhilePrinting: ko.observable(true),
                 gpio: ko.observable('none'),
                 buttonTime: ko.observable('500'),
                 id: ko.observable(Date.now())
