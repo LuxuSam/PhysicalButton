@@ -70,6 +70,25 @@ class PhysicalbuttonPlugin(octoprint.plugin.AssetPlugin,
             buttons=[]
         )
 
+    def get_settings_version(self):
+        return 1
+
+    def on_settings_migrate(self, target, current):
+        if current is None:
+            current = 0
+
+        if current is target:
+            return
+
+        button_settings = self._settings.get(["buttons"])
+        for button in button_settings:
+            if current <= 1:
+                if 'enabled' not in button:
+                    button['enabled'] = True
+                if 'enabledWhilePrinting' not in button:
+                    button['enabledWhilePrinting'] = True
+        octoprint.plugin.SettingsPlugin.on_settings_save(self, {"buttons": button_settings})
+
     def get_template_configs(self):
         return [
             dict(type="settings", custom_bindings=True)
