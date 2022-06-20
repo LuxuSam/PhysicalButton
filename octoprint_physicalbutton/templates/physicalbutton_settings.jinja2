@@ -19,19 +19,48 @@
                         Ko-fi
                     </a>
                 </div>
-                <button class="btn btn-primary add-new-button" data-bind="click: addButton" title="Add a new button">
-                    <i class="fa fa-plus"></i>
-                </button>
+                <div>
+                    <button class="btn btn-primary" data-bind="click: downloadConfig" title="Download the configuration file">
+                        <i class="fas fa-download"></i> Config
+                    </button>
+                    <a class="btn btn-primary" data-toggle="modal" href="#uploadConfigModal" title="Upload a configuration file">
+                        <i class="fas fa-upload"></i> Config
+                    </a>
+                    <button class="btn btn-primary add-new-button" data-bind="click: addButton" title="Add a new button">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </div>
+
             </div>
+        </div>
+    </div>
+    <!-- Modal to upload a config file-->
+    <div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalHeader" aria-hidden="true" id="uploadConfigModal">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="modalHeader">Upload a backup file</h3>
+        </div>
+        <div class="modal-body">
+            Here you can upload a backup or a configuration file. <br>
+            <input type="file" accept="application/JSON" data-bind="event: {change: fileUploaded}"> <br>
+            <div data-bind="if: missingProperty">
+                <strong style="color: red">Your backup has been corrupted, one button is missing the property "</strong><strong style="color: red" data-bind="text: missingProperty"></strong><strong style="color: red">".</strong>
+            </div>
+            <strong>Attention, uploading a file will replace your current configuration!</strong>
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true" data-bind="click: saveConfig, enable: uploadedConfig().length > 0">Replace current configuration</button>
         </div>
     </div>
     <small data-bind="style: { visibility: $root.changeDetected()  ? 'visible' : 'hidden'}">Don't forget to save the settings to apply your changes</small>
     <div id="accordionID" class="accordion button-list" data-bind="foreach: { data:buttons, as: 'button' }">
         <div class="accordion-group">
             <!-- Accordion Header-->
-            <div class="control-group accordion-heading" data-bind="style: { 'background-color': button.enabled() ? '' : 'lightgrey' }" button-header>
+            <div class="control-group accordion-heading" data-bind="style: { 'background-color': button.enabled ? '' : 'lightgrey' }" button-header>
                 <a class="accordion-toggle open-button" data-toggle="collapse" data-parent="#accordionID" data-bind="attr:{href: '#'+ id()}, click: $parent.changeSelection">
-                    <label data-bind="text: buttonName, style: { 'color': button.enabled() ? '' : 'grey' }"></label>
+                    <label data-bind="text: buttonName, style: { 'color': button.enabled ? '' : 'grey' }"></label>
                 </a>
                 <div class="enable-delete-button">
                     <a style="text-decoration: none" data-bind="click: function() {button.enabled(!button.enabled())}">
