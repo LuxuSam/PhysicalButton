@@ -41,12 +41,11 @@
             <h3 id="modalHeader">Upload a backup file</h3>
         </div>
         <div class="modal-body">
-            Here you can upload a backup or a configuration file. <br>
+            Here you can upload a backup or a configuration file. <br> <strong>Attention, uploading a file will replace your current configuration!</strong>
             <input type="file" accept="application/JSON" data-bind="event: {change: fileUploaded}"> <br>
-            <div data-bind="if: missingProperty">
-                <strong style="color: red">Your backup has been corrupted, one button is missing the property "</strong><strong style="color: red" data-bind="text: missingProperty"></strong><strong style="color: red">".</strong>
+            <div data-bind="if: missingProperty().length > 0">
+                <strong style="color: red">Your backup has been corrupted! <br> The </strong><strong style="color: red" data-bind="text: missingProperty()[1]+1"></strong><strong style="color: red">. button in the list is missing the property "</strong><strong style="color: red" data-bind="text: missingProperty()[0]"></strong><strong style="color: red">".</strong>
             </div>
-            <strong>Attention, uploading a file will replace your current configuration!</strong>
 
         </div>
         <div class="modal-footer">

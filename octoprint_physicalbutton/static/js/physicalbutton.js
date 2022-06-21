@@ -42,7 +42,7 @@ $(function() {
 
         self.uploadedConfig = ko.observableArray();
 
-        self.missingProperty = ko.observable('');
+        self.missingProperty = ko.observableArray([]);
 
         self.onBeforeBinding = function() {
             self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
@@ -124,13 +124,13 @@ $(function() {
 
         self.checkUpload = function (file){
             self.uploadedConfig(ko.mapping.fromJS(file)());
-            self.missingProperty('');
+            self.missingProperty([]);
             // check if config has needed keys
             let properties = ['activities', 'buttonMode', 'buttonName', 'enabled', 'enabledWhilePrinting', 'gpio', 'buttonTime', 'id'];
             for (let b = 0; b < self.uploadedConfig().length; b++) {
                 for (let p = 0; p < properties.length; p++) {
                     if (!self.uploadedConfig()[b].hasOwnProperty(properties[p])) {
-                        self.missingProperty(properties[p]);
+                        self.missingProperty([properties[p],b]);
                         self.uploadedConfig([]);
                         return;
                     }
@@ -149,8 +149,6 @@ $(function() {
             if (file){
                 reader.readAsText(file);
             }
-
-            // Check if correct json is correctly formatted
         }
         
         self.saveConfig = function () {
