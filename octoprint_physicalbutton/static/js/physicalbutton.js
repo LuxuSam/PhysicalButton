@@ -113,8 +113,11 @@ $(function() {
 
         self.downloadConfig = function() {
             const element = document.createElement('a');
+            const date = new Date().toLocaleDateString().replaceAll('.','-');
+            const time = new Date().toLocaleTimeString().replaceAll(':','-');
+            const datetime = date + '_' + time;
             element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(ko.toJSON(self.buttons, null, 2)));
-            element.setAttribute('download', 'button_config');
+            element.setAttribute('download', 'button_config_'+ datetime);
 
             element.style.display = 'none';
             document.body.appendChild(element);
