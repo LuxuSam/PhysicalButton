@@ -44,6 +44,8 @@ $(function() {
 
         self.missingProperty = ko.observableArray([]);
 
+        self.fileinputValue = ko.observable();
+
         self.onBeforeBinding = function() {
             self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
         };
@@ -130,6 +132,7 @@ $(function() {
                 for (let p = 0; p < properties.length; p++) {
                     if (!self.uploadedConfig()[b].hasOwnProperty(properties[p])) {
                         self.missingProperty([properties[p],b]);
+                        self.fileinputValue('');
                         self.uploadedConfig([]);
                         return;
                     }
@@ -158,6 +161,7 @@ $(function() {
 
             self.changeDetected(true);
             self.uploadedConfig([]);
+            self.fileinputValue('');
         }
 
         self.removeButton = function() {
