@@ -57,7 +57,7 @@
     <div id="accordionID" class="accordion button-list" data-bind="foreach: { data:buttons, as: 'button' }">
         <div class="accordion-group">
             <!-- Accordion Header-->
-            <div class="control-group accordion-heading" data-bind="style: { 'background-color': button.enabled ? '' : 'lightgrey' }" button-header>
+            <div class="control-group accordion-heading" data-bind="style: { 'background-color': button.enabled() ? '' : 'lightgrey' }" button-header>
                 <a class="accordion-toggle open-button" data-toggle="collapse" data-parent="#accordionID" data-bind="attr:{href: '#'+ id()}, click: $parent.changeSelection">
                     <label data-bind="text: buttonName, style: { 'color': button.enabled ? '' : 'grey' }"></label>
                 </a>
