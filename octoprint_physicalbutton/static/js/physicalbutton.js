@@ -111,8 +111,7 @@ $(function() {
 
         self.downloadConfig = function() {
             const element = document.createElement('a');
-            //element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(ko.toJSON(self.buttons)));
-            element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(ko.mapping.toJSON(self.buttons)));
+            element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(ko.toJSON(self.buttons, null, 2)));
             element.setAttribute('download', 'button_config');
 
             element.style.display = 'none';
