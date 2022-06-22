@@ -30,10 +30,10 @@ You can disable/enable buttons by pressing
 <img style="height: 1em;width: auto;display: inline-block" src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/toggle-off.svg">
 .
 
-You can backup your configuration by pressing 
-<button style="align-items: center;"><img style="height: 1em;width: auto;display: inline-block" src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/download.svg"> Config </button>
-and import a configuration by pressing 
-<button style="align-items: center;"><img style="height: 1em;width: auto;display: inline-block" src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/upload.svg"> Config </button>.
+You can backup your configuration by pressing
+(<img style="height: 1em;width: auto;display: inline-block" src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/download.svg"> Config)
+and import a configuration by pressing
+(<img style="height: 1em;width: auto;display: inline-block" src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/upload.svg"> Config).
 
 ### 🔧 Configuration - Detail 🔧
 * **Button Name**
