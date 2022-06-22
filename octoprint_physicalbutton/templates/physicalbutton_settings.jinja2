@@ -19,26 +19,64 @@
                         Ko-fi
                     </a>
                 </div>
-                <button class="btn btn-primary add-new-button" data-bind="click: addButton" title="Add a new button">
-                    <i class="fa fa-plus"></i>
-                </button>
+                <div>
+                    <button class="btn btn-primary" data-bind="click: downloadConfig" title="Download the configuration file">
+                        <i class="fas fa-download"></i> Config
+                    </button>
+                    <a class="btn btn-primary" data-toggle="modal" href="#uploadConfigModal" title="Upload a configuration file">
+                        <i class="fas fa-upload"></i> Config
+                    </a>
+                    <button class="btn btn-primary add-new-button" data-bind="click: addButton" title="Add a new button">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </div>
+
             </div>
+        </div>
+    </div>
+    <!-- Modal to upload a config file-->
+    <div class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modalHeader" aria-hidden="true" id="uploadConfigModal">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="modalHeader">Upload a backup file</h3>
+        </div>
+        <div class="modal-body">
+            Here you can upload a backup or a configuration file. <br> <strong>Attention, uploading a file will replace your current configuration!</strong>
+            <input type="file" accept="application/JSON" data-bind="event: {change: fileUploaded}, value:fileinputValue"> <br>
+            <div data-bind="if: missingProperty().length > 0">
+                <strong style="color: red">Your backup has been corrupted! <br> The </strong><strong style="color: red" data-bind="text: missingProperty()[1]+1"></strong><strong style="color: red">. button in the list is missing the property "</strong><strong style="color: red" data-bind="text: missingProperty()[0]"></strong><strong style="color: red">".</strong>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true" data-bind="click: saveConfig, enable: uploadedConfig().length > 0">Replace current configuration</button>
         </div>
     </div>
     <small data-bind="style: { visibility: $root.changeDetected()  ? 'visible' : 'hidden'}">Don't forget to save the settings to apply your changes</small>
     <div id="accordionID" class="accordion button-list" data-bind="foreach: { data:buttons, as: 'button' }">
         <div class="accordion-group">
             <!-- Accordion Header-->
-            <div class="control-group accordion-heading" button-header>
+            <div class="control-group accordion-heading" data-bind="style: { 'background-color': button.enabled() ? '' : 'lightgrey' }" button-header>
                 <a class="accordion-toggle open-button" data-toggle="collapse" data-parent="#accordionID" data-bind="attr:{href: '#'+ id()}, click: $parent.changeSelection">
-                    <label data-bind="text: buttonName"></label>
+                    <label data-bind="text: buttonName, style: { 'color': button.enabled ? '' : 'grey' }"></label>
                 </a>
-                <button class="btn btn-danger delete-button" data-toggle="modal" data-bind="attr:{href: '#delete'+button.id()}" title="Delete this button">
-                    <i class="far fa-trash-alt"></i>
-                </button>
+                <div class="enable-delete-button">
+                    <a style="text-decoration: none" data-bind="click: function() {button.enabled(!button.enabled())}">
+                        <!-- ko if: button.enabled -->
+                        <i class="fas fa-toggle-on fa-2x" style="color: green"></i>
+                        <!-- /ko -->
+                        <!-- ko ifnot: button.enabled -->
+                        <i class="fas fa-toggle-off fa-2x" style="color: red"></i>
+                        <!-- /ko -->
+                    </a>
+                    <button class="btn btn-danger delete-button" data-toggle="modal" data-bind="attr:{href: '#delete'+button.id()}" title="Delete this button">
+                        <i class="far fa-trash-alt"></i>
+                    </button>
+                </div>
             </div>
             <!-- Accordion Body-->
-            <div class="accordion-body fade collapse" data-bind="attr:{id: button.id()}">
+            <div class="accordion-body fade collapse" data-bind="attr:{id: button.id()},style: { 'background-color': button.enabled() ? '' : 'lightgrey' }">
                 <div class="accordion-inner">
                     <div class="row-fluid">
                         <div class="span6 left-side">
@@ -71,7 +109,11 @@
                                 <button class="btn btn-small" data-bind="click: $parent.addOutput">Output</button>
                             </div>
                             <div class="btn-group control-group add-new-plugin-activity" data-bind="if:Object.keys($root.supportedPlugins()).length > 0">
-re                                <button class="btn btn-small" data-bind="click: $parent.addPluginAction">Plugin</button>
+                                <button class="btn btn-small" data-bind="click: $parent.addPluginAction">Plugin</button>
+                            </div>
+                            <div class="control-group choose-enable-during-print">
+                                <label for="" title="Choose if the button is enabled while printing:">Enabled while printing:</label>
+                                <input type="checkbox" data-bind="value: button.enabledWhilePrinting, checked:button.enabledWhilePrinting">
                             </div>
                             <div class="control-group activity-list">
                                 <label for="" title="List of your added activities">Activities:</label>

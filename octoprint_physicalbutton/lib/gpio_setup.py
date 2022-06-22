@@ -11,7 +11,7 @@ from gpiozero import Button, OutputDevice
 
 def setup_buttons():
     for button in bg.plugin._settings.get(["buttons"]):
-        if button.get('gpio') == "none":
+        if button.get('gpio') == "none" or not button.get('enabled'):
             continue
         button_gpio = int(button.get('gpio'))
         button_mode = button.get('buttonMode')

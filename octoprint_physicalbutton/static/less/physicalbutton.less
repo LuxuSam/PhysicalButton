@@ -57,7 +57,8 @@
         .accordion-heading {
             margin: 0;
             padding-right: 5px;
-            align-items: baseline;
+            align-items: center;
+
 
             .accordion-toggle {
                 padding: 8px 5px;
@@ -65,7 +66,15 @@
 
             .open-button {}
 
-            .delete-button {}
+
+            .enable-delete-button{
+                display: flex;
+                align-items: center;
+                margin-bottom: 0;
+                .delete-button {
+                    margin-left: 5px;
+                }
+            }
         }
 
         .accordion-inner {

@@ -40,6 +40,12 @@ $(function() {
 
         self.changeDetected = ko.observable(false);
 
+        self.uploadedConfig = ko.observableArray();
+
+        self.missingProperty = ko.observableArray([]);
+
+        self.fileinputValue = ko.observable();
+
         self.onBeforeBinding = function() {
             self.buttons(self.settingsViewModel.settings.plugins.physicalbutton.buttons());
         };
@@ -97,11 +103,69 @@ $(function() {
                 activities: ko.observableArray([]),
                 buttonMode: ko.observable('Normally Open (NO)'),
                 buttonName: ko.observable('New Button Name'),
+                enabled: ko.observable(true),
+                enabledWhilePrinting: ko.observable(true),
                 gpio: ko.observable('none'),
                 buttonTime: ko.observable('500'),
                 id: ko.observable(Date.now())
             });
         };
+
+        self.downloadConfig = function() {
+            const element = document.createElement('a');
+            const date = new Date().toLocaleDateString().replaceAll('.','-');
+            const time = new Date().toLocaleTimeString().replaceAll(':','-');
+            const datetime = date + '_' + time;
+            element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(ko.toJSON(self.buttons, null, 2)));
+            element.setAttribute('download', 'button_config_'+ datetime);
+
+            element.style.display = 'none';
+            document.body.appendChild(element);
+
+            element.click();
+            document.body.removeChild(element);
+        }
+
+        self.checkUpload = function (file){
+            self.uploadedConfig(ko.mapping.fromJS(file)());
+            self.missingProperty([]);
+            // check if config has needed keys
+            let properties = ['activities', 'buttonMode', 'buttonName', 'enabled', 'enabledWhilePrinting', 'gpio', 'buttonTime', 'id'];
+            for (let b = 0; b < self.uploadedConfig().length; b++) {
+                for (let p = 0; p < properties.length; p++) {
+                    if (!self.uploadedConfig()[b].hasOwnProperty(properties[p])) {
+                        self.missingProperty([properties[p],b]);
+                        self.fileinputValue('');
+                        self.uploadedConfig([]);
+                        return;
+                    }
+                }
+            }
+        }
+
+        self.fileUploaded = function(data, event) {
+            let file    = event.target.files[0];
+            let reader  = new FileReader();
+            reader.onload = function (onload_e)
+            {
+                if (typeof reader.result === 'string')
+                    self.checkUpload(JSON.parse(reader.result));
+            };
+            if (file){
+                reader.readAsText(file);
+            }
+        }
+        
+        self.saveConfig = function () {
+            // Save data into buttons
+            if (self.uploadedConfig().length > 0){
+                self.buttons(self.uploadedConfig());
+            }
+
+            self.changeDetected(true);
+            self.uploadedConfig([]);
+            self.fileinputValue('');
+        }
 
         self.removeButton = function() {
             self.buttons.remove(this)
