@@ -24,6 +24,17 @@ In addition you have to specify for how long a button has to be held in order to
 The last step is to add activities to your button which are executed in order of the activities list.
 You can edit, move or remove activities in the right pane.
 
+You can disable/enable buttons by pressing
+<img style="height: 1em;width: auto;display: inline-block" src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/toggle-on.svg">
+/
+<img style="height: 1em;width: auto;display: inline-block" src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/toggle-off.svg">
+.
+
+You can backup your configuration by pressing 
+<button style="align-items: center;"><img style="height: 1em;width: auto;display: inline-block" src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/download.svg"> Config </button>
+and import a configuration by pressing 
+<button style="align-items: center;"><img style="height: 1em;width: auto;display: inline-block" src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/upload.svg"> Config </button>.
+
 ### 🔧 Configuration - Detail 🔧
 * **Button Name**
   * This is where you put the name of your button to differentiate it in the list of buttons.
@@ -37,6 +48,8 @@ You can edit, move or remove activities in the right pane.
       * Use this mode if your button is usually pressed (closed).
 * **Hold Time**
   * This is where you set the hold time for your button, meaning how long the button has to be held until the reaction is triggered.
+* **Enabled while printing**
+  * When this option is enabled, you can always use the button. If it's disabled, the button won't react to input while the printer is printing.
 * **Choose activities for your button**
   * Action:
     * You can choose between different actions:
