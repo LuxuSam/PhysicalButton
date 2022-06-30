@@ -129,8 +129,8 @@ if helpers and "register_button_actions" in helpers:
 ![System activity](/assets/img/plugins/physicalbutton/PhysicalButton_system.png)</br></br>
 ![File activity](/assets/img/plugins/physicalbutton/PhysicalButton_file.png)</br></br>
 ![Plugin activity](/assets/img/plugins/physicalbutton/PhysicalButton_plugin.png)</br></br>
-![Delete Button](/assets/img/plugins/physicalbutton/PhysicalButton_delete.png)
-
+![Delete button](/assets/img/plugins/physicalbutton/PhysicalButton_delete.png)</br></br>
+![Upload backup for buttons](/assets/img/plugins/physicalbutton/PhysicalButton_backup.png)
 
 ---
 ## Get Help / Feature request
