@@ -19,7 +19,7 @@ If you have other plugins installed that use GPIOs, make sure those plugins are 
 To add a new button you have to click on the ➕. This adds a new button to the end of your list.
 
 From there you should enter a button name, the used GPIO and the mode (NO or NC) of the button.
-In addition you have to specify for how long a button has to be held in order to trigger.
+In addition, you have to specify for how long a button has to be held in order to trigger.
 
 The last step is to add activities to your button which are executed in order of the activities list.
 You can edit, move or remove activities in the right pane.
@@ -30,7 +30,7 @@ You can disable/enable buttons by pressing
 <img style="height: 1em;width: auto;display: inline-block" src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/toggle-off.svg">
 .
 
-You can backup your configuration by pressing
+You can back up your configuration by pressing
 (<img style="height: 1em;width: auto;display: inline-block" src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/download.svg"> Config)
 and import a configuration by pressing
 (<img style="height: 1em;width: auto;display: inline-block" src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/upload.svg"> Config).
