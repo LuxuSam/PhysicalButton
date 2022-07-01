@@ -18,8 +18,60 @@ $(function() {
          ]);
 
          //actions:
-         self.actions = ko.observableArray(['none', 'connect', 'disconnect', 'home', 'pause', 'resume', 'toggle pause-resume',
-                                            'start', 'start latest', 'cancel', 'toggle start-cancel', 'toggle start latest-cancel', 'unselect file']);
+        self.actions = ko.observableArray([
+            {
+                value: 'none',
+                title: ''
+            },
+            {
+                value: 'connect',
+                title: 'Connect to the printer.'
+            },
+            {
+                value: 'disconnect',
+                title: 'Disconnect from the printer.'
+            },
+            {
+                value: 'home',
+                title: 'Homes all axes of the printer.'
+            },
+            {
+                value: 'pause',
+                title: 'Pause the current print.'
+            },
+            {
+                value: 'resume',
+                title: 'Resume the current print.'
+            },
+            {
+                value: 'toggle pause-resume',
+                title: 'Toggle between pausing and resuming a print.'
+            },
+            {
+                value: 'start',
+                title: 'Start printing the currently selected file.'
+            },
+            {
+                value: 'start latest',
+                title: 'Start printing the latest uploaded file.'
+            },
+            {
+                value: 'cancel',
+                title: 'Cancel the current print.'
+            },
+            {
+                value: 'toggle start-cancel',
+                title: 'Toggle between starting the currently selected file or cancelling a print.'
+            },
+            {
+                value: 'toggle start latest-cancel',
+                title: 'Toggle between starting the latest uploaded file and cancelling a print.'
+            },
+            {
+                value: 'unselect file',
+                title: 'Unselect the currently selected file.'
+            }
+        ]);
 
         //button modes:
         self.buttonModes = ko.observableArray(['Normally Open (NO)', 'Normally Closed (NC)']);
@@ -320,7 +372,7 @@ $(function() {
                     return;
                 }
 
-                if (self.selectedActivity().type() == 'plugin') {
+                if (self.selectedActivity().type() === 'plugin') {
                     let plugin = identifier.split(': ').length > 1 ? identifier.split(': ')[0] : '';
                     let action = identifier.split(': ').length > 1 ? identifier.split(': ')[1] : '';
                     if (identifier === 'New Plugin Action' || identifier.replace(/\s/g, "") === '' || (Object.keys(self.supportedPlugins()).includes(plugin) && self.supportedPlugins()[plugin].includes(action))) {
