@@ -28,7 +28,7 @@ def thread_react(pressed_button):
             button = btn
             break
 
-    if not button.get('enabledWhilePrinting') and not bg.plugin._printer.is_printing():
+    if not button.get('enabledWhilePrinting') and bg.plugin._printer.is_printing():
         bg.plugin._logger.debug(f"The button is configured to not react while printing")
         return
 
