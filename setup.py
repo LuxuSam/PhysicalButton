@@ -3,8 +3,6 @@
 ########################################################################################################################
 ### Do not forget to adjust the following variables to your own plugin.
 
-import sys
-
 # The plugin's identifier, has to be unique
 plugin_identifier = "physicalbutton"
 
