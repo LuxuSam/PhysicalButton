@@ -15,7 +15,7 @@ def setup_buttons():
             continue
         button_gpio = int(button.get('gpio'))
         button_mode = button.get('buttonMode')
-        new_button = Button(button_gpio, pull_up=True, bounce_time=None)
+        new_button = Button(button_gpio, pull_up=True, bounce_time=0.02)
         if button_mode == "Normally Open (NO)":
             new_button.when_pressed = react_to_input
         if button_mode == "Normally Closed (NC)":
